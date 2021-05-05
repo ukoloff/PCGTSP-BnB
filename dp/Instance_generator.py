@@ -30,7 +30,7 @@ def clustering(n,m):
     tpl = random_combination(range(1,n+1), m)
     tpl = (*tpl,n+1)
     clusters = {1:[i for i in range(1,tpl[0])]}
-    for ind in range(1,m+1):
+    for ind in range(2,m+1):
         clusters[ind]=[i for i in range(tpl[ind-1],tpl[ind])]
     return clusters
  
