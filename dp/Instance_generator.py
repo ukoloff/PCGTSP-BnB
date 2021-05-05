@@ -29,8 +29,9 @@ def random_combination(iterable, r):
 def clustering(n,m):
     tpl = random_combination(range(1,n+1), m)
     tpl = (*tpl,n+1)
-    clusters = {1:[i for i in range(1,tpl[0])]}
-    for ind in range(2,m+1):
+    # clusters = {1:[i for i in range(1,tpl[0])]}
+    clusters={}
+    for ind in range(1,m+1):
         clusters[ind]=[i for i in range(tpl[ind-1],tpl[ind])]
     return clusters
  
@@ -70,10 +71,14 @@ if __name__ == '__main__':
     order = complete_order(tree)
     tour = create_opt_tour(clusters, order)
     graph = update_graph(graph_generator(10),tour)
-    print(tour)
-    print(clusters)
-    print(order)
+
+    print(f'Graph: nodes={graph.nodes()}')
+    print(f'Graph: edges')
     print(graph.edges(data="weight"))
+    print(f'clusters={clusters}')
+    print(f'PC DAG: {tree.edges()}')
+    print(f'linear order={order}')
+    print(f'optimal tour={tour}')
 
 
 
