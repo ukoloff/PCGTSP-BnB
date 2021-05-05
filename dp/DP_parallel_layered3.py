@@ -299,7 +299,8 @@ def test(n,m, workers_count):
 
 
 if __name__ == '__main__':
-    test(1750,20,4) at 25893 sec
+    test(1000,20,4)
+    # test(1750,20,4) at 25893 sec
     # test(1500,20,4) at 4472 sec
     # test(1000,20,4) at 1640 sec
     # test(200,40,4)  at 7059 sec
