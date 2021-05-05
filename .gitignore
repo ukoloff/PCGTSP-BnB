@@ -7,3 +7,5 @@
 *.synctex.gz
 *.pdf
 *.synctex.gz
+*.pyc
+*.dct
