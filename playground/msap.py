@@ -7,16 +7,13 @@ import points
 
 def msap(graph):
   msap = nx.minimum_spanning_arborescence(graph, preserve_attrs=True)
-  res = nx.DiGraph()
-  res.add_nodes_from(graph.nodes)
   for node in graph.nodes:
     for k, v in graph.nodes[node].items():
-      res.nodes[node][k] = v
-  res.add_edges_from(msap.edges)
-  return res
+      msap.nodes[node][k] = v
+  return msap
 
 if __name__ == '__main__':
-    z = nx.to_directed(points.pays(31))
+    z = points.pays(31).to_directed()
     w = msap(z)
     # print(*w.edges)
     with open("tmp/msap.html", "w") as f:
