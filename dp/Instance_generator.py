@@ -15,8 +15,6 @@ def graph_generator(n):
     edges = [(i+1,j+1,weight_matrix[i,j]) for i in range(n) for j in range(n) if i != j]
     graph.add_weighted_edges_from(edges)
     return graph
-graph_generator(3) 
-
 
     
 def random_combination(iterable, r):
@@ -29,7 +27,7 @@ def random_combination(iterable, r):
 def clustering(n,m):
     tpl = random_combination(range(1,n+1), m)
     tpl = (*tpl,n+1)
-    clusters = {1:[i for i in range(1,tpl[0])]}
+    clusters={}
     for ind in range(1,m+1):
         clusters[ind]=[i for i in range(tpl[ind-1],tpl[ind])]
     return clusters
@@ -65,15 +63,24 @@ def update_graph(graph,tour):
 
 
 if __name__ == '__main__':
-    clusters = clustering(10,4)
-    tree = tree_gen(4)
+    n=30
+    m=8
+    clusters = clustering(n,m)
+    tree = tree_gen(m)
     order = complete_order(tree)
     tour = create_opt_tour(clusters, order)
-    graph = update_graph(graph_generator(10),tour)
-    print(tour)
-    print(clusters)
-    print(order)
+    graph = update_graph(graph_generator(n),tour)
+
+    print(f'PCGTSP random instance generator')
+    print(f'Number of nodes: {n}')
+    print(f'Number of clusters: {m}')
+    print(f'Graph: nodes={graph.nodes()}')
+    print(f'Graph: edges')
     print(graph.edges(data="weight"))
+    print(f'clusters={clusters}')
+    print(f'PC DAG: {tree.edges()}')
+    print(f'linear order={order}')
+    print(f'optimal tour={tour}')   
 
 
 
