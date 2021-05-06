@@ -25,8 +25,9 @@ def random_combination(iterable, r):
     return tuple(pool[i] for i in indices)
 
 def clustering(n,m):
-    tpl = random_combination(range(1,n+1), m)
-    tpl = (*tpl,n+1)
+    tpl = random_combination(range(1,n+1), m-1)
+    tpl = (1,*tpl,n+1)
+    print(tpl)
     clusters={}
     for ind in range(1,m+1):
         clusters[ind]=[i for i in range(tpl[ind-1],tpl[ind])]
@@ -64,7 +65,7 @@ def update_graph(graph,tour):
 
 if __name__ == '__main__':
     n=30
-    m=8
+    m=10
     clusters = clustering(n,m)
     tree = tree_gen(m)
     order = complete_order(tree)
