@@ -269,45 +269,66 @@ def DP_solver_layered(G, clusters, tree, lookup_table_name, workers_count):
     return (OPT, route, path)
 
 
+def get_path_length(path, graph):
+    dist = [graph[path[i]][path[i+1]]['weight'] for i in range(len(path)-1)]
+    print(f'dist = {dist}')
+    return sum(dist)
       
 
 def test(filename, workers_count):
-    # graph = ig.graph_generator(n)
-    # clusters = ig.clustering(n,m)
-    # tree = ig.tree_gen(m)
-    # order = ig.complete_order(tree)
-    # tour = ig.create_opt_tour(clusters, order)
-    # graph = ig.update_graph(graph,tour)
-
+    
     graph, clusters, tree = getInstance(filename)
 
     n = graph.number_of_nodes()
     m = len(clusters)
 
     print(f'Number of nodes: {n}, Number of clusters: {m}')
-    print(f'Graph: {graph.edges(data = "weight")}')
+    # print(f'Graph: {graph.edges(data = "weight")}')
     print(f'Clusters: {clusters}')
-    print(f'Partial order: {tree.edges()}')
+    print(f'Partial order tree: {tree.edges()}')
     
     start_time = time.time()
     
     lookup_table_name = f'problem_{n}_{m}_'
     res = DP_solver_layered(graph, clusters, tree, lookup_table_name, workers_count)
 
-    # print(f'Expected order: {order}')
-    # print(f'Expected optimal tour: {tour + [tour[0]]}')
+    
     print(f'RESULT: ')
     if res:
-        print(f'OPT = {res[0]}')
-        print(f'Optimal Tour: {res[2]}')
-        print(f'Visited clusters: {res[1]}')
+        OPT, route, tour = res
+
+        print(f'OPT = {OPT}')
+        print(f'Optimal Tour: {tour}')
+        print(f'Visited clusters: {route}')
+
+        print(f'Tour length (rechecked): {get_path_length(tour, graph)}')
+
+
     else:
         print('Instance is infeasible')
     print(f'Elapsed time: {time.time()-start_time:.2f} sec')
 
+def visited_clusters(tour, clusters):
+    def cluster(node):
+        found = -1
+        for k in clusters.keys():
+            if node in clusters[k]:
+                found = k
+                break
+        return found
+    return list(map(cluster, tour))
+
+def test2(filename):
+    graph, clusters, tree = getInstance(filename)
+    tour2 = [1, 287, 227, 122, 64, 164, 140, 207, 182, 426, 318, 292, 50, 38, 26, 380, 365, 347, 1]
+
+    print(f'tour: {tour2}')
+    print(f'clusters: {visited_clusters(tour2, clusters)}')
+    print(f'tour length (rechecked): {get_path_length(tour2, graph)}')
 
 if __name__ == '__main__':
-    test('../pcglns/e1x_10.pcglns',4)
+    test2('../pcglns/e1x_10.pcglns')
+    # test('../pcglns/e1x_10.pcglns',6)
     
 
     
