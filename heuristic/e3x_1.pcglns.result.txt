@@ -1,0 +1,28 @@
+
+--------- Problem Data ------------
+Instance Name      : e3x_1.pcglns
+Number of Vertices : 235
+Number of Sets     : 21
+Initial Tour       : Random
+Maximum Removals   : 6
+Trials             : 5
+Restart Attempts   : 3
+Rate of Adaptation : 0.5
+Prob of Reopt      : 1.0
+Maximum Time       : 3600
+Threads            : 1
+Seed               : 123
+Tour Budget        : None
+-----------------------------------
+
+ |1     2     3     4     5     |  Cost = 1188  Time = 2.4 sec       |1=====2=====3=====4     5     |  Cost = 1179  Time = 2.9 sec       |1=====2=====3=====4=====5=====|  Cost = 1179  Time = 2.7 sec      
+
+--------- Tour Summary ------------
+Cost              : 1179
+Total Time        : 2.65 sec
+Best Found Time   : 2.06 sec
+Solver Timeout?   : false
+Tour is Feasible? : true
+Output File       : None
+Tour Ordering     : [1, 218, 210, 24, 15, 231, 228, 66, 58, 114, 101, 162, 145, 202, 192, 182, 174, 139, 129, 95, 83]
+-----------------------------------
