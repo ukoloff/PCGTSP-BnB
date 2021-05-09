@@ -21,7 +21,7 @@ MAXTASKSPERWORKER = 1000
 ##  ATTENTION: designed for  Linux, for another OS can possible be adapted
 
 MEM_AMPL = 1.5
-MEM_RESERVE = 0.5
+MEM_RESERVE = 0.7
 
 def possible_workers_count():
     proc = psutil.Process(os.getpid())
@@ -206,13 +206,15 @@ def parallel(sigma):
 ###
 ##################################################
 
-def compute_Bellman_layer(G, clusters,  layer_level, tree, lookup_table_name, lookup_table, workers_count):
+def compute_Bellman_layer(G, clusters,  layer_level, tree, lookup_table_name, keep_lookup_table, workers_count, predicted_workers_count):
  
     with open(f'{lookup_table_name}{layer_level:03d}.lyr', 'rb') as fin:
         layer = pic.load(fin)
 
     c_keys=list(clusters.keys())
     start_time = time.time()
+
+    lookup_table = {}
 
     capacity = 0
     if layer_level < 1: # baseline case
@@ -231,7 +233,7 @@ def compute_Bellman_layer(G, clusters,  layer_level, tree, lookup_table_name, lo
                 
     else:
 
-        actual_workers_count = min(workers_count, possible_workers_count())
+        actual_workers_count = min(workers_count, predicted_workers_count)
         with mp.Pool(actual_workers_count, worker_init, (G, clusters, tree, f'{lookup_table_name}{layer_level-1:03d}.dct'), maxtasksperchild=MAXTASKSPERWORKER) as pool:
             results = pool.map(parallel, layer)
             pool.close()
@@ -245,19 +247,27 @@ def compute_Bellman_layer(G, clusters,  layer_level, tree, lookup_table_name, lo
                 acc.update(res[1])
                 return acc
 
-            combined = ft.reduce(instead_of_lambda, results, {})
+            # combined = ft.reduce(instead_of_lambda, results, {})
      
-            lookup_table.clear()
-            lookup_table.update(combined)
-            combined = None
+            # lookup_table.clear()
+            # lookup_table.update(combined)
+            # combined = None
+
+            lookup_table = ft.reduce(instead_of_lambda, results, {})
 
     with open(f'{lookup_table_name}{layer_level:03d}.dct', 'wb') as fout:
         pic.dump(lookup_table,fout)
         fout.close()
-        
+    
+    predicted_workers_count = possible_workers_count() 
+
+    if not keep_lookup_table:
+        lookup_table = None    
+    
     gc.collect()
 
     print(f'layer {layer_level+1:03d} of size {capacity:>10} complete by {actual_workers_count} worker(s) at {time.time() - start_time:8.2f} sec')
+    return predicted_workers_count, lookup_table
 
 
 def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_make_layers, workers_count):
@@ -268,9 +278,11 @@ def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_make_layers, 
 
     num_of_layers = len(clusters) - 1
 
-    lookup_table = {}
+    predicted_workers_count = possible_workers_count()
+
     for layer_level in range(num_of_layers):
-        compute_Bellman_layer(G, clusters,  layer_level, tree, lookup_table_name, lookup_table, workers_count)
+        keep_lookup_table = (layer_level >= num_of_layers - 1)
+        predicted_workers_count, lookup_table = compute_Bellman_layer(G, clusters,  layer_level, tree, lookup_table_name, keep_lookup_table, workers_count, predicted_workers_count)
         
     OPT = MAXINT
     best_state = None
@@ -344,14 +356,11 @@ def test(filename, need_2_make_layers, workers_count):
     # print(f'Graph: {graph.edges(data = "weight")}')
     print(f'Clusters: {clusters}')
     print(f'Partial order tree: {tree.edges()}')
-
-    print(f'Has G the edge (1,287): {graph.has_edge(1,287)}')
-    
+        
     start_time = time.time()
     
     lookup_table_name = f'problem_{n}_{m}_'
     res = DP_solver_layered(graph, clusters, tree, lookup_table_name, need_2_make_layers, workers_count)
-
     
     print(f'RESULT: ')
     if res:
@@ -380,15 +389,15 @@ def visited_clusters(tour, clusters):
 
 def test2(filename):
     graph, clusters, tree = getInstance(filename)
-    tour2 = [1, 218, 210, 24, 15, 231, 228, 66, 58, 114, 101, 162, 145, 202, 192, 182, 174, 139, 129, 95, 83, 1]
+    tour2 = [1, 251, 238, 112, 93, 65, 34, 218, 214, 234, 231, 266, 264, 283, 277, 146, 121, 314, 313, 299, 284, 200, 173, 1]
 
     print(f'tour: {tour2}')
     print(f'clusters: {visited_clusters(tour2, clusters)}')
     print(f'tour length (rechecked): {get_path_length(tour2, graph)}')
 
 if __name__ == '__main__':
-    test2('../pcglns/e3x_1.pcglns')
-    test('../pcglns/e3x_1.pcglns',True, 5)
+    test2('../pcglns/e5x_1.pcglns')          # PCGLNS results: Obj val.: 1890 - < 5 sec.
+    test('../pcglns/e5x_1.pcglns',True, 5)   # OPT: 1847 - time 4662 sec
     
 
     
