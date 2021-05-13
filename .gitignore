@@ -9,4 +9,5 @@
 *.synctex.gz
 *.pyc
 *.dct
+*.html
 /tmp

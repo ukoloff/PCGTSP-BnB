@@ -1,0 +1,28 @@
+
+--------- Problem Data ------------
+Instance Name      : enc_3.pcglns
+Number of Vertices : 333
+Number of Sets     : 21
+Initial Tour       : Random
+Maximum Removals   : 6
+Trials             : 5
+Restart Attempts   : 3
+Rate of Adaptation : 0.5
+Prob of Reopt      : 1.0
+Maximum Time       : 3600
+Threads            : 1
+Seed               : 123
+Tour Budget        : None
+-----------------------------------
+
+ |1     2     3     4     5     |  Cost = 1509  Time = 2.2 sec       |1=====2=====3===  4     5     |  Cost = 1507  Time = 2.7 sec       |1=====2=====3=====4=====5=====|  Cost = 1507  Time = 2.6 sec      
+
+--------- Tour Summary ------------
+Cost              : 1507
+Total Time        : 2.6 sec
+Best Found Time   : 1.86 sec
+Solver Timeout?   : false
+Tour is Feasible? : true
+Output File       : None
+Tour Ordering     : [1, 80, 70, 19, 219, 85, 320, 115, 220, 272, 250, 177, 154, 313, 131, 190, 55, 36, 10, 30, 51]
+-----------------------------------

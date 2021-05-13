@@ -16,13 +16,20 @@ def graph_generator(n):
     graph.add_weighted_edges_from(edges)
     return graph
 
+def random_combination(iterable, r):
+    pool = tuple(iterable)
+    n = len(pool)
+    indices = sorted(rand.sample(range(n), r))
+    return tuple(pool[i] for i in indices)
 
-def clustering(n, m):
-    breaks = rand.sample(range(2, n + 1), m - 1)
-    breaks.extend([1, n + 1])
-    breaks.sort()
-    return {(i+1): tuple(range(*rg)) for i, rg in enumerate(zip(breaks, breaks[1:]))}
-
+def clustering(n,m):
+    tpl = random_combination(range(1,n+1), m-1)
+    tpl = (1,*tpl,n+1)
+    print(tpl)
+    clusters={}
+    for ind in range(1,m+1):
+        clusters[ind]=[i for i in range(tpl[ind-1],tpl[ind])]
+    return clusters
 
 def tree_gen(m):
     tree = nx.random_tree(m, seed=SEED)
@@ -52,9 +59,9 @@ def update_graph(graph, tour):
 
 
 if __name__ == '__main__':
-    n = 100
-    m = 5
-    clusters = clustering(n, m)
+    n=30
+    m=10
+    clusters = clustering(n,m)
     tree = tree_gen(m)
     order = complete_order(tree)
     tour = create_opt_tour(clusters, order)
