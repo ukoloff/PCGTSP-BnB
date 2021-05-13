@@ -10,13 +10,12 @@ def ap(graph):
     bi = nx.Graph()
     for u, v, w in graph.edges.data('weight'):
         # print(x)
-        bi.add_edge((1, u), (2, v), weight=-w)
-        bi.add_edge((2, u), (1, v), weight=-w)
-    print(bi)
-    edges = nx.min_edge_cover(bi)
-    # print(edges)
+        bi.add_edge((1, u), (2, v), weight=w)
+        bi.add_edge((2, u), (1, v), weight=w)
+    # print(bi)
+    matching = nx.algorithms.bipartite.matching.minimum_weight_full_matching(bi)
     res = nx.create_empty_copy(graph)
-    for (p, u), (q, v) in edges:
+    for (p, u), (q, v) in matching.items():
       res.add_edge(u, v)
     return res
 
