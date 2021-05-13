@@ -9,7 +9,7 @@ def points():
     """
     while True:
         # Tuple comprehension ;-)
-        pt = (*(random.uniform(-1, 1) for i in range(2)),)
+        pt = tuple(random.uniform(-1, 1) for i in range(2))
         if sum(x * x for x in pt) < 1:
             yield pt
 
