@@ -22,13 +22,12 @@ def nc0(task):
           continue
         if task.tree_closure.has_edge(A, B) and not task.tree.has_edge(A, B):
           continue
-      w = min(w
-        for cityA in task.clusters[A]
-        for cityB in task.clusters[B]
-        if task.dists.has_edge(cityA, cityB)
-        for w in [task.dists.edges[cityA, cityB]['weight']]
-        if w >= 0
-      )
+      w = min(w for w in
+          (task.dists.edges[cityA, cityB]['weight']
+            for cityA in task.clusters[A]
+            for cityB in task.clusters[B]
+            if task.dists.has_edge(cityA, cityB))
+          if w >= 0)
       res.add_edge(A, B, weight=w)
   task.initialNC = res
 
