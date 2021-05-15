@@ -102,19 +102,8 @@ def add_layer(clusters,tree, previous_layer, layer_level, workers_count):
     # print('Pool is joined')
     assert len(results) > 0, 'results cannot be empty'
 
-    # current_layer=ft.reduce(lambda acc, item: acc + item, results, [])
     current_layer = [sigma for result in results for sigma in result]
-    # print('Results are combined')
     
-    # for sigma in previous_layer:
-    #     l_sigma = list(sigma) 
-    #     current_layer += [l_sigma + [succ] for succ in V1_succ if succ not in l_sigma]
-    
-    #     for ind in sigma:
-    #         suppl = [l_sigma + [succ] for succ in tree.successors(ind) if succ not in l_sigma]
-    #         suppl = list(map(sorted, suppl))
-    #         current_layer += suppl
-
     current_layer = make_unique_list(current_layer)
     # print('Duplicates are excluded')
     print(f'layer {layer_level+1:03d} of size {len(current_layer):>8} is prepared by {actual_workers_count} worker(s) at {time.time() - start_time:8.2f} sec')
@@ -136,11 +125,12 @@ def make_layers(clusters,tree, lookup_table_name, workers_count):
         gc.collect()
     # return layers
 
-def can_be_the_last_cluster(sigma,c_ind, tree):
-    succ = tree.successors(c_ind)
+def can_be_the_last_cluster(sigma,c_ind, transitive_closure):
+    # desc = nx.descendants(tree,c_ind)
+    succ = transitive_closure.successors(c_ind)
     return all(not s in sigma for s in succ)
 
-def compute_Bellman_cell(G, clusters, tree, lookup_table, state):
+def compute_Bellman_cell(G, clusters, transitive_closure, lookup_table, state):
     witness = state.witness()
     if witness in lookup_table:
         cached_state = lookup_table[witness]
@@ -153,7 +143,7 @@ def compute_Bellman_cell(G, clusters, tree, lookup_table, state):
 
     assert len(truncated_sigma) > 0, 'truncated_sigma is empty'
 
-    for ind_prev_cluster in [ind for ind in truncated_sigma if can_be_the_last_cluster(truncated_sigma,ind,tree)]:
+    for ind_prev_cluster in [ind for ind in truncated_sigma if can_be_the_last_cluster(truncated_sigma,ind,transitive_closure)]:
         for tilde_u in clusters[ind_prev_cluster]:
             suggested_prev_state = State(truncated_sigma,ind_prev_cluster,tilde_u,state.v)
             witness = suggested_prev_state.witness()
@@ -178,8 +168,10 @@ def worker_init(G, clusters, tree, lookup_table_filename):
     global mp_clusters
     global mp_tree
     global mp_lookup_table
+    global mp_transitive_closure
 
     mp_G, mp_clusters, mp_tree = G, clusters, tree
+    mp_transitive_closure = nx.transitive_closure(tree)
 
     with open(lookup_table_filename, 'rb') as fin:
         mp_lookup_table = pic.load(fin)
@@ -194,11 +186,11 @@ def parallel(sigma):
     capacity = 0
     c_keys=list(mp_clusters.keys())
 
-    for ind_V_j in [ind for ind in sigma if can_be_the_last_cluster(sigma, ind, mp_tree)]:
+    for ind_V_j in [ind for ind in sigma if can_be_the_last_cluster(sigma, ind, mp_transitive_closure)]:
         for v in mp_clusters[c_keys[0]]:
             for tilde_u in mp_clusters[ind_V_j]:
                 state = State(sigma, ind_V_j, tilde_u, v)
-                state.cost = compute_Bellman_cell(mp_G, mp_clusters, mp_tree, mp_lookup_table, state)
+                state.cost = compute_Bellman_cell(mp_G, mp_clusters, mp_transitive_closure, mp_lookup_table, state)
                 if state.cost < MAXINT:
                     result[state.witness()] = state
                     capacity += 1
@@ -396,8 +388,10 @@ def test2(filename):
     print(f'tour length (rechecked): {get_path_length(tour2, graph)}')
 
 if __name__ == '__main__':
-    test2('../pcglns/e5x_1.pcglns')          # PCGLNS results: Obj val.: 1890 - < 5 sec.
-    test('../pcglns/e5x_1.pcglns',True, 5)   # OPT: 1847 - time 4662 sec
+    # test2('../pcglns/e5x_1.pcglns')          # PCGLNS results: Obj val.: 1890 - < 5 sec.
+    # test('../pcglns/e5x_1.pcglns',True, 5)   # OPT: 1847 - time 4662 sec
+
+    test('../pcglns/e3x_2.pcglns',True,6)      # PCGLNS results: Obj val.: 1584 - < 5 sec., OPTL 1578 - time 15824 sec
     
 
     
