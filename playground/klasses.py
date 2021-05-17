@@ -15,8 +15,8 @@ class Task:
         self.tree_closure = nx.transitive_closure_dag(tree)
 
 
-class Branch:
-    """Узел дерева
+class STNode:
+    """Узел дерева поиска
     """
     def __init__(self, task, sigma=(1,)):
         self.task = task
