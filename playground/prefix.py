@@ -36,6 +36,7 @@ def distance_matrix(node: STNode):
     except nx.NetworkXNoPath:
       d = np.inf
     result[a, z] = d
+  node.shortest_path = result.min()
   return result
 
 if __name__ == '__main__':
