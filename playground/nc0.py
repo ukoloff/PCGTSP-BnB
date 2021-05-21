@@ -5,8 +5,10 @@
 #
 import networkx as nx
 
-def nc0(task):
-  """(task) -> None
+from klasses import Task
+
+def nc0(task: Task):
+  """Рассчитать минимальные расстояния между группами с учётом PC
   """
   res = nx.create_empty_copy(task.tree)
 
