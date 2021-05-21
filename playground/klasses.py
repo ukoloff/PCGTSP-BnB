@@ -26,3 +26,6 @@ class STNode:
 
     def S(self):
       return (set(self.sigma), self.sigma[-1])
+
+    def is_leaf(self):
+      return len(self.sigma) == len(self.task.clusters)
