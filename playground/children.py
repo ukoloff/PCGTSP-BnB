@@ -35,10 +35,25 @@ def children(node: STNode):
     child = STNode(node.task, node.sigma + (group,))
     child.parent = node
     allowed_groups(child)
+    yield child
+
+def subtree(node: STNode):
+  """Генерировать полное поддерево поиска
+  """
+  from queue import Queue
+  Q = Queue()
+  Q.put(node)
+  while not Q.empty():
+    x = Q.get()
+    for z in children(x):
+      Q.put(z)
+      yield z
 
 if __name__ == '__main__':
   import samples
 
   z = samples.random(27, 7)
+  # z = samples.load("e1x_1")
   root = STNode(z)
-  w = [*children(root)]
+  for z in subtree(root):
+    print(z.sigma, z.allowed_groups)
