@@ -21,4 +21,7 @@ class STNode:
     def __init__(self, task, sigma=(1,)):
         self.task = task
         self.sigma = sigma
-        self.S = (set(sigma[:-1]), sigma[-1])
+        self.parent = None
+
+    def S(self):
+      return (set(self.sigma), self.sigma[-1])
