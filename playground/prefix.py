@@ -19,12 +19,30 @@ def prefix_graph(node: STNode):
         if dists.has_edge(A, Z)))
   return result
 
+def distance_matrix(node: STNode):
+  import numpy as np
+
+  task = node.task
+  clusters = task.clusters
+  cityA = clusters[node.sigma[0]]
+  cityZ = clusters[node.sigma[-1]]
+
+  result = np.empty((len(cityA), len(cityZ)))
+  graph = prefix_graph(node)
+
+  for (a, z), _ in np.ndenumerate(result):
+    try:
+      d = nx.shortest_path_length(graph, cityA[a], cityZ[z], weight='weight')
+    except nx.NetworkXNoPath:
+      d = np.inf
+    result[a, z] = d
+  return result
+
 if __name__ == '__main__':
-  import samples
+  import samples, children
 
   z = samples.random(27, 7)
   # z = samples.load("e1x_1")
-  node = STNode(z, (1, 2, 3))
-  w = prefix_graph(node)
-  print(*w.edges.data())
-
+  root = STNode(z)
+  for z in children.subtree(root):
+    print(z.sigma, distance_matrix(z))
