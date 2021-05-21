@@ -27,15 +27,14 @@ def distance_matrix(node: STNode):
   cityA = clusters[node.sigma[0]]
   cityZ = clusters[node.sigma[-1]]
 
-  result = np.empty((len(cityA), len(cityZ)))
+  result = np.full((len(cityA), len(cityZ)), np.inf)
   graph = prefix_graph(node)
 
   for (a, z), _ in np.ndenumerate(result):
     try:
-      d = nx.shortest_path_length(graph, cityA[a], cityZ[z], weight='weight')
+      result[a, z] = nx.shortest_path_length(graph, cityA[a], cityZ[z], weight='weight')
     except nx.NetworkXNoPath:
-      d = np.inf
-    result[a, z] = d
+      pass
   node.shortest_path = result.min()
   return result
 
