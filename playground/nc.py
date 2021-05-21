@@ -27,12 +27,23 @@ def MSAP(graph):
     for u, v in msap.edges) + min(w
     for u, v, w in graph.edges.data('weight'))
 
+def AP(graph):
+  """Рассчитать LB-оценку методом AP / Matching
+  """
+  bi = nx.Graph()
+  for u, v, w in graph.edges.data('weight'):
+      bi.add_edge((1, u), (2, v), weight=w)
+  matching = nx.algorithms.bipartite.matching.minimum_weight_full_matching(bi,
+    top_nodes=((1, n) for n in graph))
+  return sum(graph[u][v]['weight'] for (p, u), (q, v) in (sorted(z) for z in matching.items()))
+
 
 def lower_bounds(node: STNode):
   prefix.distance_matrix(node)
   node.bounds = {}
   g = nc(node)
   node.bounds['MSAP'] = MSAP(g)
+  node.bounds['AP'] = AP(g)
 
 if __name__ == '__main__':
   import samples, nc0, children, prefix
