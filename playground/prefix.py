@@ -17,6 +17,13 @@ def prefix_graph(node: STNode):
         for A in clusters[node.sigma[i - 1]]
         for Z in clusters[node.sigma[i]]
         if dists.has_edge(A, Z)))
+  if node.is_leaf():
+    result.add_weighted_edges_from(
+      (A, (Z, '.'), dists.edges[A, Z]['weight']) for A, Z in (
+        (A, Z)
+        for A in clusters[node.sigma[-1]]
+        for Z in clusters[node.sigma[0]]
+        if dists.has_edge(A, Z)))
   return result
 
 def distance_matrix(node: STNode):
@@ -37,6 +44,24 @@ def distance_matrix(node: STNode):
       pass
   node.shortest_path = result.min()
   return result
+
+
+def upper_bound(node: STNode):
+  """Находит точное решение для заданного порядка обхода кластеров
+  """
+  if not node.is_leaf():
+    raise ValueError("Full route required!")
+  vertices = node.task.clusters[node.sigma[0]]
+  graph = prefix_graph(node)
+
+  def paths():
+    for z in vertices:
+      try:
+        yield nx.shortest_path_length(graph, z, (z, '.'), weight='weight')
+      except nx.NetworkXNoPath:
+        pass
+
+  return min(paths())
 
 if __name__ == '__main__':
   import samples, children

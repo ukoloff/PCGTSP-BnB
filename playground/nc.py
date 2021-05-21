@@ -45,6 +45,16 @@ def lower_bounds(node: STNode):
   node.bounds['MSAP'] = MSAP(g)
   node.bounds['AP'] = AP(g)
 
+def upper_bound(node: STNode):
+  node.bounds = {'UB': prefix.upper_bound(node)}
+
+def bounds(node: STNode):
+  if node.is_leaf():
+    upper_bound(node)
+  else:
+    lower_bounds(node)
+
+
 if __name__ == '__main__':
   import samples, nc0, children, prefix
 
@@ -53,5 +63,5 @@ if __name__ == '__main__':
   # z = samples.load("e1x_1")
   root = STNode(z)
   for z in children.subtree(root):
-    lower_bounds(z)
+    bounds(z)
     print(z.sigma, z.bounds)
