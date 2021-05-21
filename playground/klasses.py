@@ -22,6 +22,7 @@ class STNode:
         self.task = task
         self.sigma = sigma
         self.parent = None
+        self.allowed_groups = None
 
     def S(self):
       return (set(self.sigma), self.sigma[-1])
