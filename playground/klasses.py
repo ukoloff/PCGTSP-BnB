@@ -25,7 +25,7 @@ class STNode:
         self.allowed_groups = None
 
     def S(self):
-      return (set(self.sigma), self.sigma[-1])
+      return (frozenset(self.sigma), self.sigma[-1])
 
     def is_leaf(self):
       return len(self.sigma) == len(self.task.clusters)
