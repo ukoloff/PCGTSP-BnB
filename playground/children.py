@@ -37,17 +37,26 @@ def children(node: STNode):
     allowed_groups(child)
     yield child
 
-def subtree(node: STNode):
+def subtree(node: STNode, order=None):
   """Генерировать полное поддерево поиска
+  order:
+    - None: as is
+    - +1: Large successor set first
+    - -1: Large successor set last
   """
   from queue import Queue
   Q = Queue()
   Q.put(node)
   while not Q.empty():
     x = Q.get()
-    for z in children(x):
-      Q.put(z)
+    seq = children(x)
+    if order is not None:
+      seq = sorted(seq, key=lambda x: len(x.allowed_groups), reverse=order > 0)
+    for z in seq:
+      z.skip = False
       yield z
+      if not z.skip:
+        Q.put(z)
 
 if __name__ == '__main__':
   import samples
