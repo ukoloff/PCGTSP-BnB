@@ -37,7 +37,7 @@ def AP(graph):
       bi.add_edge((1, u), (2, v), weight=w)
   matching = nx.algorithms.bipartite.matching.minimum_weight_full_matching(bi,
     top_nodes=((1, n) for n in graph))
-  return sum(graph[u][v]['weight'] for (p, u), (q, v) in (sorted(z) for z in matching.items()))
+  return sum(graph[u][v]['weight'] for (p, u), (q, v) in matching.items() if p == 1 and q == 2)
 
 
 def lower_bounds(node: STNode):
