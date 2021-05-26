@@ -29,9 +29,7 @@ def MSAP(graph):
   """Рассчитать LB-оценку методом MSAP
   """
   msap = nx.minimum_spanning_arborescence(graph)
-  return sum(graph[u][v]['weight']
-    for u, v in msap.edges) + min(w
-    for u, v, w in graph.edges.data('weight'))
+  return sum(graph[u][v]['weight'] for u, v in msap.edges)
 
 def AP(graph):
   """Рассчитать LB-оценку методом AP / Matching
