@@ -23,19 +23,32 @@ def skip(node: STNode):
     return
   history[S] = np.minimum(history[S], dist)
 
+def factorial(n):
+  result = 1
+  for i in range(2, n + 1):
+    result *= i
+  return result
+
 if __name__ == '__main__':
   import samples, nc0, children, prefix
 
-  z = samples.random(27, 7)
-  root = STNode(z)
-  good = 0
-  bad = 0
-  for z in children.subtree(root, -1):
-    skip(z)
-    if z.skip:
-      print(z.sigma)
-      bad += 1
-    else:
-      good += 1
-  print('Nodes processed:\t', good)
-  print('Nodes skipped:\t', bad)
+  task = samples.random(27, 7)
+
+  root = STNode(task)
+  total = sum(1 for z in children.subtree(root))
+  print("Task:", len(task.dists), "/", len(task.clusters))
+  print("Total ->\t", total, "\t// of", factorial(len(task.clusters) - 1))
+
+  for order in (None, +1, -1):
+    history.clear()
+    root = STNode(task)
+    good = 0
+    bad = 0
+    for z in children.subtree(root, order):
+      skip(z)
+      if z.skip:
+        # print(z.sigma)
+        bad += 1
+      else:
+        good += 1
+    print('Order', order, "->\t", good, "\t// skipped:", bad)
