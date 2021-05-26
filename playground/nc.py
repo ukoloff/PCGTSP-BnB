@@ -9,7 +9,7 @@ from klasses import Task, STNode
 import prefix
 
 # historySuffix[] @ page 9
-history = []
+history = {}
 
 def nc(node: STNode):
   result = node.task.initialNC.copy()
@@ -45,12 +45,15 @@ def AP(graph):
 def lower_bounds(node: STNode):
   prefix.distance_matrix(node)
   node.bounds = {}
+  S = node.S()
+  if S in history:
+    node.bounds['LB'] = history[S] + node.shortest_path
+    return
   g = nc(node)
   node.bounds['MSAP'] = MSAP(g)
   node.bounds['AP'] = AP(g)
-  # for k in node.bounds:
-  #   node.bounds[k] += node.shortest_path
-  node.bounds['LB'] = max(node.bounds.values()) + node.shortest_path
+  history[S] = max(node.bounds.values())
+  node.bounds['LB'] = history[S] + node.shortest_path
 
 
 def upper_bound(node: STNode):
