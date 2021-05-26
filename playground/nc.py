@@ -11,6 +11,8 @@ def nc(node: STNode):
   result = node.task.initialNC.copy()
   for i in range(1, len(node.sigma) - 1):
     result.remove_node(node.sigma[i])
+  result.remove_edges_from((node.sigma[0], n) for n in list(result.successors(node.sigma[0])))
+  result.remove_edges_from((n, node.sigma[-1]) for n in list(result.predecessors(node.sigma[-1])))
   if not node.is_leaf():
     try:
       result.remove_edge(node.sigma[-1], node.sigma[0])
