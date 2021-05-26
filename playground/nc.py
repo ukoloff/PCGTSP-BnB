@@ -15,6 +15,8 @@ def nc(node: STNode):
   result = node.task.initialNC.copy()
   for i in range(1, len(node.sigma) - 1):
     result.remove_node(node.sigma[i])
+  result.remove_edges_from((node.sigma[0], n) for n in list(result.successors(node.sigma[0])))
+  result.remove_edges_from((n, node.sigma[-1]) for n in list(result.predecessors(node.sigma[-1])))
   if not node.is_leaf():
     try:
       result.remove_edge(node.sigma[-1], node.sigma[0])
@@ -39,7 +41,7 @@ def AP(graph):
       bi.add_edge((1, u), (2, v), weight=w)
   matching = nx.algorithms.bipartite.matching.minimum_weight_full_matching(bi,
     top_nodes=((1, n) for n in graph))
-  return sum(graph[u][v]['weight'] for (p, u), (q, v) in (sorted(z) for z in matching.items()))
+  return sum(graph[u][v]['weight'] for (p, u), (q, v) in matching.items() if p == 1 and q == 2)
 
 
 def lower_bounds(node: STNode):
