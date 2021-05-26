@@ -6,6 +6,10 @@
 import networkx as nx
 
 from klasses import Task, STNode
+import prefix
+
+# historySuffix[] @ page 9
+history = []
 
 def nc(node: STNode):
   result = node.task.initialNC.copy()
@@ -16,7 +20,7 @@ def nc(node: STNode):
       result.remove_edge(node.sigma[-1], node.sigma[0])
     except nx.NetworkXError:
       pass
-  result.add_edge(node.sigma[0], node.sigma[-1], weight=node.shortest_path)
+  result.add_edge(node.sigma[0], node.sigma[-1], weight=0)
   return result
 
 def MSAP(graph):
@@ -44,6 +48,10 @@ def lower_bounds(node: STNode):
   g = nc(node)
   node.bounds['MSAP'] = MSAP(g)
   node.bounds['AP'] = AP(g)
+  # for k in node.bounds:
+  #   node.bounds[k] += node.shortest_path
+  node.bounds['LB'] = max(node.bounds.values()) + node.shortest_path
+
 
 def upper_bound(node: STNode):
   node.bounds = {'UB': prefix.upper_bound(node)}
@@ -56,7 +64,7 @@ def bounds(node: STNode):
 
 
 if __name__ == '__main__':
-  import samples, nc0, children, prefix
+  import samples, nc0, children
 
   z = samples.random(27, 7)
   nc0.nc0(z)
