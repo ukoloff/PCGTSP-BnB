@@ -13,6 +13,8 @@ history = {}
 
 def nc(node: STNode):
   result = node.task.initialNC.copy()
+  if len(node.sigma) <= 1:
+    return result
   for i in range(1, len(node.sigma) - 1):
     result.remove_node(node.sigma[i])
   result.remove_edges_from((node.sigma[0], n) for n in list(result.successors(node.sigma[0])))

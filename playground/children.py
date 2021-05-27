@@ -45,18 +45,22 @@ def subtree(node: STNode, order=None):
     - -1: Large successor set last
   """
   from queue import Queue
+
   Q = Queue()
   Q.put(node)
+  if not node.allowed_groups:
+    allowed_groups(node)
   while not Q.empty():
     x = Q.get()
+    x.skip = False
+    yield x
+    if x.skip:
+      continue
     seq = children(x)
     if order is not None:
       seq = sorted(seq, key=lambda x: len(x.allowed_groups), reverse=order > 0)
     for z in seq:
-      z.skip = False
-      yield z
-      if not z.skip:
-        Q.put(z)
+      Q.put(z)
 
 if __name__ == '__main__':
   import samples
