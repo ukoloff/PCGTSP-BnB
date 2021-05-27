@@ -2,6 +2,7 @@
 # Граф точек с порядком обхода групп, заданным префиксом
 #
 import networkx as nx
+import numpy as np
 
 from klasses import Task, STNode
 
@@ -63,11 +64,88 @@ def upper_bound(node: STNode):
 
   return min(paths())
 
+
+def deltas(node: STNode, cityA, cityB):
+  """
+  Матрица расстояний между точками двух кластеров
+  """
+  dists = node.task.dists
+  clusters = node.task.clusters
+  A = node.task.clusters[cityA]
+  B = node.task.clusters[cityB]
+  result = np.full((len(A), len(B)), np.inf)
+  for (p, q), _ in np.ndenumerate(result):
+    if dists.has_edge(A[p], B[q]):
+      result[p, q] = dists.edges[A[p], B[q]]['weight']
+  return result
+
+def add_delta(distances, deltas):
+  """Добавим дистанции к матрице расстояний
+  """
+  return (distances[..., None] + deltas[None, ...]).min(axis=1)
+
+
+def dist_m(node: STNode, close=False):
+  n0 = len(node.task.clusters[node.sigma[0]])
+  result = np.full((n0, n0), np.inf)
+  np.fill_diagonal(result, 0)
+  for i in range(1, len(node.sigma)):
+    result = add_delta(result, deltas(node, node.sigma[i-1], node.sigma[i]))
+  if close and node.sigma[0] != node.sigma[-1]:
+    result = add_delta(result, deltas(node, node.sigma[-1], node.sigma[0]))
+  return result
+
+def new_upper_bound(node: STNode):
+  """Находит точное решение для заданного порядка обхода кластеров
+  """
+  if not node.is_leaf():
+    raise ValueError("Full route required!")
+  return dist_m(node, True).diagonal().min()
+
 if __name__ == '__main__':
   import samples, children
 
-  z = samples.random(27, 7)
+  task = samples.random(100, 7)
   # z = samples.load("e1x_1")
-  root = STNode(z)
+  root = STNode(task)
+  errors = []
   for z in children.subtree(root):
-    print(z.sigma, distance_matrix(z))
+    if len(z.sigma) == 1:
+      continue
+    print(z.sigma)
+    X = distance_matrix(z)
+    Y = dist_m(z)
+    if not np.all(X==Y):
+      print("Oops!")
+      errors.append(z.sigma)
+    if not z.is_leaf():
+      continue
+    VX = upper_bound(z)
+    VY = new_upper_bound(z)
+    if VX != VY:
+      print("Oops again!")
+      errors.append(z.sigma)
+  print()
+  print('Errors:', len(errors))
+  for err in errors:
+    print("\t-", err)
+
+  from timeit import default_timer as timer
+
+  print("Measuring old...", end='\t', flush=True)
+  start = timer()
+  for z in children.subtree(STNode(task)):
+    if len(z.sigma) == 1:
+      continue
+    distance_matrix(z)
+  end = timer()
+  print(end - start)
+
+  print("Measuring new...", end='\t', flush=True)
+  start = timer()
+  for z in children.subtree(STNode(task)):
+    if len(z.sigma) == 1:
+      continue
+    dist_m(z)
+  end = timer()
+  print(end - start)
