@@ -1,3 +1,4 @@
+import re
 import sys
 from pathlib import Path
 
@@ -11,13 +12,33 @@ import dp.fromPCGLNS as pcglns
 sys.path.remove(sroot)
 
 lib = root / "pcglns"
+solutions = root / "heuristic"
 
 
 def load(name):
     """(str) -> Task
     """
-    return klasses.Task(*pcglns.getInstance(lib / f"{name}.pcglns"))
+    result = klasses.Task(*pcglns.getInstance(lib / f"{name}.pcglns"))
+    result.UB, order = read_solution(name)
+    backidx = {i: n for n, points in result.clusters.items() for i in points}
+    result.solution = [(backidx[i], i) for i in order]
+    return result
 
+def read_solution(name):
+    UB = None
+    order = None
+    with open(solutions / f"{name}.pcglns.result.txt") as f:
+      for line in f:
+        line = line.split(":", 1)
+        if len(line) < 2:
+          continue
+        k, v = line
+        k = k.strip()
+        if k == 'Cost':
+          UB = float(v)
+        if k == 'Tour Ordering':
+          order = [int(i) for i in re.sub(r"\D+", " ", v).strip().split()]
+    return UB, order
 
 def names():
     return (f.stem for f in lib.glob("*"))
@@ -31,4 +52,11 @@ def random(n, m):
     order = gen.complete_order(tree)
     tour = gen.create_opt_tour(clusters, order)
     graph = gen.update_graph(gen.graph_generator(n), tour)
-    return klasses.Task(graph, clusters, tree)
+    result = klasses.Task(graph, clusters, tree)
+    result.UB = 0
+    result.solution = list(zip(order, tour))
+    return result
+
+if __name__ == '__main__':
+  A = random(27, 7)
+  B = load("e1x_1")
