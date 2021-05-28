@@ -1,7 +1,8 @@
 #
 # Полный обход дерева решений с отсечением
 #
-import networkx as nx
+from datetime import timedelta
+from timeit import default_timer as timer
 
 from klasses import Task, STNode
 import prefix, nc0, nc, cut_prefix, children
@@ -10,7 +11,16 @@ def solve(task: Task):
   """Обход дерева решений
   """
   nc0.nc0(task)
-  for node in children.subtree(STNode(task)):
+
+  last = timer()
+  start = last
+
+  for node in children.subtree(STNode(task), order=-1):
+    now = timer()
+    if now > last + 60:
+      print('+', timedelta(seconds=now - start))
+      last = now
+
     print(node.sigma, end='\t', flush=True)
     cut_prefix.skip(node)
     if node.skip:
@@ -31,4 +41,7 @@ def solve(task: Task):
 if __name__ == '__main__':
   import samples
 
-  solve(samples.random(100, 12))
+  # task = samples.random(1000, 12)
+  task = samples.load("e1x_1")
+
+  solve(task)
