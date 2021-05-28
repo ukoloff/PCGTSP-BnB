@@ -85,14 +85,20 @@ def add_delta(distances, deltas):
   return (distances[..., None] + deltas[None, ...]).min(axis=1)
 
 
-def dist_m(node: STNode, close=False):
-  n0 = len(node.task.clusters[node.sigma[0]])
-  result = np.full((n0, n0), np.inf)
-  np.fill_diagonal(result, 0)
-  for i in range(1, len(node.sigma)):
-    result = add_delta(result, deltas(node, node.sigma[i-1], node.sigma[i]))
-  if close and node.sigma[0] != node.sigma[-1]:
-    result = add_delta(result, deltas(node, node.sigma[-1], node.sigma[0]))
+def dist_m(node: STNode):
+  try:
+    return node.Pij
+  except AttributeError:
+    pass
+
+  if len(node.sigma) == 1:
+    n0 = len(node.task.clusters[node.sigma[0]])
+    result = np.full((n0, n0), np.inf)
+    np.fill_diagonal(result, 0)
+  else:
+    result = add_delta(dist_m(node.parent), deltas(node, node.sigma[-2], node.sigma[-1]))
+  node.Pij = result
+  node.shortest_path = result.min()
   return result
 
 def new_upper_bound(node: STNode):
@@ -100,7 +106,7 @@ def new_upper_bound(node: STNode):
   """
   if not node.is_leaf():
     raise ValueError("Full route required!")
-  return dist_m(node, True).diagonal().min()
+  return add_delta(dist_m(node), deltas(node, node.sigma[-1], node.sigma[0])).diagonal().min()
 
 if __name__ == '__main__':
   import samples, children
