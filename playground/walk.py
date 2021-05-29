@@ -12,6 +12,7 @@ def solve(task: Task):
   """
   nc0.nc0(task)
 
+  last_len = 0
   last = timer()
   start = last
 
@@ -20,6 +21,11 @@ def solve(task: Task):
     if now > last + 60:
       print('+', timedelta(seconds=now - start))
       last = now
+
+    if len(node.sigma) != last_len:
+      last_len = len(node.sigma)
+      nc.history.clear()
+      cut_prefix.history.clear()
 
     print(node.sigma, end='\t', flush=True)
     cut_prefix.skip(node)
