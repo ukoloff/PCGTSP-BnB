@@ -15,7 +15,8 @@ def solve(task: Task):
   last = timer()
   start = last
 
-  for node in subtree(STNode(task), order=-1):
+  root = STNode(task)
+  for node in subtree(root, order=-1):
     now = timer()
     if now > last + 60:
       print('+', timedelta(seconds=now - start))
@@ -36,7 +37,8 @@ def solve(task: Task):
       node.skip = True
       print('!')
       continue
-    print()
+    updateLB(node)
+    print(f'\tLB={root.LB} // {int((root.task.UB - root.LB) / root.task.UB * 100)}%')
 
 
 def subtree(node: STNode, order=None):
@@ -55,14 +57,35 @@ def subtree(node: STNode, order=None):
   while not Q.empty():
     x = Q.get()
     x.skip = False
+    if x.parent:
+      x.parent.pending.remove(x)
     yield x
     if x.skip:
       continue
+
+    x.pending = set()
+    x.children = set()
     seq = children.children(x)
     if order is not None:
       seq = sorted(seq, key=lambda x: len(x.allowed_groups), reverse=order > 0)
     for z in seq:
+      x.pending.add(z)
       Q.put(z)
+
+
+def updateLB(node: STNode):
+  node.LB = node.bounds['LB']
+  if node.parent:
+    node.parent.children.add(node)
+    if len(node.parent.pending) > 0:
+      return
+  while node.parent:
+    node = node.parent
+    oldLB = node.LB
+    newLB = max(oldLB, min((z.LB for z in node.children), default=oldLB))
+    if oldLB == newLB:
+      return
+    node.LB = newLB
 
 
 if __name__ == '__main__':
