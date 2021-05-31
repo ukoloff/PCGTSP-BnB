@@ -12,6 +12,7 @@ def solve(task: Task):
   """
   nc0.nc0(task)
 
+  last_len = 0
   last = timer()
   start = last
 
@@ -26,6 +27,11 @@ def solve(task: Task):
       print('+', timedelta(seconds=now - start),
         '\tNodes:', total_nodes, f'\tSkipped: {int(skipped_nodes / total_nodes * 100)}%')
       last = now
+
+    if len(node.sigma) != last_len:
+      last_len = len(node.sigma)
+      nc.history.clear()
+      cut_prefix.history.clear()
 
     print(node.sigma, end='\t', flush=True)
     cut_prefix.skip(node)
