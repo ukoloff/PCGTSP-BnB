@@ -15,16 +15,22 @@ def solve(task: Task):
   last = timer()
   start = last
 
+  total_nodes = 0
+  skipped_nodes = 0
+
   root = STNode(task)
   for node in subtree(root, order=-1):
+    total_nodes += 1
     now = timer()
     if now > last + 60:
-      print('+', timedelta(seconds=now - start))
+      print('+', timedelta(seconds=now - start),
+        '\tNodes:', total_nodes, f'\tSkipped: {int(skipped_nodes / total_nodes * 100)}%')
       last = now
 
     print(node.sigma, end='\t', flush=True)
     cut_prefix.skip(node)
     if node.skip:
+      skipped_nodes += 1
       print('!')
       continue
     if node.is_leaf():
@@ -35,6 +41,7 @@ def solve(task: Task):
     print(node.bounds, end='\t', flush=True)
     if node.bounds['LB'] > task.UB:
       node.skip = True
+      skipped_nodes += 1
       print('!')
       continue
     updateLB(node)
@@ -82,8 +89,8 @@ def updateLB(node: STNode):
   while node.parent:
     node = node.parent
     oldLB = node.LB
-    newLB = max(oldLB, min((z.LB for z in node.children), default=oldLB))
-    if oldLB == newLB:
+    newLB = min((z.LB for z in node.children), default=oldLB)
+    if oldLB >= newLB:
       return
     node.LB = newLB
 
