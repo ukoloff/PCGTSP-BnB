@@ -1,0 +1,28 @@
+
+--------- Problem Data ------------
+Instance Name      : ft53.1.pcglns
+Number of Vertices : 281
+Number of Sets     : 53
+Initial Tour       : Random
+Maximum Removals   : 16
+Trials             : 5
+Restart Attempts   : 3
+Rate of Adaptation : 0.5
+Prob of Reopt      : 1.0
+Maximum Time       : 3600
+Threads            : 1
+Seed               : 123
+Tour Budget        : None
+-----------------------------------
+
+ |1     2     3     4     5     |  Cost = 7544  Time = 3.1 sec       |1=    2     3     4     5     |  Cost = 6280  Time = 3.6 sec       |1=====2     3     4     5     |  Cost = 6208  Time = 4.1 sec       |1=====2=====3     4     5     |  Cost = 6207  Time = 4.6 sec       |1=====2=====3=====4     5     |  Cost = 6207  Time = 5.1 sec       |1=====2=====3=====4===  5     |  Cost = 6207  Time = 5.6 sec       |1=====2=====3=====4=====5=====|  Cost = 6207  Time = 6.1 sec       |1=====2=====3=====4=====5=====|  Cost = 6207  Time = 5.2 sec      
+
+--------- Tour Summary ------------
+Cost              : 6207
+Total Time        : 5.17 sec
+Best Found Time   : 3.13 sec
+Solver Timeout?   : false
+Tour is Feasible? : true
+Output File       : None
+Tour Ordering     : [1, 190, 215, 214, 207, 199, 172, 176, 160, 157, 16, 12, 90, 88, 87, 200, 94, 99, 9, 224, 251, 232, 246, 234, 240, 235, 187, 281, 276, 268, 267, 254, 156, 146, 138, 140, 139, 38, 36, 23, 55, 46, 15, 76, 59, 58, 68, 83, 107, 100, 136, 127, 116]
+-----------------------------------

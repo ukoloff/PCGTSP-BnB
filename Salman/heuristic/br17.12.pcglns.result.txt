@@ -1,0 +1,28 @@
+
+--------- Problem Data ------------
+Instance Name      : br17.12.pcglns
+Number of Vertices : 92
+Number of Sets     : 17
+Initial Tour       : Random
+Maximum Removals   : 5
+Trials             : 5
+Restart Attempts   : 3
+Rate of Adaptation : 0.5
+Prob of Reopt      : 1.0
+Maximum Time       : 3600
+Threads            : 1
+Seed               : 123
+Tour Budget        : None
+-----------------------------------
+
+ |1     2     3     4     5     |  Cost = 47  Time = 2.3 sec       |1=====2=====3=====4=====5=====|  Cost = 43  Time = 2.4 sec      
+
+--------- Tour Summary ------------
+Cost              : 43
+Total Time        : 2.35 sec
+Best Found Time   : 1.95 sec
+Solver Timeout?   : false
+Tour is Feasible? : true
+Output File       : None
+Tour Ordering     : [1, 63, 38, 31, 66, 47, 89, 46, 24, 14, 85, 79, 53, 2, 60, 73, 9]
+-----------------------------------

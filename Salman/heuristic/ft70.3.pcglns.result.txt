@@ -1,0 +1,28 @@
+
+--------- Problem Data ------------
+Instance Name      : ft70.3.pcglns
+Number of Vertices : 347
+Number of Sets     : 70
+Initial Tour       : Random
+Maximum Removals   : 21
+Trials             : 5
+Restart Attempts   : 3
+Rate of Adaptation : 0.5
+Prob of Reopt      : 1.0
+Maximum Time       : 3600
+Threads            : 1
+Seed               : 123
+Tour Budget        : None
+-----------------------------------
+
+ |1     2     3     4     5     |  Cost = 39819  Time = 2.4 sec       |1=    2     3     4     5     |  Cost = 36060  Time = 2.9 sec       |1=====2     3     4     5     |  Cost = 36060  Time = 3.4 sec       |1=====2=    3     4     5     |  Cost = 35401  Time = 3.9 sec       |1=====2=    3     4     5     |  Cost = 35309  Time = 4.4 sec       |1=====2=====3     4     5     |  Cost = 35309  Time = 4.9 sec       |1=====2=====3     4     5     |  Cost = 35309  Time = 5.4 sec       |1=====2=====3=====4     5     |  Cost = 35309  Time = 5.9 sec       |1=====2=====3=====4     5     |  Cost = 35309  Time = 6.4 sec       |1=====2=====3=====4=====5     |  Cost = 35309  Time = 6.9 sec       |1=====2=====3=====4=====5     |  Cost = 35309  Time = 7.4 sec       |1=====2=====3=====4=====5==   |  Cost = 35309  Time = 7.9 sec       |1=====2=====3=====4=====5=====|  Cost = 35309  Time = 7.8 sec      
+
+--------- Tour Summary ------------
+Cost              : 35309
+Total Time        : 7.82 sec
+Best Found Time   : 3.7 sec
+Solver Timeout?   : false
+Tour is Feasible? : true
+Output File       : None
+Tour Ordering     : [1, 3, 204, 303, 248, 181, 165, 167, 189, 193, 338, 328, 315, 220, 197, 223, 216, 158, 164, 137, 249, 114, 36, 130, 107, 110, 243, 122, 74, 76, 60, 55, 48, 23, 300, 290, 277, 200, 211, 306, 287, 270, 261, 234, 230, 92, 100, 84, 83, 78, 133, 104, 124, 152, 142, 175, 326, 336, 327, 311, 192, 191, 155, 69, 63, 53, 102, 33, 24, 12]
+-----------------------------------

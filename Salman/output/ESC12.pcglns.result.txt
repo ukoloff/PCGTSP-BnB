@@ -1,0 +1,60 @@
+Edge weights matrix:
+Initial cost matrix of  (65, 65) float64
+Problem is	  input/ESC12.pcglns
+Initial data:
+node count is	  65
+cluster count is	 13
+Using license file /home/u0618/michael/gurobi.lic
+Academic license - for non-commercial use only
+Changed value of parameter Threads to 12
+   Prev: 0  Min: 0  Max: 1024  Default: 0
+Gurobi Optimizer version 9.0.1 build v9.0.1rc0 (linux64)
+Optimize a model with 1794 rows, 4563 columns and 20050 nonzeros
+Model fingerprint: 0x432ce6b5
+Variable types: 338 continuous, 4225 integer (4225 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [1e+00, 6e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 2e+00]
+
+User MIP start produced solution with objective 1390 (0.00s)
+Loaded user MIP start with objective 1390
+
+Presolve removed 508 rows and 912 columns
+Presolve time: 0.03s
+Presolved: 1286 rows, 3651 columns, 15702 nonzeros
+Variable types: 55 continuous, 3596 integer (3596 binary)
+
+Root relaxation: objective 1.248222e+03, 674 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1248.22222    0   82 1390.00000 1248.22222  10.2%     -    0s
+     0     0 1271.90385    0   88 1390.00000 1271.90385  8.50%     -    0s
+     0     0 1271.90385    0   82 1390.00000 1271.90385  8.50%     -    0s
+     0     0 1277.17647    0   91 1390.00000 1277.17647  8.12%     -    0s
+     0     0 1289.38889    0  100 1390.00000 1289.38889  7.24%     -    0s
+     0     0 1289.38889    0  100 1390.00000 1289.38889  7.24%     -    0s
+     0     2 1289.38889    0   97 1390.00000 1289.38889  7.24%     -    0s
+
+Cutting planes:
+  Gomory: 8
+  MIR: 6
+  GUB cover: 3
+  Zero half: 18
+  RLT: 4
+  Relax-and-lift: 8
+
+Explored 138 nodes (7888 simplex iterations) in 0.52 seconds
+Thread count was 12 (of 36 available processors)
+
+Solution count 1: 1390 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.390000000000e+03, best bound 1.390000000000e+03, gap 0.0000%
+Optimal tour:  [1, 19, 45, 53, 51, 36, 2, 8, 27, 58, 4, 33, 63]
+Visited clusters:  [1, 5, 9, 11, 10, 8, 2, 4, 6, 12, 3, 7, 13]
+Precedence test is  passed
+Total cost is  1390.0

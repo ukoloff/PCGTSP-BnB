@@ -1,0 +1,28 @@
+
+--------- Problem Data ------------
+Instance Name      : rbg048a.pcglns
+Number of Vertices : 255
+Number of Sets     : 49
+Initial Tour       : Random
+Maximum Removals   : 15
+Trials             : 5
+Restart Attempts   : 3
+Rate of Adaptation : 0.5
+Prob of Reopt      : 1.0
+Maximum Time       : 3600
+Threads            : 1
+Seed               : 123
+Tour Budget        : None
+-----------------------------------
+
+ |1     2     3     4     5     |  Cost = 314  Time = 2.8 sec       |1===  2     3     4     5     |  Cost = 286  Time = 3.3 sec       |1=====2     3     4     5     |  Cost = 284  Time = 3.8 sec       |1=====2=====3     4     5     |  Cost = 282  Time = 4.3 sec       |1=====2=====3=====4     5     |  Cost = 282  Time = 4.8 sec       |1=====2=====3=====4===  5     |  Cost = 282  Time = 5.3 sec       |1=====2=====3=====4=====5===  |  Cost = 282  Time = 5.8 sec       |1=====2=====3=====4=====5=====|  Cost = 282  Time = 5.6 sec      
+
+--------- Tour Summary ------------
+Cost              : 282
+Total Time        : 5.6 sec
+Best Found Time   : 3.55 sec
+Solver Timeout?   : false
+Tour is Feasible? : true
+Output File       : None
+Tour Ordering     : [1, 51, 3, 13, 136, 118, 77, 164, 19, 6, 131, 141, 87, 85, 25, 83, 81, 176, 75, 163, 179, 60, 92, 62, 112, 152, 151, 124, 23, 167, 33, 249, 158, 41, 97, 183, 174, 192, 191, 208, 217, 239, 227, 196, 207, 244, 253, 215, 226]
+-----------------------------------

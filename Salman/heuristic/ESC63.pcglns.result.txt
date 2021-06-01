@@ -1,0 +1,28 @@
+
+--------- Problem Data ------------
+Instance Name      : ESC63.pcglns
+Number of Vertices : 349
+Number of Sets     : 64
+Initial Tour       : Random
+Maximum Removals   : 19
+Trials             : 5
+Restart Attempts   : 3
+Rate of Adaptation : 0.5
+Prob of Reopt      : 1.0
+Maximum Time       : 3600
+Threads            : 1
+Seed               : 123
+Tour Budget        : None
+-----------------------------------
+
+ |1     2     3     4     5     |  Cost = 63  Time = 2.3 sec       |1===  2     3     4     5     |  Cost = 62  Time = 2.8 sec       |1=====2=    3     4     5     |  Cost = 62  Time = 3.3 sec       |1=====2=====3     4     5     |  Cost = 62  Time = 3.8 sec       |1=====2=====3=====4     5     |  Cost = 62  Time = 4.3 sec       |1=====2=====3=====4=====5     |  Cost = 62  Time = 4.8 sec       |1=====2=====3=====4=====5=====|  Cost = 62  Time = 5.3 sec       |1=====2=====3=====4=====5=====|  Cost = 62  Time = 4.9 sec      
+
+--------- Tour Summary ------------
+Cost              : 62
+Total Time        : 4.92 sec
+Best Found Time   : 1.99 sec
+Solver Timeout?   : false
+Tour is Feasible? : true
+Output File       : None
+Tour Ordering     : [1, 285, 43, 170, 18, 70, 326, 217, 102, 307, 63, 164, 151, 277, 24, 251, 20, 195, 48, 79, 269, 7, 225, 5, 123, 154, 23, 44, 93, 149, 38, 207, 189, 114, 230, 243, 300, 213, 10, 136, 186, 183, 261, 103, 253, 199, 58, 339, 89, 95, 45, 81, 175, 118, 120, 140, 304, 327, 205, 317, 283, 335, 345, 259]
+-----------------------------------
