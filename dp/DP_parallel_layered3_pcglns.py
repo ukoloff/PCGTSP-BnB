@@ -8,6 +8,7 @@ import gc
 import psutil
 import os
 import functools as ft
+import sys
 
 from collections import Counter
 
@@ -391,7 +392,25 @@ if __name__ == '__main__':
     # test2('../pcglns/e5x_1.pcglns')          # PCGLNS results: Obj val.: 1890 - < 5 sec.
     # test('../pcglns/e5x_1.pcglns',True, 5)   # OPT: 1847 - time 4662 sec
 
-    test('../pcglns/e3x_2.pcglns',True,6)      # PCGLNS results: Obj val.: 1584 - < 5 sec., OPTL 1578 - time 15824 sec
+    # test('../pcglns/e3x_2.pcglns',True,6)      # PCGLNS results: Obj val.: 1584 - < 5 sec., OPTL 1578 - time 15824 sec
+
+    # test('../Salman/input/ESC07.pcglns', True, 3)  OPT: 1730, time < 2 sec
+    ifname = ''
+    workers_count = 1
+
+    try:
+        for arg in sys.argv:
+            if '=' in arg:
+                parts = arg.split('=')
+                if parts[0] == '--input' or parts[0] == '-i':
+                    ifname = parts[1]
+                if parts[0] == '--workers' or parts[0] == '-w':
+                    workers_count = int(parts[1])
+
+        test(ifname, True, workers_count)
+    except:
+        print('SYNTAX: python DP_parallel_layered3_pcglns.py -i=<input path/filename> [-w=<workers_count>]')
+
     
 
     
