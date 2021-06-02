@@ -1,0 +1,28 @@
+
+--------- Problem Data ------------
+Instance Name      : ESC12.pcglns
+Number of Vertices : 65
+Number of Sets     : 13
+Initial Tour       : Random
+Maximum Removals   : 4
+Trials             : 5
+Restart Attempts   : 3
+Rate of Adaptation : 0.5
+Prob of Reopt      : 1.0
+Maximum Time       : 3600
+Threads            : 1
+Seed               : 123
+Tour Budget        : None
+-----------------------------------
+
+ |1     2     3     4     5     |  Cost = 1390  Time = 2.3 sec       |1=====2=====3=====4=====5=====|  Cost = 1390  Time = 2.2 sec      
+
+--------- Tour Summary ------------
+Cost              : 1390
+Total Time        : 2.25 sec
+Best Found Time   : 1.87 sec
+Solver Timeout?   : false
+Tour is Feasible? : true
+Output File       : None
+Tour Ordering     : [1, 19, 45, 53, 51, 36, 2, 8, 27, 58, 4, 33, 63]
+-----------------------------------

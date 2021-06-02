@@ -18,14 +18,14 @@ def graph_generator(n):
 
 def random_combination(iterable, r):
     pool = tuple(iterable)
-    n = len(pool)
-    indices = sorted(rand.sample(range(n), r))
+    pool_len = len(pool)
+    indices = sorted(rand.sample(range(pool_len), r))
     return tuple(pool[i] for i in indices)
 
 def clustering(n,m):
-    tpl = random_combination(range(1,n+1), m-1)
+    tpl = random_combination(range(2,n+1), m-1)
     tpl = (1,*tpl,n+1)
-    print(tpl)
+    # print(tpl)
     clusters={}
     for ind in range(1,m+1):
         clusters[ind]=[i for i in range(tpl[ind-1],tpl[ind])]
@@ -57,10 +57,18 @@ def update_graph(graph, tour):
     graph[tour[-1]][tour[0]]["weight"] = 0
     return graph
 
+def get_instance(n,m):
+    clusters = clustering(n,m)
+    tree = tree_gen(m)
+    order = complete_order(tree)
+    tour = create_opt_tour(clusters, order)
+    graph = update_graph(graph_generator(n), tour)
+
+    return graph, clusters, tree
 
 if __name__ == '__main__':
-    n=30
-    m=10
+    n=10
+    m=3
     clusters = clustering(n,m)
     tree = tree_gen(m)
     order = complete_order(tree)

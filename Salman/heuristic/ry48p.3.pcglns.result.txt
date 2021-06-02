@@ -1,0 +1,28 @@
+
+--------- Problem Data ------------
+Instance Name      : ry48p.3.pcglns
+Number of Vertices : 254
+Number of Sets     : 48
+Initial Tour       : Random
+Maximum Removals   : 14
+Trials             : 5
+Restart Attempts   : 3
+Rate of Adaptation : 0.5
+Prob of Reopt      : 1.0
+Maximum Time       : 3600
+Threads            : 1
+Seed               : 123
+Tour Budget        : None
+-----------------------------------
+
+ |1     2     3     4     5     |  Cost = 19225  Time = 2.3 sec       |1===  2     3     4     5     |  Cost = 16828  Time = 2.8 sec       |1=====2     3     4     5     |  Cost = 16663  Time = 3.3 sec       |1=====2=====3     4     5     |  Cost = 16663  Time = 3.8 sec       |1=====2=====3=====4     5     |  Cost = 16595  Time = 4.3 sec       |1=====2=====3=====4=====5     |  Cost = 16595  Time = 4.8 sec       |1=====2=====3=====4=====5==   |  Cost = 16540  Time = 5.3 sec       |1=====2=====3=====4=====5=====|  Cost = 16540  Time = 5.2 sec      
+
+--------- Tour Summary ------------
+Cost              : 16540
+Total Time        : 5.16 sec
+Best Found Time   : 4.9 sec
+Solver Timeout?   : false
+Tour is Feasible? : true
+Output File       : None
+Tour Ordering     : [1, 108, 52, 89, 222, 140, 184, 24, 230, 145, 73, 202, 80, 208, 22, 211, 249, 200, 106, 244, 154, 234, 177, 127, 97, 133, 111, 6, 70, 121, 61, 146, 112, 47, 232, 167, 18, 124, 3, 138, 159, 56, 105, 31, 92, 40, 192, 35]
+-----------------------------------

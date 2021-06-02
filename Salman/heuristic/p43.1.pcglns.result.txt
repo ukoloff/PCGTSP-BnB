@@ -1,0 +1,28 @@
+
+--------- Problem Data ------------
+Instance Name      : p43.1.pcglns
+Number of Vertices : 203
+Number of Sets     : 43
+Initial Tour       : Random
+Maximum Removals   : 13
+Trials             : 5
+Restart Attempts   : 3
+Rate of Adaptation : 0.5
+Prob of Reopt      : 1.0
+Maximum Time       : 3600
+Threads            : 1
+Seed               : 123
+Tour Budget        : None
+-----------------------------------
+
+ |1     2     3     4     5     |  Cost = 22921  Time = 2.3 sec       |1=====2     3     4     5     |  Cost = 22638  Time = 2.8 sec       |1=====2=====3     4     5     |  Cost = 22545  Time = 3.3 sec       |1=====2=====3=====4     5     |  Cost = 22545  Time = 3.8 sec       |1=====2=====3=====4=====5=====|  Cost = 22545  Time = 4.3 sec       |1=====2=====3=====4=====5=====|  Cost = 22545  Time = 3.9 sec      
+
+--------- Tour Summary ------------
+Cost              : 22545
+Total Time        : 3.95 sec
+Best Found Time   : 2.61 sec
+Solver Timeout?   : false
+Tour is Feasible? : true
+Output File       : None
+Tour Ordering     : [1, 17, 183, 19, 26, 141, 137, 159, 163, 59, 52, 64, 194, 193, 201, 185, 186, 117, 92, 100, 102, 113, 123, 75, 68, 76, 77, 91, 86, 45, 27, 151, 144, 32, 35, 24, 3, 12, 126, 131, 5, 174, 166]
+-----------------------------------

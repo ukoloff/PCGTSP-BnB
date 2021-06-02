@@ -1,0 +1,28 @@
+
+--------- Problem Data ------------
+Instance Name      : ft70.4.pcglns
+Number of Vertices : 353
+Number of Sets     : 70
+Initial Tour       : Random
+Maximum Removals   : 21
+Trials             : 5
+Restart Attempts   : 3
+Rate of Adaptation : 0.5
+Prob of Reopt      : 1.0
+Maximum Time       : 3600
+Threads            : 1
+Seed               : 123
+Tour Budget        : None
+-----------------------------------
+
+ |1     2     3     4     5     |  Cost = 47471  Time = 3.2 sec       |1     2     3     4     5     |  Cost = 44799  Time = 3.7 sec       |1=    2     3     4     5     |  Cost = 44752  Time = 4.2 sec       |1===  2     3     4     5     |  Cost = 44752  Time = 4.7 sec       |1=====2     3     4     5     |  Cost = 44752  Time = 5.2 sec       |1=====2     3     4     5     |  Cost = 44752  Time = 5.7 sec       |1=====2=    3     4     5     |  Cost = 44752  Time = 6.2 sec       |1=====2=    3     4     5     |  Cost = 44752  Time = 6.7 sec       |1=====2=    3     4     5     |  Cost = 44615  Time = 7.2 sec       |1=====2=    3     4     5     |  Cost = 44497  Time = 7.7 sec       |1=====2=    3     4     5     |  Cost = 44552  Time = 8.2 sec       |1=====2=    3     4     5     |  Cost = 44510  Time = 8.7 sec       |1=====2=    3     4     5     |  Cost = 44497  Time = 9.2 sec       |1=====2=====3     4     5     |  Cost = 44497  Time = 9.7 sec       |1=====2=====3     4     5     |  Cost = 44497  Time = 10.2 sec       |1=====2=====3     4     5     |  Cost = 44497  Time = 10.7 sec       |1=====2=====3     4     5     |  Cost = 44497  Time = 11.2 sec       |1=====2=====3     4     5     |  Cost = 44497  Time = 11.7 sec       |1=====2=====3     4     5     |  Cost = 44497  Time = 12.2 sec       |1=====2=====3=    4     5     |  Cost = 44497  Time = 12.7 sec       |1=====2=====3=    4     5     |  Cost = 44497  Time = 13.2 sec       |1=====2=====3=    4     5     |  Cost = 44497  Time = 13.7 sec       |1=====2=====3=    4     5     |  Cost = 44497  Time = 14.2 sec       |1=====2=====3=    4     5     |  Cost = 44497  Time = 14.7 sec       |1=====2=====3=====4     5     |  Cost = 44497  Time = 15.2 sec       |1=====2=====3=====4     5     |  Cost = 44497  Time = 15.7 sec       |1=====2=====3=====4     5     |  Cost = 44497  Time = 16.2 sec       |1=====2=====3=====4     5     |  Cost = 44497  Time = 16.7 sec       |1=====2=====3=====4     5     |  Cost = 44497  Time = 17.2 sec       |1=====2=====3=====4     5     |  Cost = 44497  Time = 17.7 sec       |1=====2=====3=====4     5     |  Cost = 44497  Time = 18.2 sec       |1=====2=====3=====4=    5     |  Cost = 44497  Time = 18.7 sec       |1=====2=====3=====4=    5     |  Cost = 44497  Time = 19.2 sec       |1=====2=====3=====4===  5     |  Cost = 44497  Time = 19.7 sec       |1=====2=====3=====4=    5     |  Cost = 44497  Time = 20.2 sec       |1=====2=====3=====4=    5     |  Cost = 44497  Time = 20.7 sec       |1=====2=====3=====4===  5     |  Cost = 44497  Time = 21.2 sec       |1=====2=====3=====4=====5     |  Cost = 44497  Time = 21.7 sec       |1=====2=====3=====4=====5     |  Cost = 44497  Time = 22.2 sec       |1=====2=====3=====4=====5     |  Cost = 44497  Time = 22.7 sec       |1=====2=====3=====4=====5     |  Cost = 44497  Time = 23.2 sec       |1=====2=====3=====4=====5===  |  Cost = 44497  Time = 23.7 sec       |1=====2=====3=====4=====5=====|  Cost = 44497  Time = 23.7 sec      
+
+--------- Tour Summary ------------
+Cost              : 44497
+Total Time        : 23.66 sec
+Best Found Time   : 8.42 sec
+Solver Timeout?   : false
+Tour is Feasible? : true
+Output File       : None
+Tour Ordering     : [1, 3, 252, 322, 314, 281, 208, 232, 114, 262, 247, 200, 103, 127, 331, 73, 228, 245, 163, 289, 273, 36, 239, 248, 155, 134, 61, 309, 125, 257, 292, 187, 16, 29, 330, 353, 344, 266, 80, 52, 71, 40, 120, 109, 180, 214, 310, 301, 307, 264, 96, 290, 272, 84, 184, 240, 223, 349, 340, 329, 4, 28, 144, 76, 46, 128, 153, 162, 168, 269]
+-----------------------------------

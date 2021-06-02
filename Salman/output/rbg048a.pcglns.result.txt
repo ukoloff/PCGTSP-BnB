@@ -1,0 +1,71 @@
+Edge weights matrix:
+Initial cost matrix of  (255, 255) float64
+Problem is	  input/rbg048a.pcglns
+Initial data:
+node count is	  255
+cluster count is	 49
+Using license file /home/u0618/michael/gurobi.lic
+Academic license - for non-commercial use only
+Changed value of parameter Threads to 12
+   Prev: 0  Min: 0  Max: 1024  Default: 0
+Warning: linear constraint 110362 and linear constraint 110377 have the same name "APC-(1-35)"
+Gurobi Optimizer version 9.0.1 build v9.0.1rc0 (linux64)
+Optimize a model with 111313 rows, 69827 columns and 728765 nonzeros
+Model fingerprint: 0x918ae0e5
+Variable types: 4802 continuous, 65025 integer (65025 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [1e+00, 3e+01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 2e+00]
+
+User MIP start produced solution with objective 282 (0.14s)
+Loaded user MIP start with objective 282
+
+Presolve removed 62716 rows and 24143 columns
+Presolve time: 1.40s
+Presolved: 48597 rows, 45684 columns, 357760 nonzeros
+Variable types: 681 continuous, 45003 integer (45003 binary)
+
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing first log only...
+
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+    8444    6.2401007e+02   2.562041e+00   2.710394e+10      5s
+   14224    6.1360326e+02   5.168064e-01   2.545923e+10     10s
+Concurrent spin time: 0.01s
+
+Solved with dual simplex
+
+Root relaxation: objective 2.663000e+02, 11334 iterations, 9.49 seconds
+Total elapsed time = 17.23s
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  266.30000    0   89  282.00000  266.30000  5.57%     -   21s
+     0     0  273.05556    0  161  282.00000  273.05556  3.17%     -   34s
+     0     0  273.05556    0   87  282.00000  273.05556  3.17%     -   49s
+     0     0  280.55556    0  327  282.00000  280.55556  0.51%     -   59s
+     0     0  282.00000    0  330  282.00000  282.00000  0.00%     -   64s
+
+Cutting planes:
+  Gomory: 1
+  MIR: 7
+  RLT: 2
+  Relax-and-lift: 21
+
+Explored 1 nodes (69437 simplex iterations) in 64.32 seconds
+Thread count was 12 (of 36 available processors)
+
+Solution count 1: 282 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 2.820000000000e+02, best bound 2.820000000000e+02, gap 0.0000%
+Optimal tour:  [1, 51, 3, 13, 136, 118, 77, 164, 19, 6, 131, 141, 87, 85, 25, 83, 81, 176, 75, 163, 179, 60, 92, 62, 112, 152, 151, 124, 23, 167, 33, 249, 158, 41, 97, 183, 174, 192, 191, 208, 217, 239, 227, 196, 207, 244, 253, 215, 226]
+Visited clusters:  [1, 10, 2, 4, 25, 22, 14, 31, 5, 3, 24, 26, 18, 17, 7, 16, 15, 34, 13, 30, 35, 11, 19, 12, 21, 28, 27, 23, 6, 32, 8, 48, 29, 9, 20, 36, 33, 38, 37, 41, 43, 46, 45, 39, 40, 47, 49, 42, 44]
+Precedence test is  passed
+Total cost is  282.0

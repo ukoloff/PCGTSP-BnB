@@ -1,0 +1,89 @@
+Edge weights matrix:
+Initial cost matrix of  (133, 133) float64
+Problem is	  input/ESC25.pcglns
+Initial data:
+node count is	  133
+cluster count is	 26
+Using license file /home/u0618/michael/gurobi.lic
+Academic license - for non-commercial use only
+Changed value of parameter Threads to 12
+   Prev: 0  Min: 0  Max: 1024  Default: 0
+Gurobi Optimizer version 9.0.1 build v9.0.1rc0 (linux64)
+Optimize a model with 15575 rows, 19041 columns and 125616 nonzeros
+Model fingerprint: 0x244a739f
+Variable types: 1352 continuous, 17689 integer (17689 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [1e+00, 1e+03]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 2e+00]
+
+User MIP start produced solution with objective 1418 (0.02s)
+Loaded user MIP start with objective 1418
+
+Presolve removed 1412 rows and 1586 columns
+Presolve time: 0.22s
+Presolved: 14163 rows, 17455 columns, 116474 nonzeros
+Variable types: 289 continuous, 17166 integer (17166 binary)
+
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing first log only...
+
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Root relaxation: objective 1.226000e+03, 2905 iterations, 0.49 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1226.00000    0   96 1418.00000 1226.00000  13.5%     -    0s
+     0     0 1237.85713    0  104 1418.00000 1237.85713  12.7%     -    1s
+     0     0 1242.96154    0  118 1418.00000 1242.96154  12.3%     -    1s
+     0     0 1258.70588    0  121 1418.00000 1258.70588  11.2%     -    1s
+H    0     0                    1403.0000000 1258.70588  10.3%     -    1s
+     0     0 1264.89474    0  123 1403.00000 1264.89474  9.84%     -    1s
+     0     0 1265.12500    0  123 1403.00000 1265.12500  9.83%     -    1s
+     0     0 1266.60000    0  131 1403.00000 1266.60000  9.72%     -    2s
+     0     0 1266.60000    0  131 1403.00000 1266.60000  9.72%     -    2s
+     0     0 1284.38889    0  120 1403.00000 1284.38889  8.45%     -    2s
+H    0     0                    1400.0000000 1284.38889  8.26%     -    2s
+     0     0 1290.00000    0  127 1400.00000 1290.00000  7.86%     -    2s
+     0     0 1290.00000    0  127 1400.00000 1290.00000  7.86%     -    2s
+H    0     0                    1383.0000000 1302.55556  5.82%     -    2s
+     0     0 1302.55556    0  102 1383.00000 1302.55556  5.82%     -    2s
+     0     0 1302.55556    0  118 1383.00000 1302.55556  5.82%     -    2s
+     0     0 1302.55556    0  137 1383.00000 1302.55556  5.82%     -    2s
+     0     0 1302.55556    0  109 1383.00000 1302.55556  5.82%     -    2s
+     0     0 1302.55556    0  109 1383.00000 1302.55556  5.82%     -    3s
+     0     0 1302.55556    0  108 1383.00000 1302.55556  5.82%     -    3s
+     0     0 1302.55556    0  108 1383.00000 1302.55556  5.82%     -    3s
+     0     0 1306.00000    0  155 1383.00000 1306.00000  5.57%     -    3s
+     0     0 1312.90000    0  155 1383.00000 1312.90000  5.07%     -    3s
+     0     0 1324.00000    0  155 1383.00000 1324.00000  4.27%     -    3s
+     0     0 1328.25000    0  148 1383.00000 1328.25000  3.96%     -    3s
+     0     0 1335.00000    0  152 1383.00000 1335.00000  3.47%     -    3s
+     0     0 1335.50000    0  152 1383.00000 1335.50000  3.43%     -    3s
+     0     0 1341.16667    0  148 1383.00000 1341.16667  3.02%     -    3s
+     0     0 1341.16667    0  148 1383.00000 1341.16667  3.02%     -    3s
+     0     2 1341.16667    0  144 1383.00000 1341.16667  3.02%     -    3s
+
+Cutting planes:
+  Gomory: 2
+  MIR: 16
+  GUB cover: 1
+  Zero half: 9
+  RLT: 55
+
+Explored 100 nodes (19175 simplex iterations) in 4.45 seconds
+Thread count was 12 (of 36 available processors)
+
+Solution count 4: 1383 1400 1403 1418 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.383000000000e+03, best bound 1.383000000000e+03, gap 0.0000%
+Optimal tour:  [1, 14, 53, 5, 63, 100, 42, 20, 60, 35, 70, 32, 82, 10, 54, 99, 25, 61, 79, 108, 89, 125, 126, 94, 113, 121]
+Visited clusters:  [1, 4, 10, 2, 14, 21, 9, 5, 12, 8, 15, 7, 17, 3, 11, 20, 6, 13, 16, 22, 18, 25, 26, 19, 23, 24]
+Precedence test is  passed
+Total cost is  1383.0
