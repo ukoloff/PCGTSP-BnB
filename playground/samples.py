@@ -18,8 +18,17 @@ solutions = root / "heuristic"
 def load(name):
     """(str) -> Task
     """
-    result = klasses.Task(*pcglns.getInstance(lib / f"{name}.pcglns"))
-    result.UB, order = read_solution(name)
+    if name.startswith('s/'):
+      name = name[2:]
+      Salman = root / "Salman"
+      src = Salman / "input"
+      res = Salman / "heuristic"
+    else:
+      src = root / "pcglns"
+      res = root / "heuristic"
+
+    result = klasses.Task(*pcglns.getInstance(src / f"{name}.pcglns"))
+    result.UB, order = read_solution(res / f"{name}.pcglns.result.txt")
     backidx = {i: n for n, points in result.clusters.items() for i in points}
     result.solution = [(backidx[i], i) for i in order]
     return result
@@ -27,7 +36,7 @@ def load(name):
 def read_solution(name):
     UB = None
     order = None
-    with open(solutions / f"{name}.pcglns.result.txt") as f:
+    with open(name) as f:
       for line in f:
         line = line.split(":", 1)
         if len(line) < 2:
@@ -59,4 +68,8 @@ def random(n, m):
 
 if __name__ == '__main__':
   A = random(27, 7)
+  print(A)
   B = load("e1x_1")
+  print(B)
+  C = load("s/br17.12")
+  print(C)
