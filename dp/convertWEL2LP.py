@@ -46,7 +46,7 @@ def prepareSTEconstraints(v1, vars):
     
     
 def writeATSPxy(WELfilename, LPfilename):
-    G = nx.read_weighted_edgelist(WELfilename)
+    G = nx.read_weighted_edgelist(WELfilename, create_using=nx.DiGraph)
     v1 = min(G.nodes)
     vars = createVariables(G)
     
@@ -102,6 +102,9 @@ if __name__ == '__main__':
 	except AssertionError as msg:
 		print(msg)
 
-	writeATSPxy(ifname, ofname)
+	try:
+		writeATSPxy(ifname, ofname)
+	except FileNotFoundError as msg:
+		print(msg)
 	
 
