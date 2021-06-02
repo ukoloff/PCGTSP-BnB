@@ -102,9 +102,19 @@ def updateLB(node: STNode):
 
 
 if __name__ == '__main__':
+  import sys
+
   import samples
 
+  src = "e1x_1" if len(sys.argv) < 2 else sys.argv[1]
+  print("Loading:", src)
+
   # task = samples.random(1000, 12)
-  task = samples.load("e1x_1")
+  task = samples.load(src)
+
+  print("Size:\t", task.dists.order(), '/', len(task.clusters))
+  print("UB:\t", task.UB)
+  print("Solution so far:\t", task.solution)
+  print()
 
   solve(task)
