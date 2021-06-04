@@ -6,7 +6,7 @@
 import networkx as nx
 
 from klasses import Task, STNode
-import prefix
+import prefix, nb
 
 # historySuffix[] @ page 9
 history = {}
@@ -54,6 +54,12 @@ def lower_bounds(node: STNode):
   g = nc(node)
   node.bounds['MSAP'] = MSAP(g)
   node.bounds['AP'] = AP(g)
+
+  # Noon-Bean
+  g = nb.noon_bean(node)
+  node.bounds['NB-MSAP'] = MSAP(g)
+  node.bounds['NB-AP'] = AP(g)
+
   history[S] = max(node.bounds.values())
   node.bounds['LB'] = history[S] + node.shortest_path
 

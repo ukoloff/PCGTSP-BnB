@@ -106,7 +106,7 @@ if __name__ == '__main__':
 
   import samples
 
-  src = "e1x_1" if len(sys.argv) < 2 else sys.argv[1]
+  src = "e5x_1" if len(sys.argv) < 2 else sys.argv[1]
   print("Loading:", src)
 
   # task = samples.random(1000, 12)

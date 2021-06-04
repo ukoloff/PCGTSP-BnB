@@ -38,7 +38,7 @@ def noon_bean(node: STNode):
     # Build 0-cycles
     if len(node.sigma) > 1:
         # Avoid cycles @ prefix groups
-        omit = set(node.sigma)
+        # omit = set(node.sigma)
         pass
 
     result.add_weighted_edges_from(
@@ -51,17 +51,20 @@ def noon_bean(node: STNode):
 
     # Add 0-path thru prefix
     if len(node.sigma) > 1:
-        if len(clusters[node.sigma[0]]) == 1:
-            result.add_weighted_edges_from(
-                (clusters[node.sigma[0]][0], v, 0) for v in clusters[node.sigma[-1]])
-        elif len(clusters[node.sigma[-1]]) == 1:
-            result.add_weighted_edges_from(
-                (v, clusters[node.sigma[-1]][0], 0) for v in clusters[node.sigma[0]])
-        else:
-            result.add_weighted_edges_from((v, '!', 0)
-                                           for v in clusters[node.sigma[0]])
-            result.add_weighted_edges_from(('!', v, 0)
-                                           for v in clusters[node.sigma[-1]])
+        # if len(clusters[node.sigma[0]]) == 1:
+        #     result.add_weighted_edges_from(
+        #         (clusters[node.sigma[0]][0], v, 0) for v in clusters[node.sigma[-1]])
+        # elif len(clusters[node.sigma[-1]]) == 1:
+        #     result.add_weighted_edges_from(
+        #         (v, clusters[node.sigma[-1]][0], 0) for v in clusters[node.sigma[0]])
+        # else:
+        #     result.add_weighted_edges_from((v, '!', 0)
+        #                                    for v in clusters[node.sigma[0]])
+        #     result.add_weighted_edges_from(('!', v, 0)
+        #                                    for v in clusters[node.sigma[-1]])
+        result.add_weighted_edges_from(
+            (u, v, 0) for u in clusters[node.sigma[0]] for v in clusters[node.sigma[-1]])
+
     return result
 
 
