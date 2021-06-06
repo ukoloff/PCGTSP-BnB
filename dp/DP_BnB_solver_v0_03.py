@@ -53,74 +53,6 @@ def make_unique_list(lst):
     return list(map(list,unique_tuples))
 
 
-################ multiprocessing staff ############
-### 
-def layer_worker_init(tree, V1_succ):
-    global mp_tree
-    global mp_V1_succ
-    
-    mp_tree, mp_V1_succ = tree, V1_succ
-
-    
-def parallel_make_layer(sigma):
-    current_layer_chunk=[]
-    l_sigma = list(sigma) 
-    current_layer_chunk += [l_sigma + [succ] for succ in mp_V1_succ if succ not in l_sigma]
-    
-    for ind in l_sigma:
-        suppl = [l_sigma + [succ] for succ in mp_tree.successors(ind) if succ not in l_sigma and nx.ancestors(mp_tree,succ).issubset(l_sigma+[1])]
-        suppl = list(map(sorted, suppl))
-        current_layer_chunk += suppl
-
-    return make_unique_list(current_layer_chunk)
-
-
-###
-###################################################
-
-def add_layer(clusters,tree, previous_layer, layer_level, workers_count):
-    clust_keys=list(clusters.keys())
-    V1_succ = list(tree.successors(clust_keys[0]))
-    start_time = time.time()
-
-    if len(previous_layer) == 0:     # baseline case 
-        current_layer = [[succ] for succ in V1_succ]
-        return current_layer
-
-    actual_workers_count = min(workers_count, possible_workers_count())
-    pool = mp.Pool(actual_workers_count, layer_worker_init, (tree, V1_succ), maxtasksperchild=MAXTASKSPERWORKER)
-    
-    results = pool.map(parallel_make_layer, previous_layer)
-    pool.close()
-    pool.join()
-    
-    # print('Pool is joined')
-    assert len(results) > 0, 'results cannot be empty'
-
-    current_layer = [sigma for result in results for sigma in result]
-    
-    current_layer = make_unique_list(current_layer)
-    # print('Duplicates are excluded')
-    print(f'layer {layer_level+1:03d} of size {len(current_layer):>8} is prepared by {actual_workers_count} worker(s) at {time.time() - start_time:8.2f} sec')
-    # print(current_layer)
-    return current_layer
-
-def make_layers(clusters,tree, lookup_table_name, workers_count):
-    num_of_layers = len(clusters) - 1
-    # layers=[]
-    previous_layer = []
-    for layer_level in range(num_of_layers):
-        current_layer = add_layer(clusters, tree, previous_layer, layer_level, workers_count)
-        # layers.append(current_layer)
-
-        with open(f'{lookup_table_name}{layer_level:03d}.lyr', 'wb') as fout:
-            pic.dump(current_layer,fout)
-            fout.close()       
-        previous_layer = current_layer
-
-        gc.collect()
-    # return layers
-
 def can_be_the_last_cluster(sigma,c_ind, transitive_closure):
     # desc = nx.descendants(tree,c_ind)
     succ = transitive_closure.successors(c_ind)
@@ -213,13 +145,42 @@ def parallel(sigma):
 ###
 ##################################################
 
-def compute_Bellman_layer(G, clusters,  layer_level, tree, lookup_table_name, keep_lookup_table, workers_count, predicted_workers_count, UB):
- 
-    with open(f'{lookup_table_name}{layer_level:03d}.lyr', 'rb') as fin:
-        layer = pic.load(fin)
+def do_prepare_layer(sigma, tree, V1, V1_succ):
+    current_layer_chunk=[]
+    l_sigma = list(sigma) 
+    current_layer_chunk += [l_sigma + [succ] for succ in V1_succ if succ not in l_sigma]
+    
+    for ind in l_sigma:
+        suppl = [l_sigma + [succ] for succ in tree.successors(ind) if succ not in l_sigma and nx.ancestors(tree,succ).issubset(l_sigma+[V1])]
+        current_layer_chunk += suppl
 
+    return current_layer_chunk
+
+def prepare_layer(clusters,tree, previous_layer, layer_level):
+    clust_keys=list(clusters.keys())
+    V1 = clust_keys[0]
+    V1_succ = list(tree.successors(V1))
+    start_time = time.time()
+
+    current_layer = []
+
+    if not previous_layer:     # baseline case 
+        current_layer = [[succ] for succ in V1_succ]
+        return current_layer
+
+    for sigma in previous_layer:
+        current_layer += do_prepare_layer(sigma, tree, V1, V1_succ)
+        
+    current_layer = make_unique_list(current_layer)
+    return current_layer
+
+
+def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, lookup_table_name, keep_lookup_table, workers_count, predicted_workers_count, UB):
     c_keys=list(clusters.keys())
     start_time = time.time()
+
+    layer = prepare_layer(clusters, tree, previous_layer, layer_level)
+    print(f'layer {layer_level+1:03d} is prepared')
 
     lookup_table = {}
 
@@ -262,7 +223,10 @@ def compute_Bellman_layer(G, clusters,  layer_level, tree, lookup_table_name, ke
     with open(f'{lookup_table_name}{layer_level:03d}.dct', 'wb') as fout:
         pic.dump(lookup_table,fout)
         fout.close()
-    
+
+    ####### for filtering the next layer ###################
+    sigmas_from_lookup_table = list(set([tuple(s.sigma) for s in lookup_table.values()]))
+        
     predicted_workers_count = possible_workers_count() 
 
     if not keep_lookup_table:
@@ -270,24 +234,26 @@ def compute_Bellman_layer(G, clusters,  layer_level, tree, lookup_table_name, ke
     
     gc.collect()
 
-    print(f'layer {layer_level+1:03d} of size {capacity:>10} complete by {actual_workers_count} worker(s) at {time.time() - start_time:8.2f} sec')
+    print(f'layer {layer_level+1:03d} of size {capacity:>10} is completed by {actual_workers_count} worker(s) at {time.time() - start_time:8.2f} sec')
     print(f'{cutoff} ({cutoff / (cutoff + capacity):.1%}) of branches were cut off')
-    return predicted_workers_count, lookup_table
+    return predicted_workers_count, lookup_table, sigmas_from_lookup_table
 
 
 def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_make_layers, workers_count, UB = MAXINT):
-    if need_2_make_layers:
-        make_layers(clusters,tree, lookup_table_name, workers_count)   
+    # if need_2_make_layers:
+    #     make_layers(clusters,tree, lookup_table_name, workers_count)   
 
-    print('================================')
+    # print('================================')
 
     num_of_layers = len(clusters) - 1
 
     predicted_workers_count = possible_workers_count()
+    previous_layer = []
 
     for layer_level in range(num_of_layers):
         keep_lookup_table = (layer_level >= num_of_layers - 1)
-        predicted_workers_count, lookup_table = compute_Bellman_layer(G, clusters,  layer_level, tree, lookup_table_name, keep_lookup_table, workers_count, predicted_workers_count, UB)
+        predicted_workers_count, lookup_table, previous_layer = compute_Bellman_layer(G, clusters,  layer_level, previous_layer, 
+            tree, lookup_table_name, keep_lookup_table, workers_count, predicted_workers_count, UB)
         
     OPT = MAXINT
     best_state = None

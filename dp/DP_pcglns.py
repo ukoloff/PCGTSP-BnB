@@ -7,7 +7,7 @@ import sys
 
 
 from fromPCGLNS import getInstance
-from DP_BnB_solver import DP_solver_layered, visited_clusters, get_path_length, MAXINT
+from DP_BnB_solver_v0_04 import DP_solver_layered, visited_clusters, get_path_length, MAXINT
 
       
 
@@ -19,10 +19,9 @@ def test(filename, need_2_make_layers, workers_count, UB):
     m = len(clusters)
 
     print(f'Number of nodes: {n}, Number of clusters: {m}')
-    # print(f'Graph: {graph.edges(data = "weight")}')
     print(f'Clusters: {clusters}')
     print(f'Partial order tree: {tree.edges()}')
-        
+
     start_time = time.time()
     
     lookup_table_name = f'problem_{n}_{m}_'

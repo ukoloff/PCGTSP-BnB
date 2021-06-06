@@ -69,7 +69,7 @@ def parallel_make_layer(sigma):
     
     for ind in l_sigma:
         suppl = [l_sigma + [succ] for succ in mp_tree.successors(ind) if succ not in l_sigma and nx.ancestors(mp_tree,succ).issubset(l_sigma+[1])]
-        suppl = list(map(sorted, suppl))
+        # suppl = list(map(sorted, suppl))
         current_layer_chunk += suppl
 
     return make_unique_list(current_layer_chunk)
@@ -262,6 +262,18 @@ def compute_Bellman_layer(G, clusters,  layer_level, tree, lookup_table_name, ke
     with open(f'{lookup_table_name}{layer_level:03d}.dct', 'wb') as fout:
         pic.dump(lookup_table,fout)
         fout.close()
+
+    ####### filtering the next layer ###################
+    sigmas_from_lookup_table = list(set([tuple(s.sigma) for s in lookup_table.values()]))
+    if layer_level < len(clusters) - 2:
+        with open(f'{lookup_table_name}{(layer_level+1):03d}.lyr', 'rb') as fin:
+            next_layer = pic.load(fin)
+            fin.close()
+        filtered_next_layer = [sigma for sigma in next_layer if any(set(s).issubset(sigma) for s in sigmas_from_lookup_table)]
+
+        with open(f'{lookup_table_name}{(layer_level+1):03d}.lyr', 'wb') as fout:
+            pic.dump(filtered_next_layer,fout)
+            fout.close()
     
     predicted_workers_count = possible_workers_count() 
 

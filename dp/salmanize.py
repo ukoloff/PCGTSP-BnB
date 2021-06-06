@@ -42,17 +42,17 @@ def subgraph(nc0: nx.DiGraph, sigma, last_cluster, start_cluster=1):
     if len(sigma) <= 1:
         return result
     result.remove_nodes_from(
-        n for n in sigma if last_cluster != n != start_cluster)
-    result.remove_edges_from((start_cluster, n)
-                             for n in list(result.successors(start_cluster)))
-    result.remove_edges_from((n, last_cluster)
-                             for n in list(result.predecessors(last_cluster)))
-    if len(sigma) < len(nc0):
-        # Not a leaf node
-        try:
-            result.remove_edge(last_cluster, start_cluster)
-        except nx.NetworkXError:
-            pass
+        n for n in sigma if not n in (start_cluster, last_cluster))
+    result.remove_edges_from([(start_cluster, n)
+                             for n in list(result.successors(start_cluster))])
+    result.remove_edges_from([(n, last_cluster)
+                             for n in list(result.predecessors(last_cluster))])
+    # if len(sigma) < len(nc0):
+    #     # Not a leaf node
+    #     try:
+    #         result.remove_edge(last_cluster, start_cluster)
+    #     except nx.NetworkXError:
+    #         pass
     result.add_edge(start_cluster, last_cluster, weight=0)
     return result
 
