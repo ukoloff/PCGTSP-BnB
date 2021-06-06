@@ -1,5 +1,6 @@
 import networkx as nx
 import sys
+import time
 
 def createVariables(G):
     vars = {(int(e[0]), int(e[1])): e[2] for e in G.edges(data='weight')}
@@ -40,12 +41,38 @@ def prepareSTEconstraints(v1, vars):
                 if (not v1 in ejk) and (eij[1] == ejk[0]):
                     for eki in vars:
                         if (not v1 in eki) and (ejk[1] == eki[0]) and (eki[1] == eij[0]):
-                            print(f'eij={eij}, ejk={ejk}, eki={eki}')
+                            # print(f'eij={eij}, ejk={ejk}, eki={eki}')
                             cons5.append(f'{formatVar(eij,"y")} + {formatVar(ejk,"y")} + {formatVar(eki,"y")} <= 2')
     return cons3, cons4, cons5
+
+def parseOrder(fname):
+    succ = {}
+    with open(fname, 'r') as ford:
+        line = ford.readline()
+        while line:
+            chunks = line.strip().split()
+            key = int(chunks[0])
+            val = int(chunks[1])
+
+            if key in succ:
+                succ[key].append(val)
+            else:
+                succ[key] = [val]
+            
+            line = ford.readline()
+    return succ
+
+def preparePrecConstraints(succ):
+    cons6 = []
+    for key in succ:
+        cons6.extend([f'{formatVar((key, s),"y")} = 1' for s in succ[key]])
+    return cons6
     
     
-def writeATSPxy(WELfilename, LPfilename):
+def writeATSPxy(WELfilename, LPfilename, Orderfilename='', verbose = False):
+    if verbose:
+        start = time.time()
+
     G = nx.read_weighted_edgelist(WELfilename, create_using=nx.DiGraph)
     v1 = min(G.nodes)
     vars = createVariables(G)
@@ -53,7 +80,7 @@ def writeATSPxy(WELfilename, LPfilename):
     obj = prepareObjective(vars)
     cons1, cons2 = prepareAPconstraints(G,vars)
     cons3, cons4, cons5 = prepareSTEconstraints(v1, vars)
-    
+        
     with open(LPfilename, 'w') as lpf:
         lpf.write('\\\\ -------------------------------------\n')
         lpf.write('\\\\ This file was generated automaticaly. Do not modify it manually.\n')
@@ -79,6 +106,15 @@ def writeATSPxy(WELfilename, LPfilename):
         lpf.write('\n')
         for c in cons5:
             lpf.write(f'{c}\n')
+        
+        if Orderfilename:
+            succ = parseOrder(Orderfilename)
+            cons6 = preparePrecConstraints(succ)
+            print(succ)
+            print(len(cons6))
+
+            for c in cons6:
+                lpf.write(f'{c}\n')
             
         lpf.write('\n\nBounds\nBinaries\n')
         var_str = ' '.join([f'{formatVar(e)}' for e in vars])
@@ -86,25 +122,35 @@ def writeATSPxy(WELfilename, LPfilename):
         
         lpf.write('\n\nEnd\n')
 
+    if verbose:
+        end = time.time()
+        print(f'Model {LPfilename} is done in {(end - start):.2f} sec.')
+
 
 if __name__ == '__main__':
-	ifname = ''
-	ofname = ''
-	try:
-		for arg in sys.argv:
-			if '=' in arg:
-				parts = arg.split('=')
-				if parts[0] == '--input' or parts[0] == '-i':
-					ifname = parts[1]
-				if parts[0] == '--output' or parts[0] == '-o':
-					ofname = parts[1]
-		assert ifname and ofname, 'SYNTAX: python convertWEL2LP.py -i=<input path/filename> -o=<output path/filename>'
-	except AssertionError as msg:
-		print(msg)
-
-	try:
-		writeATSPxy(ifname, ofname)
-	except FileNotFoundError as msg:
-		print(msg)
+    welfname = ''
+    modelfname = ''
+    orderfname = ''
+    verbose = False
+    try:
+        for arg in sys.argv:
+            if arg == '-v':
+                verbose = True
+            if '=' in arg:
+                parts = arg.split('=')
+                if parts[0] == '--wel' or parts[0] == '-w':
+                    welfname = parts[1]
+                if parts[0] == '--model' or parts[0] == '-m':
+                    modelfname = parts[1]
+                if parts[0] == '--order' or parts[0] == '-o':
+                    orderfname = parts[1]
+        assert welfname and modelfname, 'SYNTAX: python convertWEL2LP.py -w=<wel path/filename> -m=<model path/filename> [-o=<order path/filename>]'
+    except AssertionError as msg:
+        print(msg)
+        exit(1)
+    try:
+        writeATSPxy(welfname, modelfname, orderfname, verbose)
+    except FileNotFoundError as msg:
+        print(msg)
 	
 
