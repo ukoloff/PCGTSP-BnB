@@ -101,13 +101,19 @@ def worker_init(G, clusters, tree, lookup_table_filename, UB):
         mp_lookup_table = pic.load(fin)
 
 def can_be_the_last_cluster(sigma,c_ind, transitive_closure):
+    global mp_succs
+
     if c_ind not in mp_succs:
-        succ = transitive_closure.successors(c_ind)
+        succ = list(transitive_closure.successors(c_ind))
         mp_succs[c_ind] = succ
     else:
         succ = mp_succs[c_ind]
 
-    return all(not s in sigma for s in succ)
+    # if c_ind == 9 and sigma == [4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 17]:
+    #     print(f'test: ind={c_ind}, succ={succ}')
+
+    # succ = transitive_closure.successors(c_ind)
+    return all(not (s in sigma) for s in succ)
 
 def parallel(sigma):
     global mp_lookup_table
@@ -125,7 +131,7 @@ def parallel(sigma):
             P2_cost = lower_bound(mp_nc0, [start_cluster_id] + sigma, ind_V_j, start_cluster_id)
         except:
             print(f'LB calculations fault, sigma={sigma}, start={start_cluster_id}, dest={ind_V_j}')
-            exit(1)
+            P2_cost = 0
         ###
         # print(f'S={[start_cluster_id]+sigma},\t org_cluster={start_cluster_id},\t dest_cluster={ind_V_j},\t  P2_cost={P2_cost}')
         truncated_sigma = [ind for ind in sigma if ind != ind_V_j]

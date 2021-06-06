@@ -106,4 +106,4 @@ def getInstance(filename):
 
 
 if __name__ == '__main__':
-	parseFile('Salman/input/ESC63.pcglns', True)
+	parseFile('Salman/input/br17.12.pcglns', True)
