@@ -11,7 +11,7 @@ from DP_BnB_solver_v0_05 import DP_solver_layered, visited_clusters, get_path_le
 
       
 
-def test(filename, need_2_make_layers, workers_count, UB):
+def test(filename, need_2_keep_layers, workers_count, UB):
     
     graph, clusters, tree = getInstance(filename)
 
@@ -25,7 +25,7 @@ def test(filename, need_2_make_layers, workers_count, UB):
     start_time = time.time()
     
     lookup_table_name = f'problem_{n}_{m}_'
-    res = DP_solver_layered(graph, clusters, tree, lookup_table_name, need_2_make_layers, workers_count, UB)
+    res = DP_solver_layered(graph, clusters, tree, lookup_table_name, need_2_keep_layers, workers_count, UB)
     
     print(f'RESULT: ')
     if res:
@@ -61,9 +61,12 @@ if __name__ == '__main__':
     ifname = ''
     workers_count = 1
     UB = MAXINT
+    keep_layers = False
 
     try:
         for arg in sys.argv:
+            if arg == '--keep_layers':
+                keep_layers = True
             if '=' in arg:
                 parts = arg.split('=')
                 if parts[0] == '--input' or parts[0] == '-i':
@@ -76,7 +79,7 @@ if __name__ == '__main__':
     except:
         print('SYNTAX: python DP_parallel_layered3_pcglns.py -i=<input path/filename> [-w=<workers_count>] [-UB=<upper_bound>]')
 
-    test(ifname, True, workers_count, UB)
+    test(ifname, keep_layers, workers_count, UB)
 
     
 

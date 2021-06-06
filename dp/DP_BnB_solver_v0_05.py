@@ -8,6 +8,7 @@ import psutil
 import os
 import functools as ft
 import sys
+import glob 
 
 from collections import Counter
 from salmanize import lower_bound, nc0
@@ -53,40 +54,12 @@ def make_unique_list(lst):
     return list(map(list,unique_tuples))
 
 
-def compute_Bellman_cell(G, clusters, transitive_closure, lookup_table, state):
-    witness = state.witness()
-    if witness in lookup_table:
-        cached_state = lookup_table[witness]
-        return cached_state.cost
-        
+def compute_Bellman_cell(G, clusters, transitive_closure, lookup_table, filtered_prev_states, state):        
     best_cost = MAXINT
     prev_state = None
 
-    truncated_sigma = [ind for ind in state.sigma if ind != state.j]
-
-    # assert len(truncated_sigma) > 0, 'truncated_sigma is empty'
-
-    # for ind_prev_cluster in [ind for ind in truncated_sigma if can_be_the_last_cluster(truncated_sigma,ind,transitive_closure)]:
-    #     for tilde_u in clusters[ind_prev_cluster]:
-    #         suggested_prev_state = State(truncated_sigma,ind_prev_cluster,tilde_u,state.v)
-    #         witness = suggested_prev_state.witness()
-    #         if witness in lookup_table:
-    #             pretender_state = lookup_table[witness]
-    #             cost = pretender_state.cost + G[tilde_u][state.tilde_u]['weight']
-    #             if cost < best_cost:
-    #                 best_cost = cost
-    #                 prev_state = pretender_state
-
     
-    # for witness in lookup_table:
-    #     suggested_prev_state = lookup_table[witness]
-    #     if truncated_sigma == suggested_prev_state.sigma:   # we rely on that all the sigmas are ordered 
-    #         cost = suggested_prev_state.cost + G[suggested_prev_state.tilde_u][state.tilde_u]['weight']
-    #         if cost < best_cost:
-    #             best_cost = cost
-    #             prev_state = suggested_prev_state
-
-    for suggested_prev_state in [s for s in lookup_table.values() if truncated_sigma == s.sigma and state.v == s.v]:
+    for suggested_prev_state in filtered_prev_states:
         cost = suggested_prev_state.cost + G[suggested_prev_state.tilde_u][state.tilde_u]['weight']
         if cost < best_cost:
             best_cost = cost
@@ -153,10 +126,12 @@ def parallel(sigma):
             exit(1)
         ###
         # print(f'S={[start_cluster_id]+sigma},\t org_cluster={start_cluster_id},\t dest_cluster={ind_V_j},\t  P2_cost={P2_cost}')
+        truncated_sigma = [ind for ind in sigma if ind != ind_V_j]
         for v in mp_clusters[start_cluster_id]:
+            filtered_prev_states = [s for s in mp_lookup_table.values() if truncated_sigma == s.sigma and v == s.v]
             for tilde_u in mp_clusters[ind_V_j]:
                 state = State(sigma, ind_V_j, tilde_u, v)
-                state.cost = compute_Bellman_cell(mp_G, mp_clusters, mp_transitive_closure, mp_lookup_table, state)
+                state.cost = compute_Bellman_cell(mp_G, mp_clusters, mp_transitive_closure, mp_lookup_table, filtered_prev_states, state)
                 if state.cost < MAXINT:
                     state.LB = P2_cost + state.cost
                     if state.LB <= mp_UB:
@@ -247,8 +222,9 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
         pic.dump(lookup_table,fout)
         fout.close()
 
-    ####### for filtering the next layer ###################
+    ####### to filter out the next layer ###################
     sigmas_from_lookup_table = list(set([tuple(s.sigma) for s in lookup_table.values()]))
+    ########################################################
         
     predicted_workers_count = possible_workers_count() 
 
@@ -262,12 +238,8 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
     return predicted_workers_count, lookup_table, sigmas_from_lookup_table
 
 
-def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_make_layers, workers_count, UB = MAXINT):
-    # if need_2_make_layers:
-    #     make_layers(clusters,tree, lookup_table_name, workers_count)   
-
-    # print('================================')
-
+def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_keep_layers, workers_count, UB = MAXINT):
+    
     num_of_layers = len(clusters) - 1
 
     predicted_workers_count = possible_workers_count()
@@ -329,6 +301,15 @@ def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_make_layers, 
     route.append(ind_V_1)
     path.reverse()
     route.reverse()
+
+    if not need_2_keep_layers:
+        filelist = glob.glob(f'{lookup_table_name}*.dct', recursive = False)
+        for ff in filelist:
+            try:
+                os.remove(ff)
+            except OSError as mag:
+                print(msg)
+
     
     return (OPT, route, path)
 
