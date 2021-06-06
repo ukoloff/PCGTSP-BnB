@@ -85,10 +85,11 @@ def worker_init(G, clusters, tree, lookup_table_filename, UB):
     global mp_UB
     global mp_succs
 
+
     mp_G, mp_clusters, mp_tree = G, clusters, tree
     mp_transitive_closure = nx.transitive_closure(tree)
     mp_UB = UB
-
+    
     mp_succs={}
 
     c_keys=list(mp_clusters.keys())
@@ -116,6 +117,7 @@ def parallel(sigma):
     c_keys=list(mp_clusters.keys())
     start_cluster_id = c_keys[0]
     cutoff = 0
+    localLB = MAXINT
    
     for ind_V_j in [ind for ind in sigma if can_be_the_last_cluster(sigma, ind, mp_transitive_closure)]:
         ###
@@ -137,9 +139,10 @@ def parallel(sigma):
                     if state.LB <= mp_UB:
                         result[state.witness()] = state
                         capacity += 1
+                        localLB = min(localLB, state.LB)
                     else:
                         cutoff += 1
-    return (capacity, result, cutoff)
+    return (capacity, result, cutoff, localLB)
 ###
 ##################################################
 
@@ -173,7 +176,7 @@ def prepare_layer(clusters,tree, previous_layer, layer_level):
     return current_layer
 
 
-def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, lookup_table_name, keep_lookup_table, workers_count, predicted_workers_count, UB):
+def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, lookup_table_name, keep_lookup_table, workers_count, predicted_workers_count, UB, LB):
     c_keys=list(clusters.keys())
     start_time = time.time()
 
@@ -181,19 +184,27 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
     print(f'layer {layer_level+1:03d} is prepared')
 
     lookup_table = {}
+    start_cluster_id = c_keys[0]
 
     capacity = 0
     cutoff = 0
+    layerLB = MAXINT
+
     if layer_level < 1: # baseline case
         actual_workers_count = 1
         for sigma in layer:
             for ind_V_j in sigma:
-                for v in clusters[c_keys[0]]:
+                NC0 = nc0(G, clusters, tree, start_cluster_id)
+                P2_cost = lower_bound(NC0, [start_cluster_id] + sigma, ind_V_j, start_cluster_id)
+                for v in clusters[start_cluster_id]:
                     for tilde_u in clusters[ind_V_j]:
                         if G.has_edge(v,tilde_u):             # checking if graph has edge
                             capacity += 1
                             state = State(sigma, ind_V_j, tilde_u, v)
                             state.cost = G[v][tilde_u]["weight"]
+                            state.LB = state.cost + P2_cost
+                            layerLB = min(layerLB, state.LB)
+
                             witness = state.witness()
                             lookup_table[witness] = state
                         
@@ -209,8 +220,8 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
             layer = None
  
             capacity = sum(map(lambda item: item[0],results))
-
             cutoff = sum(map(lambda item: item[2],results))
+            layerLB = min(map(lambda item: item[3],results))
      
             def instead_of_lambda(acc, res):
                 acc.update(res[1])
@@ -233,9 +244,14 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
     
     gc.collect()
 
+    LB = max(LB, layerLB)
+    Gap = (UB - LB)/LB
+
+    # print(f'Layer LB is {layerLB}')  
     print(f'\t{cutoff} ({cutoff / (cutoff + capacity):.1%}) of branches were cut off')
-    print(f'layer {layer_level+1:03d} of size {capacity:>10} is completed by {actual_workers_count} worker(s) at {time.time() - start_time:8.2f} sec')
-    return predicted_workers_count, lookup_table, sigmas_from_lookup_table
+    print(f'layer {layer_level+1:03d} of size {capacity:>10} ({len(sigmas_from_lookup_table)}) is completed by {actual_workers_count} worker(s) at {time.time() - start_time:8.2f} sec.')
+    print(f'Best UB is {UB}, Best LB is {LB}, Gap is {Gap:.2%}\n=============================')
+    return predicted_workers_count, lookup_table, sigmas_from_lookup_table, LB
 
 
 def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_keep_layers, workers_count, UB = MAXINT):
@@ -245,10 +261,17 @@ def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_keep_layers, 
     predicted_workers_count = possible_workers_count()
     previous_layer = []
 
+    c_keys=list(clusters.keys())
+    start_cluster_id = c_keys[0]
+    NC0 = nc0(G, clusters, tree, start_cluster_id)
+
+    LB = lower_bound(NC0, [start_cluster_id], start_cluster_id, start_cluster_id)
+    print(f'Start LB is {LB}')
+
     for layer_level in range(num_of_layers):
         keep_lookup_table = (layer_level >= num_of_layers - 1)
-        predicted_workers_count, lookup_table, previous_layer = compute_Bellman_layer(G, clusters,  layer_level, previous_layer, 
-            tree, lookup_table_name, keep_lookup_table, workers_count, predicted_workers_count, UB)
+        predicted_workers_count, lookup_table, previous_layer, LB = compute_Bellman_layer(G, clusters,  layer_level, previous_layer, 
+            tree, lookup_table_name, keep_lookup_table, workers_count, predicted_workers_count, UB, LB)
         
     OPT = MAXINT
     best_state = None
