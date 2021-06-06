@@ -1,4 +1,3 @@
-
 import networkx as nx
 import Instance_generator as ig
 import time
@@ -11,9 +10,7 @@ import functools as ft
 import sys
 
 from collections import Counter
-
-from fromWEL import getInstance
-
+from salmanize import lower_bound, nc0
 
 MAXINT = 100000000000000000000000000000
 MAXTASKSPERWORKER = 1000
@@ -41,7 +38,8 @@ class State:
         self.tilde_u = tilde_u   # last node in the last cluster
         self.v = v               # first node 
         self.predecessor_witness = ''    # predecessor state witness
-        self.cost = cost  
+        self.cost = cost
+        self.LB = - MAXINT  
 
     def witness(self):
         return f'{self.sigma}, {self.j}, {self.tilde_u}, {self.v}'
@@ -49,7 +47,7 @@ class State:
        
 
 def make_unique_list(lst):
-    tuples=map(tuple, lst)
+    tuples=map(lambda item: tuple(sorted(item)),lst)
     cnt = Counter(tuples)
     unique_tuples = list(cnt.keys())
     return list(map(list,unique_tuples))
@@ -65,11 +63,7 @@ def layer_worker_init(tree, V1_succ):
 
     
 def parallel_make_layer(sigma):
-    global mp_tree
-    global mp_V1_succ
-
     current_layer_chunk=[]
-
     l_sigma = list(sigma) 
     current_layer_chunk += [l_sigma + [succ] for succ in mp_V1_succ if succ not in l_sigma]
     
@@ -107,7 +101,8 @@ def add_layer(clusters,tree, previous_layer, layer_level, workers_count):
     
     current_layer = make_unique_list(current_layer)
     # print('Duplicates are excluded')
-    print(f'layer {layer_level+1:03d} of size {len(current_layer):>8} is prepared by {actual_workers_count} worker(s) at {time.time() - start_time:8.2f} sec')
+    # print(f'layer {layer_level+1:03d} of size {len(current_layer):>8} is prepared by {actual_workers_count} worker(s) at {time.time() - start_time:8.2f} sec')
+    print(current_layer)
     return current_layer
 
 def make_layers(clusters,tree, lookup_table_name, workers_count):
@@ -164,42 +159,54 @@ def compute_Bellman_cell(G, clusters, transitive_closure, lookup_table, state):
 
 ################ multiprocessing staff #########
 ###  
-def worker_init(G, clusters, tree, lookup_table_filename):
+def worker_init(G, clusters, tree, lookup_table_filename, UB):
     global mp_G
     global mp_clusters
     global mp_tree
     global mp_lookup_table
     global mp_transitive_closure
+    global mp_nc0
+    global mp_UB
 
     mp_G, mp_clusters, mp_tree = G, clusters, tree
     mp_transitive_closure = nx.transitive_closure(tree)
+    mp_UB = UB
+
+    c_keys=list(mp_clusters.keys())
+    start_cluster_id = c_keys[0]
+    mp_nc0 = nc0(mp_G, mp_clusters, mp_tree, start_cluster_id)
 
     with open(lookup_table_filename, 'rb') as fin:
         mp_lookup_table = pic.load(fin)
 
 def parallel(sigma):
-    global mp_G
-    global mp_clusters
-    global mp_tree
     global mp_lookup_table
 
     result ={}
     capacity = 0
     c_keys=list(mp_clusters.keys())
-
+    start_cluster_id = c_keys[0]
+    cutoff = 0
+   
     for ind_V_j in [ind for ind in sigma if can_be_the_last_cluster(sigma, ind, mp_transitive_closure)]:
-        for v in mp_clusters[c_keys[0]]:
+        P2_cost = lower_bound(mp_G, [start_cluster_id] + sigma, ind_V_j, start_cluster_id)
+        print(f'S={[start_cluster_id]+sigma},\t org_cluster={start_cluster_id},\t dest_cluster={ind_V_j},\t  P2_cost={P2_cost}')
+        for v in mp_clusters[start_cluster_id]:
             for tilde_u in mp_clusters[ind_V_j]:
                 state = State(sigma, ind_V_j, tilde_u, v)
                 state.cost = compute_Bellman_cell(mp_G, mp_clusters, mp_transitive_closure, mp_lookup_table, state)
                 if state.cost < MAXINT:
-                    result[state.witness()] = state
-                    capacity += 1
-    return (capacity, result)
+                    state.LB = P2_cost + state.cost
+                    if state.LB <= mp_UB:
+                        result[state.witness()] = state
+                        capacity += 1
+                    else:
+                        cutoff += 1
+    return (capacity, result, cutoff)
 ###
 ##################################################
 
-def compute_Bellman_layer(G, clusters,  layer_level, tree, lookup_table_name, keep_lookup_table, workers_count, predicted_workers_count):
+def compute_Bellman_layer(G, clusters,  layer_level, tree, lookup_table_name, keep_lookup_table, workers_count, predicted_workers_count, UB):
  
     with open(f'{lookup_table_name}{layer_level:03d}.lyr', 'rb') as fin:
         layer = pic.load(fin)
@@ -210,6 +217,7 @@ def compute_Bellman_layer(G, clusters,  layer_level, tree, lookup_table_name, ke
     lookup_table = {}
 
     capacity = 0
+    cutoff = 0
     if layer_level < 1: # baseline case
         actual_workers_count = 1
         for sigma in layer:
@@ -227,7 +235,7 @@ def compute_Bellman_layer(G, clusters,  layer_level, tree, lookup_table_name, ke
     else:
 
         actual_workers_count = min(workers_count, predicted_workers_count)
-        with mp.Pool(actual_workers_count, worker_init, (G, clusters, tree, f'{lookup_table_name}{layer_level-1:03d}.dct'), maxtasksperchild=MAXTASKSPERWORKER) as pool:
+        with mp.Pool(actual_workers_count, worker_init, (G, clusters, tree, f'{lookup_table_name}{layer_level-1:03d}.dct', UB), maxtasksperchild=MAXTASKSPERWORKER) as pool:
             results = pool.map(parallel, layer)
             pool.close()
             pool.join()
@@ -235,16 +243,12 @@ def compute_Bellman_layer(G, clusters,  layer_level, tree, lookup_table_name, ke
             layer = None
  
             capacity = sum(map(lambda item: item[0],results))
+
+            cutoff = sum(map(lambda item: item[2],results))
      
             def instead_of_lambda(acc, res):
                 acc.update(res[1])
                 return acc
-
-            # combined = ft.reduce(instead_of_lambda, results, {})
-     
-            # lookup_table.clear()
-            # lookup_table.update(combined)
-            # combined = None
 
             lookup_table = ft.reduce(instead_of_lambda, results, {})
 
@@ -260,10 +264,11 @@ def compute_Bellman_layer(G, clusters,  layer_level, tree, lookup_table_name, ke
     gc.collect()
 
     print(f'layer {layer_level+1:03d} of size {capacity:>10} complete by {actual_workers_count} worker(s) at {time.time() - start_time:8.2f} sec')
+    print(f'{cutoff} ({cutoff / (cutoff + capacity):.1%}) of branches were cut off')
     return predicted_workers_count, lookup_table
 
 
-def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_make_layers, workers_count):
+def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_make_layers, workers_count, UB = MAXINT):
     if need_2_make_layers:
         make_layers(clusters,tree, lookup_table_name, workers_count)   
 
@@ -275,7 +280,7 @@ def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_make_layers, 
 
     for layer_level in range(num_of_layers):
         keep_lookup_table = (layer_level >= num_of_layers - 1)
-        predicted_workers_count, lookup_table = compute_Bellman_layer(G, clusters,  layer_level, tree, lookup_table_name, keep_lookup_table, workers_count, predicted_workers_count)
+        predicted_workers_count, lookup_table = compute_Bellman_layer(G, clusters,  layer_level, tree, lookup_table_name, keep_lookup_table, workers_count, predicted_workers_count, UB)
         
     OPT = MAXINT
     best_state = None
@@ -338,38 +343,6 @@ def get_path_length(path, graph):
     return sum(dist)
       
 
-def test(filename, need_2_make_layers, workers_count):
-    
-    graph, clusters, tree = getInstance(filename)
-
-    n = graph.number_of_nodes()
-    m = len(clusters)
-
-    print(f'Number of nodes: {n}, Number of clusters: {m}')
-    # print(f'Graph: {graph.edges(data = "weight")}')
-    print(f'Clusters: {clusters}')
-    print(f'Partial order tree: {tree.edges()}')
-        
-    start_time = time.time()
-    
-    lookup_table_name = f'problem_{n}_{m}_'
-    res = DP_solver_layered(graph, clusters, tree, lookup_table_name, need_2_make_layers, workers_count)
-    
-    print(f'RESULT: ')
-    if res:
-        OPT, route, tour = res
-
-        print(f'OPT = {OPT}')
-        print(f'Optimal Tour: {tour}')
-        print(f'Visited clusters: {route}')
-
-        print(f'Tour length (rechecked): {get_path_length(tour, graph)}')
-
-
-    else:
-        print('Instance is infeasible')
-    print(f'Elapsed time: {time.time()-start_time:.2f} sec')
-
 def visited_clusters(tour, clusters):
     def cluster(node):
         found = -1
@@ -379,44 +352,3 @@ def visited_clusters(tour, clusters):
                 break
         return found
     return list(map(cluster, tour))
-
-def test2(filename):
-    graph, clusters, tree = getInstance(filename)
-    tour2 = [1, 251, 238, 112, 93, 65, 34, 218, 214, 234, 231, 266, 264, 283, 277, 146, 121, 314, 313, 299, 284, 200, 173, 1]
-
-    print(f'tour: {tour2}')
-    print(f'clusters: {visited_clusters(tour2, clusters)}')
-    print(f'tour length (rechecked): {get_path_length(tour2, graph)}')
-
-if __name__ == '__main__':
-    # test2('../pcglns/e5x_1.pcglns')          # PCGLNS results: Obj val.: 1890 - < 5 sec.
-    # test('../pcglns/e5x_1.pcglns',True, 5)   # OPT: 1847 - time 4662 sec
-
-    # test('../pcglns/e3x_2.pcglns',True,6)      # PCGLNS results: Obj val.: 1584 - < 5 sec., OPTL 1578 - time 15824 sec
-
-    # test('../Salman/input/ESC07.pcglns', True, 3)  OPT: 1730, time < 2 sec
-    ifname = ''
-    workers_count = 1
-
-    try:
-        for arg in sys.argv:
-            if '=' in arg:
-                parts = arg.split('=')
-                if parts[0] == '--input' or parts[0] == '-i':
-                    ifname = parts[1]
-                if parts[0] == '--workers' or parts[0] == '-w':
-                    workers_count = int(parts[1])
-
-        test(ifname, True, workers_count)
-    except:
-        print('SYNTAX: python DP_parallel_layered3_wel.py -i=<input path/filename> [-w=<workers_count>]')
-
-    
-
-    
-
-        
-    
-    
-  
-
