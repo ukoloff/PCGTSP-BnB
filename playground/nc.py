@@ -11,8 +11,15 @@ import prefix, nb
 # historySuffix[] @ page 9
 history = {}
 
-def nc(node: STNode):
-  result = node.task.initialNC.copy()
+def nc(node: STNode, L=1):
+  if L == 1:
+    result = node.task.initialNC
+  elif L == 2:
+    result = node.task.L2
+  else:
+    raise ValueError("Invalid L for NC")
+  result = result.copy()
+
   if len(node.sigma) <= 1:
     return result
   for i in range(1, len(node.sigma) - 1):
@@ -54,6 +61,9 @@ def lower_bounds(node: STNode):
   g = nc(node)
   # node.bounds['MSAP'] = MSAP(g)
   node.bounds['AP'] = AP(g)
+
+  g = nc(node, L=2)
+  node.bounds['L2'] = AP(g)
 
   # Noon-Bean
   # g = nb.noon_bean(node)
