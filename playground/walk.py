@@ -51,7 +51,7 @@ def solve(task: Task):
       print('!')
       continue
     updateLB(node)
-    print(f'\tLB={root.LB} // {int((root.task.UB - root.LB) / root.task.UB * 100)}%')
+    print(f'\tLB={root.LB} // {(root.task.UB - root.LB) / root.task.UB * 100:.0f}%')
 
 
 def subtree(node: STNode, order=None):
