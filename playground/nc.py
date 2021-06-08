@@ -52,13 +52,13 @@ def lower_bounds(node: STNode):
     node.bounds['LB'] = history[S] + node.shortest_path
     return
   g = nc(node)
-  node.bounds['MSAP'] = MSAP(g)
+  # node.bounds['MSAP'] = MSAP(g)
   node.bounds['AP'] = AP(g)
 
   # Noon-Bean
-  g = nb.noon_bean(node)
-  node.bounds['NB-MSAP'] = MSAP(g)
-  node.bounds['NB-AP'] = AP(g)
+  # g = nb.noon_bean(node)
+  # node.bounds['NB-MSAP'] = MSAP(g)
+  # node.bounds['NB-AP'] = AP(g)
 
   history[S] = max(node.bounds.values())
   node.bounds['LB'] = history[S] + node.shortest_path
