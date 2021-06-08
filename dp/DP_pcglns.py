@@ -7,7 +7,7 @@ import sys
 
 
 from fromPCGLNS import getInstance
-from DP_BnB_solver_v0_10 import DP_solver_layered, visited_clusters, get_path_length, MAXINT
+from DP_BnB_solver_v0_11 import DP_solver_layered, visited_clusters, get_path_length, MAXINT, MEMORY_LIMIT_GB
 
       
 
@@ -75,9 +75,11 @@ if __name__ == '__main__':
                     workers_count = int(parts[1])
                 if parts[0] == '--upper_bound' or parts[0] == '-UB':
                     UB = float(parts[1])
+                if parts[0] == '--memory_limit_gb' or parts[0] == '-m':
+                    MEMORY_LIMIT = int(parts[1]) * 1000000000
 
     except:
-        print('SYNTAX: python DP_parallel_layered3_pcglns.py -i=<input path/filename> [-w=<workers_count>] [-UB=<upper_bound>]')
+        print('SYNTAX: python DP_parallel_layered3_pcglns.py -i=<input path/filename> [-w=<workers_count>] [-UB=<upper_bound>] [-m=<memory_limit (Gb)>]')
 
     test(ifname, keep_layers, workers_count, UB)
 
