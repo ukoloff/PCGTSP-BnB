@@ -2,7 +2,6 @@
 # Построить граф L2
 # (расстояния между кластерами через промежуточный кластер)
 #
-from re import S
 import numpy as np
 import networkx as nx
 
