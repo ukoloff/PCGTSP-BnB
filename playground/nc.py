@@ -6,13 +6,18 @@
 import networkx as nx
 
 from klasses import Task, STNode
-import prefix, nb
+import prefix, nb, nc0, L2
 
 # historySuffix[] @ page 9
 history = {}
 
-def nc(node: STNode):
+def nc(node: STNode, L=1):
+  if L == 2:
+    return node.task.L2.suffix_graph(node)
+  if L != 1:
+    raise ValueError("Invalid L for NC")
   result = node.task.initialNC.copy()
+
   if len(node.sigma) <= 1:
     return result
   for i in range(1, len(node.sigma) - 1):
@@ -52,13 +57,16 @@ def lower_bounds(node: STNode):
     node.bounds['LB'] = history[S] + node.shortest_path
     return
   g = nc(node)
-  node.bounds['MSAP'] = MSAP(g)
+  # node.bounds['MSAP'] = MSAP(g)
   node.bounds['AP'] = AP(g)
 
+  g = nc(node, L=2)
+  node.bounds['L2'] = AP(g)
+
   # Noon-Bean
-  g = nb.noon_bean(node)
-  node.bounds['NB-MSAP'] = MSAP(g)
-  node.bounds['NB-AP'] = AP(g)
+  # g = nb.noon_bean(node)
+  # node.bounds['NB-MSAP'] = MSAP(g)
+  # node.bounds['NB-AP'] = AP(g)
 
   history[S] = max(node.bounds.values())
   node.bounds['LB'] = history[S] + node.shortest_path
@@ -72,6 +80,14 @@ def bounds(node: STNode):
     upper_bound(node)
   else:
     lower_bounds(node)
+
+
+def initL1(task: Task):
+  nc0.nc0(task)
+
+
+def initL2(task: Task):
+  task.L2 = L2.L2data(task)
 
 
 if __name__ == '__main__':

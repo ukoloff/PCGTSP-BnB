@@ -7,16 +7,16 @@ import networkx as nx
 
 from klasses import Task
 
-def nc0(task: Task):
+def nc0(task: Task, start_cluster=1):
   """Рассчитать минимальные расстояния между группами с учётом PC
   """
-  res = nx.create_empty_copy(task.tree)
+  res = nx.DiGraph()
 
   for A in task.tree:
     for B in task.tree:
       if A is B:
         continue
-      if B == 1:
+      if B == start_cluster:
         if task.tree.out_degree(A) != 0:
           continue
       else:

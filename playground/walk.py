@@ -5,12 +5,13 @@ from datetime import timedelta
 from timeit import default_timer as timer
 
 from klasses import Task, STNode
-import prefix, nc0, nc, cut_prefix, children
+import prefix, nc, cut_prefix, children
 
 def solve(task: Task):
   """Обход дерева решений
   """
-  nc0.nc0(task)
+  nc.initL1(task)
+  nc.initL2(task)
 
   last_len = 0
   last = timer()
@@ -51,7 +52,7 @@ def solve(task: Task):
       print('!')
       continue
     updateLB(node)
-    print(f'\tLB={root.LB} // {int((root.task.UB - root.LB) / root.task.UB * 100)}%')
+    print(f'\tLB={root.LB} // {(root.task.UB - root.LB) / root.task.UB * 100:.0f}%')
 
 
 def subtree(node: STNode, order=None):
