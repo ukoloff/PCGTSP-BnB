@@ -6,19 +6,17 @@
 import networkx as nx
 
 from klasses import Task, STNode
-import prefix, nb
+import prefix, nb, nc0, L2
 
 # historySuffix[] @ page 9
 history = {}
 
 def nc(node: STNode, L=1):
-  if L == 1:
-    result = node.task.initialNC
-  elif L == 2:
-    result = node.task.L2
-  else:
+  if L == 2:
+    return node.task.L2.suffix_graph(node)
+  if L != 1:
     raise ValueError("Invalid L for NC")
-  result = result.copy()
+  result = node.task.initialNC.copy()
 
   if len(node.sigma) <= 1:
     return result
@@ -82,6 +80,14 @@ def bounds(node: STNode):
     upper_bound(node)
   else:
     lower_bounds(node)
+
+
+def initL1(task: Task):
+  nc0.nc0(task)
+
+
+def initL2(task: Task):
+  task.L2 = L2.L2data(task)
 
 
 if __name__ == '__main__':
