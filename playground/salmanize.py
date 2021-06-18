@@ -83,6 +83,6 @@ if __name__ == '__main__':
     cg = nc0(task.dists, task.clusters, task.tree)
     for sigma, ap in ex5s.items():
         LB = lower_bound(cg, sorted(sigma), sigma[-1], sigma[0])
-        if LB != ap:
+        if LB != ap['AP']:
             print("Error for", sigma)
     print("Tested:", len(ex5s), "prefixes")
