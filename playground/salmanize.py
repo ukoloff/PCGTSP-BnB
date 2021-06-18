@@ -1,15 +1,50 @@
 #
 # "Чистый" код для подсчёта пути по "внешнему" пути (суффиксу)
 # NC + AP
+#
 import networkx as nx
 
+from saL2 import L2data
 
-def nc0(dists: nx.DiGraph, clusters: dict, order: nx.DiGraph, start_cluster=1):
+
+def precalculate(dists: nx.DiGraph, clusters: dict, tree: nx.DiGraph, start_cluster=1):
+    """Рассчитать данные для быстрого расчёта оценок L1 & L2
+
+    dists - расстояния между точками
+    clusters - распределение точек по кластерам
+    tree - дерево порядка (редуцированное!)
+    start_cluster - начальный кластер
+    """
+    tree_closure = nx.transitive_closure_dag(tree)
+
+    return (
+        nc0(dists, clusters, tree, tree_closure, start_cluster),
+        L2data(dists, clusters, tree, tree_closure, start_cluster),
+    )
+
+
+def lower_bound(precalculated: tuple, sigma, last_cluster, start_cluster=1, details=False):
+    """Рассчитать LB для "внешнего" графа
+    """
+    result = (
+        AP(subgraph(precalculated[0], sigma, last_cluster, start_cluster)),
+        AP(precalculated[1].suffix_graph(sigma, last_cluster, start_cluster)),
+    )
+    if details:
+        return result
+    return max(result)
+
+#
+# Ниже расчёт L1
+#
+
+
+def nc0(dists: nx.DiGraph, clusters: dict, tree: nx.DiGraph, tree_closure: nx.DiGraph, start_cluster=1):
     """Построить граф кластеров для данной задачи
     (с частичным учётом ограничений предшествования)
     """
-    tree = nx.transitive_reduction(order)
-    tree_closure = nx.transitive_closure_dag(tree)
+    # tree = nx.transitive_reduction(order)
+    # tree_closure = nx.transitive_closure_dag(tree)
 
     res = nx.DiGraph()
     for A in tree:
@@ -68,10 +103,10 @@ def AP(graph: nx.DiGraph):
     return sum(graph[u][v]['weight'] for (p, u), (q, v) in matching.items() if p == 1 and q == 2)
 
 
-def lower_bound(nc0: nx.DiGraph, sigma, last_cluster, start_cluster=1):
-    """Рассчитать LB для "внешнего" графа
-    """
-    return AP(subgraph(nc0, sigma, last_cluster, start_cluster))
+# def lower_bound(nc0: nx.DiGraph, sigma, last_cluster, start_cluster=1):
+#     """Рассчитать LB для "внешнего" графа
+#     """
+#     return AP(subgraph(nc0, sigma, last_cluster, start_cluster))
 
 
 if __name__ == '__main__':
@@ -80,9 +115,9 @@ if __name__ == '__main__':
 
     # task = samples.random(27, 7)
     task = samples.load("e5x_1")
-    cg = nc0(task.dists, task.clusters, task.tree)
+    data = precalculate(task.dists, task.clusters, task.tree)
     for sigma, ap in ex5s.items():
-        LB = lower_bound(cg, sorted(sigma), sigma[-1], sigma[0])
-        if LB != ap['AP']:
+        LB = lower_bound(data, sorted(sigma), sigma[-1], sigma[0], details=True)
+        if LB[0] != ap['AP'] or LB[1] != ap['L2']:
             print("Error for", sigma)
     print("Tested:", len(ex5s), "prefixes")
