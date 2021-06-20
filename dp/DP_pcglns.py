@@ -7,7 +7,7 @@ import sys
 
 
 from fromPCGLNS import getInstance
-from DP_BnB_solver_v0_11 import DP_solver_layered, visited_clusters, get_path_length, MAXINT, MEMORY_LIMIT
+from DP_BnB_solver_v0_20 import DP_solver_layered, visited_clusters, get_path_length, MAXINT, MEMORY_LIMIT
 
       
 
