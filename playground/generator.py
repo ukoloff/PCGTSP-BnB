@@ -14,23 +14,39 @@ print("Loading:", src)
 # task = samples.random(1000, 12)
 task = samples.load(src)
 
-print("Size:\t", task.dists.order(), '/', len(task.clusters))
-print("UB:\t", task.UB)
-# print("Solution so far:\t", task.solution)
-print()
 
-nc.initL1(task)
-nc.initL2(task)
+def make_generator(task: Task):
+    print("Size:\t", task.dists.order(), '/', len(task.clusters))
+    print("UB:\t", task.UB)
+    # print("Solution so far:\t", task.solution)
+    print()
 
-root = STNode(task)
-n = 0
-for node in children.subtree(root):
-    n += 1
-    if n > 5:
-      break
-    print(node.sigma, end='\t', flush=True)
+    nc.initL1(task)
+    nc.initL2(task)
 
-    graph = nc.nc(node, L=1)
-    tree = nc.get_order(node, graph)
-    # Use them!
-    print(len(graph), len(tree))
+    root = STNode(task)
+    for node in children.subtree(root):
+        # print(node.sigma, end='\t', flush=True)
+
+        graph = nc.nc(node, L=1)
+        tree = nc.get_order(node, graph)
+
+        yield graph, tree, node.sigma
+
+
+it = make_generator(task)
+
+
+def next_graph():
+    """Возвращает следуюшую тройку:
+    1) Граф кластеров
+    2) Дерево (DAG) порядка
+    3) Сигма
+    """
+    return next(it)
+
+
+# Пример использования:
+for i in range(5):
+    graph, tree, sigma = next_graph()
+    print(sigma, len(graph), len(tree))
