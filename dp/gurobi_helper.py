@@ -50,9 +50,9 @@ def create_model(model_name, G, tree, first_node_idx = 0):
         
     perms=set()
         
-    for e1,e2,e3 in permutations([e for e in G.edges if not first_node in e],3):
+    for e1,e2,e3 in [p for p in permutations([e for e in G.edges if not first_node in e],3) if sorted(p) == p]:
         if e1[1] == e2[0] and e2[1] == e3[0] and e3[1] == e1[0]:
-            perms.add(tuple(sorted([e1,e2,e3])))
+            perms.add((e1, e2, e3))
 
     for e1, e2, e3 in perms:
         i = n_dict[e1[0]]
