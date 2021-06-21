@@ -32,6 +32,13 @@ def nc(node: STNode, L=1):
   result.add_edge(node.sigma[0], node.sigma[-1], weight=0)
   return result
 
+def get_order(node: STNode, graph: nx.DiGraph):
+  """Построить дерево порядка для графа кластеров
+  """
+  result = node.task.tree_closure.copy()
+  result.remove_nodes_from([node for node in result if node not in graph])
+  return nx.transitive_reduction(result)
+
 def MSAP(graph):
   """Рассчитать LB-оценку методом MSAP
   """
