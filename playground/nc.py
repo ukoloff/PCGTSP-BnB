@@ -36,7 +36,7 @@ def get_order(node: STNode, graph: nx.DiGraph):
   """Построить дерево порядка для графа кластеров
   """
   result = node.task.tree_closure.copy()
-  result.remove_nodes_from([node for node in result if node not in graph])
+  result.remove_nodes_from(set(result) - set(graph))
   return nx.transitive_reduction(result)
 
 def MSAP(graph):
