@@ -23,7 +23,11 @@ nc.initL1(task)
 nc.initL2(task)
 
 root = STNode(task)
+n = 0
 for node in children.subtree(root):
+    n += 1
+    if n > 5:
+      break
     print(node.sigma, end='\t', flush=True)
 
     graph = nc.nc(node, L=1)
