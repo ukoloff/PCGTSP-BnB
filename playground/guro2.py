@@ -10,6 +10,7 @@ from gurobipy import GRB
 
 def model(graph: nx.DiGraph, tree: nx.DiGraph, start_node=1):
     m = gp.Model('pctsp')
+    m.Params.LogToConsole = False
 
     vertices = list(graph)
     n = len(vertices)
@@ -76,6 +77,7 @@ def model(graph: nx.DiGraph, tree: nx.DiGraph, start_node=1):
 
 
 if __name__ == '__main__':
+    from timeit import timeit
     import samples
     import nc
     from klasses import Task, STNode
@@ -92,6 +94,14 @@ if __name__ == '__main__':
     m.optimize()
     print('Result:', m.objboundc)
     for v in m.getVars():
-      if not v.VarName.startswith('x[') or v.X == 0:
-        continue
-      print(v.VarName[2:-1], end='\t')
+        if not v.VarName.startswith('x[') or v.X == 0:
+            continue
+        print(v.VarName[2:-1], end='\t')
+
+    # Time it!
+    print()
+    build = timeit(lambda: model(graph, tree), number=10) / 10
+    print(f'Build: {build * 1000:.3f}ms')
+
+    solve = timeit(lambda: model(graph, tree).optimize(), number=10) / 10
+    print(f'Build + Solve: {solve * 1000:.3f}ms')
