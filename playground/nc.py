@@ -66,7 +66,7 @@ def lower_bounds(node: STNode):
   g = nc(node)
   # node.bounds['MSAP'] = MSAP(g)
   node.bounds['AP'] = AP(g)
-  node.bounds['TSP'] = gurobi(node, g)
+  node.bounds['TSP'] = round(gurobi(node, g))
 
   g = nc(node, L=2)
   node.bounds['L2'] = AP(g)
