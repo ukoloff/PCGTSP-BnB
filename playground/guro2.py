@@ -7,7 +7,6 @@ import networkx as nx
 import gurobipy as gp
 from gurobipy import GRB
 
-
 def model(graph: nx.DiGraph, tree: nx.DiGraph, start_node=1):
     m = gp.Model('pctsp')
     m.Params.LogToConsole = False
@@ -104,4 +103,12 @@ if __name__ == '__main__':
     print(f'Build: {build * 1000:.3f}ms')
 
     solve = timeit(lambda: model(graph, tree).optimize(), number=10) / 10
+    print(f'Build + Solve: {solve * 1000:.3f}ms')
+
+    from guro2x import create_model
+    print('[guro2x]')
+    build = timeit(lambda: create_model('pctsp', graph, tree), number=10) / 10
+    print(f'Build: {build * 1000:.3f}ms')
+
+    solve = timeit(lambda: create_model('pctsp', graph, tree)[0].optimize(), number=10) / 10
     print(f'Build + Solve: {solve * 1000:.3f}ms')
