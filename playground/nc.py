@@ -6,7 +6,7 @@
 import networkx as nx
 
 from klasses import Task, STNode
-import prefix, nb, nc0, L2
+import prefix, nb, nc0, L2, guro2
 
 # historySuffix[] @ page 9
 history = {}
@@ -31,6 +31,13 @@ def nc(node: STNode, L=1):
       pass
   result.add_edge(node.sigma[0], node.sigma[-1], weight=0)
   return result
+
+def get_order(node: STNode, graph: nx.DiGraph):
+  """Построить дерево порядка для графа кластеров
+  """
+  result = node.task.tree_closure.copy()
+  result.remove_nodes_from(set(result) - set(graph))
+  return nx.transitive_reduction(result)
 
 def MSAP(graph):
   """Рассчитать LB-оценку методом MSAP
@@ -59,9 +66,11 @@ def lower_bounds(node: STNode):
   g = nc(node)
   # node.bounds['MSAP'] = MSAP(g)
   node.bounds['AP'] = AP(g)
+  node.bounds['TSP'] = round(gurobi(node, g))
 
   g = nc(node, L=2)
   node.bounds['L2'] = AP(g)
+  # node.bounds['TSP/L2'] = gurobi(node, g)
 
   # Noon-Bean
   # g = nb.noon_bean(node)
@@ -70,6 +79,16 @@ def lower_bounds(node: STNode):
 
   history[S] = max(node.bounds.values())
   node.bounds['LB'] = history[S] + node.shortest_path
+
+
+def gurobi(node: STNode, graph: nx.DiGraph):
+  """Посчитать честный TSP
+  """
+  m = guro2.model(graph, node.task.tree_closure, node.sigma[0])
+  m.optimize()
+  if m.status != 2:
+    raise RuntimeError(f"Gurobi status = {m.status}")
+  return m.objboundc
 
 
 def upper_bound(node: STNode):
