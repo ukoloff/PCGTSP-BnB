@@ -8,7 +8,7 @@ import gurobipy as gp
 from gurobipy import GRB
 
 
-def create_model(model_name, G, tree, first_node_idx=0):
+def create_model(model_name, G, tree_closure, first_node_idx=0):
     # with gp.Env(empty=True) as env:
         # env.setParam('LogToConsole', 0)
         # env.start()
@@ -21,7 +21,7 @@ def create_model(model_name, G, tree, first_node_idx=0):
         n_dict = {n_list[idx]: idx for idx in range(n)}
         first_node = n_list[first_node_idx]
 
-        tree_closure = nx.transitive_closure_dag(tree)
+        # tree_closure = nx.transitive_closure_dag(tree)
         A = nx.to_numpy_matrix(G, nodelist=list(G))
 
         x_ij, cost = gp.multidict(dict(np.ndenumerate(A)))
@@ -61,6 +61,8 @@ def create_model(model_name, G, tree, first_node_idx=0):
         # PRECEDENCE CONSTRAINTS
 
         for e in tree_closure.edges:
+            if e[0] not in n_dict or e[1] not in n_dict:
+              continue
             i = n_dict[e[0]]
             j = n_dict[e[1]]
 

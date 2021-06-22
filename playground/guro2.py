@@ -7,7 +7,7 @@ import networkx as nx
 import gurobipy as gp
 from gurobipy import GRB
 
-def model(graph: nx.DiGraph, tree: nx.DiGraph, start_node=1):
+def model(graph: nx.DiGraph, tree_closure: nx.DiGraph, start_node=1):
     m = gp.Model('pctsp')
     m.Params.LogToConsole = False
 
@@ -65,7 +65,9 @@ def model(graph: nx.DiGraph, tree: nx.DiGraph, start_node=1):
                 f'tri_{iu}_{iv}_{iw}')
 
     # PRECEDENCE CONSTRAINTS
-    for u, v in nx.transitive_closure_dag(tree).edges:
+    for u, v in tree_closure.edges:
+        if u not in iVert or v not in iVert:
+          continue
         iu = iVert[u]
         iv = iVert[v]
         m.addConstr(
@@ -86,9 +88,9 @@ if __name__ == '__main__':
     nc.initL1(task)
     root = STNode(task)
     graph = nc.nc(root, L=1)
-    tree = nc.get_order(root, graph)
+    # tree = nc.get_order(root, graph)
 
-    m = model(graph, tree)
+    m = model(graph, task.tree_closure)
     # m.write('!!!.lp')
     m.optimize()
     print('Result:', m.objboundc)
@@ -99,16 +101,16 @@ if __name__ == '__main__':
 
     # Time it!
     print()
-    build = timeit(lambda: model(graph, tree), number=10) / 10
+    build = timeit(lambda: model(graph, task.tree_closure), number=10) / 10
     print(f'Build: {build * 1000:.3f}ms')
 
-    solve = timeit(lambda: model(graph, tree).optimize(), number=10) / 10
+    solve = timeit(lambda: model(graph, task.tree_closure).optimize(), number=10) / 10
     print(f'Build + Solve: {solve * 1000:.3f}ms')
 
     from guro2x import create_model
     print('[guro2x]')
-    build = timeit(lambda: create_model('pctsp', graph, tree), number=10) / 10
+    build = timeit(lambda: create_model('pctsp', graph, task.tree_closure), number=10) / 10
     print(f'Build: {build * 1000:.3f}ms')
 
-    solve = timeit(lambda: create_model('pctsp', graph, tree)[0].optimize(), number=10) / 10
+    solve = timeit(lambda: create_model('pctsp', graph, task.tree_closure)[0].optimize(), number=10) / 10
     print(f'Build + Solve: {solve * 1000:.3f}ms')
