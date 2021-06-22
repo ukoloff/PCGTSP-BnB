@@ -8,7 +8,8 @@ def points():
     Center: 0, 0; Radius: 1
     """
     while True:
-        pt = (*[random.uniform(-1, 1) for i in range(2)],)
+        # Tuple comprehension ;-)
+        pt = tuple(random.uniform(-1, 1) for i in range(2))
         if sum(x * x for x in pt) < 1:
             yield pt
 
