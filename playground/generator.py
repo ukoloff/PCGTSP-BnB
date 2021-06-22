@@ -35,29 +35,29 @@ def make_generator(task: Task):
         yield graph, tree, node.sigma
 
 
-# it = make_generator(task)
+it = make_generator(task)
 
 
-def next_graph(count):
+def next_graph():
     """Возвращает следуюшую тройку:
     1) Граф кластеров
     2) Дерево (DAG) порядка
     3) Сигма
     """
-    src = "e5x_1"
-    print("Loading:", src)
+#     src = "e5x_1"
+#     print("Loading:", src)
 
-# task = samples.random(1000, 12)
-    task = samples.load(src)
-    it = make_generator(task)
+# # task = samples.random(1000, 12)
+#     task = samples.load(src)
+#     it = make_generator(task)
     
-    for c in range(count):
-        next(it)
+#     for c in range(count):
+#         next(it)
     
     return next(it)
 
 
 # Пример использования:
-for i in range(5):
-    graph, tree, sigma = next_graph()
-    print(sigma, len(graph), len(tree))
+# for i in range(5):
+#     graph, tree, sigma = next_graph()
+#     print(sigma, len(graph), len(tree))
