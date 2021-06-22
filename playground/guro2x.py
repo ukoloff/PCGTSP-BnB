@@ -8,12 +8,12 @@ import gurobipy as gp
 from gurobipy import GRB
 
 
-def create_model(model_name, G, tree_closure, first_node_idx=0):
+def create_model(G, tree_closure, first_node_idx=0):
     # with gp.Env(empty=True) as env:
         # env.setParam('LogToConsole', 0)
         # env.start()
 
-        model = gp.Model(model_name) #, env=env)
+        model = gp.Model('pctsp') #, env=env)
         model.Params.LogToConsole = False
 
         n = len(G)

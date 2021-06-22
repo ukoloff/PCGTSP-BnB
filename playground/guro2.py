@@ -109,8 +109,8 @@ if __name__ == '__main__':
 
     from guro2x import create_model
     print('[guro2x]')
-    build = timeit(lambda: create_model('pctsp', graph, task.tree_closure), number=10) / 10
+    build = timeit(lambda: create_model(graph, task.tree_closure), number=10) / 10
     print(f'Build: {build * 1000:.3f}ms')
 
-    solve = timeit(lambda: create_model('pctsp', graph, task.tree_closure)[0].optimize(), number=10) / 10
+    solve = timeit(lambda: create_model(graph, task.tree_closure)[0].optimize(), number=10) / 10
     print(f'Build + Solve: {solve * 1000:.3f}ms')
