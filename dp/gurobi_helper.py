@@ -68,8 +68,21 @@ def optimizeModel(model):
     return model.status, model.objboundc
 
 
-def main():
-	pass
+def main(model_name, G_c, tree):
+    model, x = create_model(model_name, G_c, tree)
+    model.write(f'tmp/{model_name}')
+
+    status, LB = optimizeModel(mode)
+    print(status, LB)
+	
 
 if __name__ == '__main__':
-	main()
+    from fromPCGLNS import getInstance
+    from salmanize import nc0
+
+    model_name='e5_x1'
+    G, clusters, tree = getInstance(f'pcglns/{model_name}.pcglns')
+    tree_closure = nx.transitive_closure_dag(tree)
+
+    G_c = nc0(G, clusters, tree, tree_closure)
+    main(model_name, G_c, tree)
