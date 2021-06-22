@@ -46,9 +46,10 @@ def create_model(model_name, G, tree, first_node_idx = 0):
 
             if not first_node_idx in (i,j):               
                 model.addConstr(y[i,j] - x[i,j] >= 0, f'ste1_{n_list[i]}_{n_list[j]}')
-                model.addConstr(y[i,j] + x[j,i] == 1, f'ste2_{n_list[i]}_{n_list[j]}')
+                model.addConstr(y[i,j] + y[j,i] == 1, f'ste2_{n_list[i]}_{n_list[j]}')
 
-        for i,j,k in [p for p in permutations(range(1,n),3) if sorted(list(p)) == list(p)]:
+        idxs = list(range(first_node_idx)) + list(range(first_node_idx + 1, n))
+        for i,j,k in [p for p in permutations(idxs,3) if sorted(list(p)) == list(p)]:
             model.addConstr(y[i,j] + y[j,k] + y[k,i] <= 2, f'ste3_{n_list[i]}_{n_list[j]}_{n_list[k]}')
 
         ### PRECEDENCE CONSTRAINTS
@@ -69,10 +70,17 @@ def optimizeModel(model):
 
 
 def main(model_name, G_c, tree):
-    model, x = create_model(model_name, G_c, tree)
-    model.write(f'tmp/{model_name}')
+    # print(G_c.nodes)
+    # print(G_c.edges(data='weight'))
+    
+    # comps = list(nx.strongly_connected_components(G))
+    # print(len(comps))
+    # exit(1)
 
-    status, LB = optimizeModel(mode)
+    model, x = create_model(model_name, G_c, tree)
+    model.write(f'tmp/{model_name}.lp')
+
+    status, LB = optimizeModel(model)
     print(status, LB)
 	
 
@@ -80,7 +88,7 @@ if __name__ == '__main__':
     from fromPCGLNS import getInstance
     from salmanize import nc0
 
-    model_name='e5_x1'
+    model_name='e5x_1'
     G, clusters, tree = getInstance(f'pcglns/{model_name}.pcglns')
     tree_closure = nx.transitive_closure_dag(tree)
 

@@ -23,6 +23,15 @@ def precalculate(dists: nx.DiGraph, clusters: dict, tree: nx.DiGraph, start_clus
     )
 
 
+def suffix_graphs(precalculated: tuple, sigma, last_cluster, start_cluster=1):
+    """Рассчитать "суффиксные" графы L1 & L2
+    """
+    return (
+        subgraph(precalculated[0], sigma, last_cluster, start_cluster),
+        precalculated[1].suffix_graph(sigma, last_cluster, start_cluster),
+    )
+
+
 def lower_bound(precalculated: tuple, sigma, last_cluster, start_cluster=1, details=False):
     """Рассчитать LB для "внешнего" графа
     """
@@ -117,7 +126,8 @@ if __name__ == '__main__':
     task = samples.load("e5x_1")
     data = precalculate(task.dists, task.clusters, task.tree)
     for sigma, ap in ex5s.items():
-        LB = lower_bound(data, sorted(sigma), sigma[-1], sigma[0], details=True)
+        LB = lower_bound(data, sorted(sigma),
+                         sigma[-1], sigma[0], details=True)
         if LB[0] != ap['AP'] or LB[1] != ap['L2']:
             print("Error for", sigma)
     print("Tested:", len(ex5s), "prefixes")
