@@ -8,33 +8,31 @@ import gurobipy as gp
 from gurobipy import GRB
 
 def model(graph: nx.DiGraph, tree_closure: nx.DiGraph, start_node=1):
-    m = gp.Model('pctsp')
-    m.Params.LogToConsole = False
+    m = gp.Model('PCATSPxy')
+    m.Params.LogToConsole = 0
 
     vertices = list(graph)
     n = len(vertices)
     iVert = {v: i for i, v in enumerate(vertices)}
     start_idx = iVert[start_node]
 
-    Xs, costs = gp.multidict(np.ndenumerate(nx.to_numpy_matrix(graph)))
-    Ys, _ = gp.multidict(np.ndenumerate(np.zeros((n, n))))
+    Xs, costs = gp.multidict(((iVert[u], iVert[v]), w) for u, v, w in graph.edges.data('weight') if u != v)
+    Ys = gp.tuplelist((u, v) for u in range(n) if u != start_idx for v in range(n) if v != start_idx if u != v)
 
     # VARIABLES
     x = m.addVars(Xs, vtype=GRB.BINARY, name='x')
     y = m.addVars(Ys, name='y')
 
     # OBJECTIVE
-    objective = m.setObjective(x.prod(costs), GRB.MINIMIZE)
+    m.setObjective(x.prod(costs), GRB.MINIMIZE)
 
     # CONSTRAINTS
     # FLOW CONSERVATION
-    for v in graph:
-        m.addConstr(
-            sum(x[iVert[v], iVert[w]] for w in graph.successors(v)) == 1,
-            f'out_{iVert[v]}')
-        m.addConstr(
-            sum(x[iVert[w], iVert[v]] for w in graph.predecessors(v)) == 1,
-            f'in_{iVert[v]}')
+    m.addConstrs((x.sum(i, '*') == 1 for i in range(n)), 'out')
+    m.addConstrs((x.sum('*', i) == 1 for i in range(n)), 'in')
+
+    m.write('!!!.lp')
+    return m
 
     # SUB-TOUR ELIMINATION
     for u, v in graph.edges:
