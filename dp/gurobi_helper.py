@@ -4,7 +4,7 @@ import gurobipy as gp
 from gurobipy import GRB
 from itertools import permutations
 
-def create_model(model_name, G, tree, first_node_idx = 0):
+def createModel(model_name, G, tree, first_node_idx = 0):
     with gp.Env(empty = True) as env:
         env.setParam('LogToConsole', 0)
         env.start()
@@ -49,7 +49,7 @@ def create_model(model_name, G, tree, first_node_idx = 0):
                 model.addConstr(y[i,j] + y[j,i] == 1, f'ste2_{n_list[i]}_{n_list[j]}')
 
         idxs = list(range(first_node_idx)) + list(range(first_node_idx + 1, n))
-        for i,j,k in [p for p in permutations(idxs,3) if sorted(list(p)) == list(p)]:
+        for i,j,k in permutations(idxs,3):
             model.addConstr(y[i,j] + y[j,k] + y[k,i] <= 2, f'ste3_{n_list[i]}_{n_list[j]}_{n_list[k]}')
 
         ### PRECEDENCE CONSTRAINTS
@@ -77,7 +77,7 @@ def main(model_name, G_c, tree):
     # print(len(comps))
     # exit(1)
 
-    model, x = create_model(model_name, G_c, tree)
+    model, x = createModel(model_name, G_c, tree)
     model.write(f'tmp/{model_name}.lp')
 
     status, LB = optimizeModel(model)
