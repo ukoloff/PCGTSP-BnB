@@ -41,12 +41,13 @@ def model(graph: nx.DiGraph, tree_closure: nx.DiGraph, start_node=1):
         (y[u, yIndex[vi]] + y[yIndex[vi], u] == 1
             for iu, u in enumerate(yIndex) for vi in range(iu + 1, len(yIndex))),
         'yy')
-    for a, b in graph.edges:
-        if a == start_node or b == start_node or a >= b:
-            continue
-        for c in set(graph.predecessors(a)) & set(graph.successors(b)):
-            if c == start_node or a >= c:
-                continue
+    for ia, a in enumerate(yIndex):
+        for ib in range(ia + 1, len(yIndex)):
+          b = yIndex[ib]
+          for ic in range(ia + 1, len(yIndex)):
+            if ib == ic:
+              continue
+            c = yIndex[ic]
             m.addConstr(
                 y[a, b] + y[b, c] + y[c, a] <= 2,
                 f'tri[{a},{b},{c}]')
