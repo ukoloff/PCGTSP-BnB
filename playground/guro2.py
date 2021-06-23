@@ -39,18 +39,22 @@ def model(graph: nx.DiGraph, tree_closure: nx.DiGraph, start_node=1):
     # SUB-TOUR ELIMINATION
     m.addConstrs(
         (y[u, v] - x[u, v] >= 0
-         for u, v in x if u != start_idx if v != start_idx),
+            for u, v in x if u != start_idx if v != start_idx),
         'xy')
     m.addConstrs(
         (y[u, v] + y[v, u] == 1
-         for u in range(n) if u != start_idx for v in range(u + 1, n) if v != start_idx),
+            for u in range(n) if u != start_idx for v in range(u + 1, n) if v != start_idx),
         'yy')
     m.addConstrs(
         (y[a, b] + y[b, c] + y[c, a] <= 2
-         for a in range(n) if a != start_idx
-         for b in range(a + 1, n) if b != start_idx
-         for c in range(a + 1, n) if c != start_idx
-         if b != c),
+            for a, b, c in (
+            (iVert[u], iVert[v], iVert[w])
+            for u, v in graph.edges
+            if u != start_node and v != start_node
+            if iVert[u] < iVert[v]
+            for w in set(graph.predecessors(u)) & set(graph.successors(v))
+            if w != start_node
+            if iVert[u] < iVert[w])),
         'tri')
 
     # PRECEDENCE CONSTRAINTS
