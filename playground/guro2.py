@@ -29,36 +29,42 @@ def model(graph: nx.DiGraph, tree_closure: nx.DiGraph, start_node=1):
 
     # CONSTRAINTS
     # FLOW CONSERVATION
-    m.addConstrs((x.sum(i, '*') == 1 for i in graph), 'out')
-    m.addConstrs((x.sum('*', i) == 1 for i in graph), 'in')
+    for v in graph:
+        m.addConstr(x.sum(v, '*') == 1, f'out[{v}]')
+        m.addConstr(x.sum('*', v) == 1, f'in[{v}]')
 
     # SUB-TOUR ELIMINATION
-    m.addConstrs(
-        (y[u, v] >= x[u, v]
-            for u, v in x if u != start_node if v != start_node),
-        'xy')
-    m.addConstrs(
-        (y[u, yIndex[vi]] + y[yIndex[vi], u] == 1
-            for iu, u in enumerate(yIndex) for vi in range(iu + 1, len(yIndex))),
-        'yy')
+    for u, v in x:
+        if u == start_node or v == start_node:
+            continue
+        m.addConstr(
+            y[u, v] >= x[u, v],
+            f'xy[{u},{v}]')
+
     for ia, a in enumerate(yIndex):
         for ib in range(ia + 1, len(yIndex)):
-          b = yIndex[ib]
-          for ic in range(ia + 1, len(yIndex)):
-            if ib == ic:
-              continue
-            c = yIndex[ic]
+            b = yIndex[ib]
             m.addConstr(
-                y[a, b] + y[b, c] + y[c, a] <= 2,
-                f'tri[{a},{b},{c}]')
+                y[a, b] + y[b, a] == 1,
+                f'yy[{a},{b}]')
+
+            for ic in range(ia + 1, len(yIndex)):
+                if ib == ic:
+                    continue
+                c = yIndex[ic]
+                m.addConstr(
+                    y[a, b] + y[b, c] + y[c, a] <= 2,
+                    f'tri[{a},{b},{c}]')
 
     # PRECEDENCE CONSTRAINTS
-    m.addConstrs(
-        (y[u, v] == 1
-            for u, v in tree_closure.edges
-            if u in graph and v in graph
-            if u != start_node and v != start_node),
-        'pc')
+    for u, v in tree_closure.edges:
+        if u == start_node or v == start_node:
+            continue
+        if u not in graph or v not in graph:
+            continue
+        m.addConstr(
+            y[u, v] == 1,
+            f'pc[{u},{v}]')
 
     return m
 
