@@ -2,6 +2,7 @@
 # Построение модели для Gurobi
 # Альтернативная версия
 #
+import re
 import numpy as np
 import networkx as nx
 import gurobipy as gp
@@ -9,6 +10,15 @@ from gurobipy import GRB
 
 # Force banner
 gp.Model('-')
+
+
+def run(model: gp.Model):
+    model.Params.TimeLimit = 1.01
+    model.optimize()
+    if model.status not in (GRB.OPTIMAL, GRB.TIME_LIMIT):
+      raise RuntimeError(f"Gurobi status = {m.status}")
+    return model.ObjBound
+
 
 def model(graph: nx.DiGraph, tree_closure: nx.DiGraph, start_node=1):
     m = gp.Model('PC-ATSPxy')
@@ -88,40 +98,22 @@ if __name__ == '__main__':
 
     m = model(graph, task.tree_closure)
     # m.write('!!!.lp')
-    m.optimize()
+    run(m)
     print('Result:', m.ObjBoundC)
     print('Time:', m.Runtime)
     print('Status:', m.Status)
-    for v in m.getVars():
-        if not v.VarName.startswith('x[') or v.X == 0:
-            continue
-        print(v.VarName[2:-1], end=' ')
+
+    tour = nx.DiGraph(
+      [int(v) for v in re.findall(r"\d+", v.VarName)]
+      for v in m.getVars()
+      if v.VarName.startswith('x[') and v.X != 0
+    )
+    print("Tour:", *nx.simple_cycles(tour))
 
     # Time it!
-    print()
     build = timeit(lambda: model(graph, task.tree_closure), number=10) / 10
     print(f'Build: {build * 1000:.3f}ms')
 
     solve = timeit(lambda: model(
         graph, task.tree_closure).optimize(), number=10) / 10
     print(f'Build + Solve: {solve * 1000:.3f}ms')
-
-    # from guro2x import create_model
-    # print('[guro2x]')
-    # build = timeit(lambda: create_model(
-    #     graph, task.tree_closure), number=10) / 10
-    # print(f'Build: {build * 1000:.3f}ms')
-
-    # solve = timeit(lambda: create_model(graph, task.tree_closure)[
-    #                0].optimize(), number=10) / 10
-    # print(f'Build + Solve: {solve * 1000:.3f}ms')
-
-    # import guro2z
-    # print('[guro2z]')
-    # build = timeit(lambda: guro2z.model(
-    #     graph, task.tree_closure), number=10) / 10
-    # print(f'Build: {build * 1000:.3f}ms')
-
-    # solve = timeit(lambda: guro2z.model(
-    #     graph, task.tree_closure).optimize(), number=10) / 10
-    # print(f'Build + Solve: {solve * 1000:.3f}ms')
