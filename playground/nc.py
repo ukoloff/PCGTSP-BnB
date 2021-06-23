@@ -66,7 +66,7 @@ def lower_bounds(node: STNode):
   g = nc(node)
   # node.bounds['MSAP'] = MSAP(g)
   node.bounds['AP'] = AP(g)
-  node.bounds['TSP'] = round(gurobi(node, g))
+  node.bounds['TSP'] = gurobi(node, g)
 
   g = nc(node, L=2)
   node.bounds['L2'] = AP(g)
@@ -84,11 +84,7 @@ def lower_bounds(node: STNode):
 def gurobi(node: STNode, graph: nx.DiGraph):
   """Посчитать честный TSP
   """
-  m = guro2.model(graph, node.task.tree_closure, node.sigma[0])
-  m.optimize()
-  if m.status != 2:
-    raise RuntimeError(f"Gurobi status = {m.status}")
-  return m.objboundc
+  return guro2.run(guro2.model(graph, node.task.tree_closure, node.sigma[0]))
 
 
 def upper_bound(node: STNode):
