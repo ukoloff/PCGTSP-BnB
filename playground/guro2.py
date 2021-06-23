@@ -41,15 +41,15 @@ def model(graph: nx.DiGraph, tree_closure: nx.DiGraph, start_node=1):
         (y[u, yIndex[vi]] + y[yIndex[vi], u] == 1
             for iu, u in enumerate(yIndex) for vi in range(iu + 1, len(yIndex))),
         'yy')
-    m.addConstrs(
-        (y[a, b] + y[b, c] + y[c, a] <= 2
-            for a, b in graph.edges
-            if a != start_node and b != start_node
-            if a < b
-            for c in set(graph.predecessors(a)) & set(graph.successors(b))
-            if c != start_node
-            if a < c),
-        'tri')
+    for a, b in graph.edges:
+        if a == start_node or b == start_node or a >= b:
+            continue
+        for c in set(graph.predecessors(a)) & set(graph.successors(b)):
+            if c == start_node or a >= c:
+                continue
+            m.addConstr(
+                y[a, b] + y[b, c] + y[c, a] <= 2,
+                f'tri[{a},{b},{c}]')
 
     # PRECEDENCE CONSTRAINTS
     m.addConstrs(
@@ -78,7 +78,7 @@ if __name__ == '__main__':
     m = model(graph, task.tree_closure)
     # m.write('!!!.lp')
     m.optimize()
-    print('Result:', m.objboundc)
+    print('Result:', m.ObjBoundC)
     for v in m.getVars():
         if not v.VarName.startswith('x[') or v.X == 0:
             continue
@@ -93,22 +93,22 @@ if __name__ == '__main__':
         graph, task.tree_closure).optimize(), number=10) / 10
     print(f'Build + Solve: {solve * 1000:.3f}ms')
 
-    from guro2x import create_model
-    print('[guro2x]')
-    build = timeit(lambda: create_model(
-        graph, task.tree_closure), number=10) / 10
-    print(f'Build: {build * 1000:.3f}ms')
+    # from guro2x import create_model
+    # print('[guro2x]')
+    # build = timeit(lambda: create_model(
+    #     graph, task.tree_closure), number=10) / 10
+    # print(f'Build: {build * 1000:.3f}ms')
 
-    solve = timeit(lambda: create_model(graph, task.tree_closure)[
-                   0].optimize(), number=10) / 10
-    print(f'Build + Solve: {solve * 1000:.3f}ms')
+    # solve = timeit(lambda: create_model(graph, task.tree_closure)[
+    #                0].optimize(), number=10) / 10
+    # print(f'Build + Solve: {solve * 1000:.3f}ms')
 
-    import guro2z
-    print('[guro2z]')
-    build = timeit(lambda: guro2z.model(
-        graph, task.tree_closure), number=10) / 10
-    print(f'Build: {build * 1000:.3f}ms')
+    # import guro2z
+    # print('[guro2z]')
+    # build = timeit(lambda: guro2z.model(
+    #     graph, task.tree_closure), number=10) / 10
+    # print(f'Build: {build * 1000:.3f}ms')
 
-    solve = timeit(lambda: guro2z.model(
-        graph, task.tree_closure).optimize(), number=10) / 10
-    print(f'Build + Solve: {solve * 1000:.3f}ms')
+    # solve = timeit(lambda: guro2z.model(
+    #     graph, task.tree_closure).optimize(), number=10) / 10
+    # print(f'Build + Solve: {solve * 1000:.3f}ms')
