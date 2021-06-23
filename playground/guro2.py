@@ -13,6 +13,8 @@ gp.Model('-')
 def model(graph: nx.DiGraph, tree_closure: nx.DiGraph, start_node=1):
     m = gp.Model('PC-ATSPxy')
     m.Params.LogToConsole = 0
+    m.Params.Threads = 1
+    # m.Params.TimeLimit = 0.01
 
     Xs, costs = gp.multidict(
         ((u, v), w)
@@ -78,7 +80,7 @@ if __name__ == '__main__':
     from klasses import Task, STNode
 
     # z = samples.random(27, 7)
-    task = samples.load("e5x_1")
+    task = samples.load("34")
     nc.initL1(task)
     root = STNode(task)
     graph = nc.nc(root, L=1)
@@ -88,6 +90,8 @@ if __name__ == '__main__':
     # m.write('!!!.lp')
     m.optimize()
     print('Result:', m.ObjBoundC)
+    print('Time:', m.Runtime)
+    print('Status:', m.Status)
     for v in m.getVars():
         if not v.VarName.startswith('x[') or v.X == 0:
             continue
