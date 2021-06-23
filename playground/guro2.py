@@ -20,43 +20,17 @@ def run(model: gp.Model):
     return model.ObjBound
 
 
-def model(graph: nx.DiGraph, tree_closure: nx.DiGraph, start_node=1):
+def triangles(n: int):
+    """Вернуть модель с "треугольными" ограничениями (часть SUB-TOUR ELIMINATION)
+    """
     m = gp.Model('PC-ATSPxy')
     m.Params.LogToConsole = 0
     m.Params.Threads = 1
-    # m.Params.TimeLimit = 0.01
 
-    vertices = [start_node] + [v for v in graph if v != start_node]
-    n = len(vertices)
-    iVert = {v: i for i, v in enumerate(vertices)}
-
-    Xs, costs = gp.multidict(
-        ((iVert[u], iVert[v]), w)
-        for u, v, w in graph.edges.data('weight') if u != v)
     Ys = gp.tuplelist(
         (u, v)
         for u in range(1, n) for v in range(1, n) if u != v)
-
-    # VARIABLES
-    x = m.addVars(Xs, vtype=GRB.BINARY, name='x')
     y = m.addVars(Ys, name='y')
-
-    # OBJECTIVE
-    m.setObjective(x.prod(costs), GRB.MINIMIZE)
-
-    # CONSTRAINTS
-    # FLOW CONSERVATION
-    for v in range(n):
-        m.addConstr(x.sum(v, '*') == 1, f'out[{vertices[v]}]')
-        m.addConstr(x.sum('*', v) == 1, f'in[{vertices[v]}]')
-
-    # SUB-TOUR ELIMINATION
-    for u, v in x:
-        if u == 0 or v == 0:
-            continue
-        m.addConstr(
-            y[u, v] >= x[u, v],
-            f'xy[{vertices[u]},{vertices[v]}]')
 
     for a in range(1, n):
         for b in range(a + 1, n):
@@ -70,6 +44,49 @@ def model(graph: nx.DiGraph, tree_closure: nx.DiGraph, start_node=1):
                 m.addConstr(
                     y[a, b] + y[b, c] + y[c, a] <= 2,
                     f'tri[{a},{b},{c}]')
+
+    m.update()
+    return m
+
+
+cache = {}
+
+
+def model(graph: nx.DiGraph, tree_closure: nx.DiGraph, start_node=1):
+    vertices = [start_node] + [v for v in graph if v != start_node]
+    n = len(vertices)
+    iVert = {v: i for i, v in enumerate(vertices)}
+
+    if n not in cache:
+        cache[n] = triangles(n)
+    m = cache[n].copy()
+    y = {(u, v): m.getVarByName(f'y[{u},{v}]')
+         for u in range(1, n) for v in range(1, n) if u != v}
+
+    Xs, costs = gp.multidict(
+        ((iVert[u], iVert[v]), w)
+        for u, v, w in graph.edges.data('weight') if u != v)
+
+    # VARIABLES
+    x = m.addVars(Xs, vtype=GRB.BINARY, name='x')
+    # y = addYs(m, n)
+
+    # OBJECTIVE
+    m.setObjective(x.prod(costs), GRB.MINIMIZE)
+
+    # CONSTRAINTS
+    # FLOW CONSERVATION
+    for v in range(n):
+        m.addConstr(x.sum(v, '*') == 1, f'out[{vertices[v]}]')
+        m.addConstr(x.sum('*', v) == 1, f'in[{vertices[v]}]')
+
+    # SUB-TOUR ELIMINATION, extra constraints
+    for u, v in x:
+        if u == 0 or v == 0:
+            continue
+        m.addConstr(
+            y[u, v] >= x[u, v],
+            f'xy[{vertices[u]},{vertices[v]}]')
 
     # PRECEDENCE CONSTRAINTS
     for u, v in tree_closure.edges:
