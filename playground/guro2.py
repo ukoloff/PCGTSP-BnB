@@ -7,6 +7,8 @@ import networkx as nx
 import gurobipy as gp
 from gurobipy import GRB
 
+# Force banner
+gp.Model('-')
 
 def model(graph: nx.DiGraph, tree_closure: nx.DiGraph, start_node=1):
     m = gp.Model('PC-ATSPxy')
