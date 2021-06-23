@@ -36,15 +36,11 @@ def lower_bound(precalculated: tuple, sigma, last_cluster, start_cluster=1, deta
     """Рассчитать LB для "внешнего" графа
     """
     g1 = subgraph(precalculated[0], sigma, last_cluster, start_cluster)
-    m = guro2.model(g1, precalculated[1].tree_closure, start_cluster)
-    m.optimize()
-    if m.status != 2:
-      raise RuntimeError(f"Gurobi status = {m.status}")
 
     result = (
         AP(g1),
         AP(precalculated[1].suffix_graph(sigma, last_cluster, start_cluster)),
-        m.objboundc,
+        guro2.run(guro2.model(g1, precalculated[1].tree_closure, start_cluster)),
     )
     if details:
         return result
