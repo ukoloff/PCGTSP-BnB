@@ -111,3 +111,11 @@ if __name__ == '__main__':
     solve = timeit(lambda: create_model(graph, task.tree_closure)[
                    0].optimize(), number=10) / 10
     print(f'Build + Solve: {solve * 1000:.3f}ms')
+
+    import guro2z
+    print('[guro2z]')
+    build = timeit(lambda: guro2z.model(graph, task.tree_closure), number=10) / 10
+    print(f'Build: {build * 1000:.3f}ms')
+
+    solve = timeit(lambda: guro2z.model(graph, task.tree_closure).optimize(), number=10) / 10
+    print(f'Build + Solve: {solve * 1000:.3f}ms')
