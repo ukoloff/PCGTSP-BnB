@@ -16,7 +16,7 @@ def run(model: gp.Model):
     model.Params.TimeLimit = 1.01
     model.optimize()
     if model.status not in (GRB.OPTIMAL, GRB.TIME_LIMIT):
-      raise RuntimeError(f"Gurobi exited with status {model.status}")
+        raise RuntimeError(f"Gurobi exited with status {model.status}")
     return model.ObjBound
 
 
@@ -46,29 +46,27 @@ def model(graph: nx.DiGraph, tree_closure: nx.DiGraph, start_node=1):
 
     # CONSTRAINTS
     # FLOW CONSERVATION
-    for v in graph:
-        m.addConstr(x.sum(v, '*') == 1, f'out[{v}]')
-        m.addConstr(x.sum('*', v) == 1, f'in[{v}]')
+    for v in range(n):
+        m.addConstr(x.sum(v, '*') == 1, f'out[{vertices[v]}]')
+        m.addConstr(x.sum('*', v) == 1, f'in[{vertices[v]}]')
 
     # SUB-TOUR ELIMINATION
     for u, v in x:
-        if u == start_node or v == start_node:
+        if u == 0 or v == 0:
             continue
         m.addConstr(
             y[u, v] >= x[u, v],
-            f'xy[{u},{v}]')
+            f'xy[{vertices[u]},{vertices[v]}]')
 
-    for ia, a in enumerate(yIndex):
-        for ib in range(ia + 1, len(yIndex)):
-            b = yIndex[ib]
+    for a in range(1, n):
+        for b in range(a + 1, n):
             m.addConstr(
                 y[a, b] + y[b, a] == 1,
                 f'yy[{a},{b}]')
 
-            for ic in range(ia + 1, len(yIndex)):
-                if ib == ic:
+            for c in range(a + 1, n):
+                if b == c:
                     continue
-                c = yIndex[ic]
                 m.addConstr(
                     y[a, b] + y[b, c] + y[c, a] <= 2,
                     f'tri[{a},{b},{c}]')
@@ -80,7 +78,7 @@ def model(graph: nx.DiGraph, tree_closure: nx.DiGraph, start_node=1):
         if u not in graph or v not in graph:
             continue
         m.addConstr(
-            y[u, v] == 1,
+            y[iVert[u], iVert[v]] == 1,
             f'pc[{u},{v}]')
 
     return m
@@ -107,9 +105,9 @@ if __name__ == '__main__':
     print('Status:', m.Status)
 
     tour = nx.DiGraph(
-      [int(v) for v in re.findall(r"\d+", v.VarName)]
-      for v in m.getVars()
-      if v.VarName.startswith('x[') and v.X != 0
+        [int(v) for v in re.findall(r"\d+", v.VarName)]
+        for v in m.getVars()
+        if v.VarName.startswith('x[') and v.X != 0
     )
     print("Tour:", *nx.simple_cycles(tour))
 
