@@ -16,7 +16,7 @@ def run(model: gp.Model):
     model.Params.TimeLimit = 1.01
     model.optimize()
     if model.status not in (GRB.OPTIMAL, GRB.TIME_LIMIT):
-      raise RuntimeError(f"Gurobi status = {m.status}")
+      raise RuntimeError(f"Gurobi exited with status {model.status}")
     return model.ObjBound
 
 
@@ -26,13 +26,16 @@ def model(graph: nx.DiGraph, tree_closure: nx.DiGraph, start_node=1):
     m.Params.Threads = 1
     # m.Params.TimeLimit = 0.01
 
+    vertices = [start_node] + [v for v in graph if v != start_node]
+    n = len(vertices)
+    iVert = {v: i for i, v in enumerate(vertices)}
+
     Xs, costs = gp.multidict(
-        ((u, v), w)
+        ((iVert[u], iVert[v]), w)
         for u, v, w in graph.edges.data('weight') if u != v)
-    yIndex = [v for v in graph if v != start_node]
     Ys = gp.tuplelist(
         (u, v)
-        for u in yIndex for v in yIndex if u != v)
+        for u in range(1, n) for v in range(1, n) if u != v)
 
     # VARIABLES
     x = m.addVars(Xs, vtype=GRB.BINARY, name='x')
