@@ -9,20 +9,16 @@ from gurobipy import GRB
 
 
 def model(graph: nx.DiGraph, tree_closure: nx.DiGraph, start_node=1):
-    m = gp.Model('PCATSPxy')
+    m = gp.Model('PC-ATSPxy')
     m.Params.LogToConsole = 0
 
-    vertices = list(graph)
-    n = len(vertices)
-    iVert = {v: i for i, v in enumerate(vertices)}
-    start_idx = iVert[start_node]
-
     Xs, costs = gp.multidict(
-        ((iVert[u], iVert[v]), w)
+        ((u, v), w)
         for u, v, w in graph.edges.data('weight') if u != v)
+    yIndex = [v for v in graph if v != start_node]
     Ys = gp.tuplelist(
         (u, v)
-        for u in range(n) if u != start_idx for v in range(n) if v != start_idx if u != v)
+        for u in yIndex for v in yIndex if u != v)
 
     # VARIABLES
     x = m.addVars(Xs, vtype=GRB.BINARY, name='x')
@@ -33,39 +29,34 @@ def model(graph: nx.DiGraph, tree_closure: nx.DiGraph, start_node=1):
 
     # CONSTRAINTS
     # FLOW CONSERVATION
-    m.addConstrs((x.sum(i, '*') == 1 for i in range(n)), 'out')
-    m.addConstrs((x.sum('*', i) == 1 for i in range(n)), 'in')
+    m.addConstrs((x.sum(i, '*') == 1 for i in graph), 'out')
+    m.addConstrs((x.sum('*', i) == 1 for i in graph), 'in')
 
     # SUB-TOUR ELIMINATION
     m.addConstrs(
-        (y[u, v] - x[u, v] >= 0
-            for u, v in x if u != start_idx if v != start_idx),
+        (y[u, v] >= x[u, v]
+            for u, v in x if u != start_node if v != start_node),
         'xy')
     m.addConstrs(
-        (y[u, v] + y[v, u] == 1
-            for u in range(n) if u != start_idx for v in range(u + 1, n) if v != start_idx),
+        (y[u, yIndex[vi]] + y[yIndex[vi], u] == 1
+            for iu, u in enumerate(yIndex) for vi in range(iu + 1, len(yIndex))),
         'yy')
     m.addConstrs(
         (y[a, b] + y[b, c] + y[c, a] <= 2
-            for a, b, c in (
-            (iVert[u], iVert[v], iVert[w])
-            for u, v in graph.edges
-            if u != start_node and v != start_node
-            if iVert[u] < iVert[v]
-            for w in set(graph.predecessors(u)) & set(graph.successors(v))
-            if w != start_node
-            if iVert[u] < iVert[w])),
+            for a, b in graph.edges
+            if a != start_node and b != start_node
+            if a < b
+            for c in set(graph.predecessors(a)) & set(graph.successors(b))
+            if c != start_node
+            if a < c),
         'tri')
 
     # PRECEDENCE CONSTRAINTS
     m.addConstrs(
         (y[u, v] == 1
-         for u, v in (
-            (iVert[u], iVert[v])
             for u, v in tree_closure.edges
-            if u in iVert and v in iVert)
-         if u != start_idx and v != start_idx
-         ),
+            if u in graph and v in graph
+            if u != start_node and v != start_node),
         'pc')
 
     return m
@@ -114,8 +105,10 @@ if __name__ == '__main__':
 
     import guro2z
     print('[guro2z]')
-    build = timeit(lambda: guro2z.model(graph, task.tree_closure), number=10) / 10
+    build = timeit(lambda: guro2z.model(
+        graph, task.tree_closure), number=10) / 10
     print(f'Build: {build * 1000:.3f}ms')
 
-    solve = timeit(lambda: guro2z.model(graph, task.tree_closure).optimize(), number=10) / 10
+    solve = timeit(lambda: guro2z.model(
+        graph, task.tree_closure).optimize(), number=10) / 10
     print(f'Build + Solve: {solve * 1000:.3f}ms')
