@@ -7,10 +7,14 @@ import networkx as nx
 import gurobipy as gp
 from gurobipy import GRB
 
+# Force banner
+gp.Model('-')
 
 def model(graph: nx.DiGraph, tree_closure: nx.DiGraph, start_node=1):
     m = gp.Model('PC-ATSPxy')
     m.Params.LogToConsole = 0
+    m.Params.Threads = 1
+    # m.Params.TimeLimit = 0.01
 
     Xs, costs = gp.multidict(
         ((u, v), w)
@@ -86,6 +90,8 @@ if __name__ == '__main__':
     # m.write('!!!.lp')
     m.optimize()
     print('Result:', m.ObjBoundC)
+    print('Time:', m.Runtime)
+    print('Status:', m.Status)
     for v in m.getVars():
         if not v.VarName.startswith('x[') or v.X == 0:
             continue
