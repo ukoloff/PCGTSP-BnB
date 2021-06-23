@@ -1,0 +1,8 @@
+Problem Instance : 34m.floor.pcglns
+Vertices         : 273
+Sets             : 35
+Comment          : To avoid ~0.5sec startup time, use the Julia REPL
+Host Computer    : dan-desktop2
+Solver Time      : 4.16 sec
+Tour Cost        : 710
+Tour Ordering    : [1, 189, 181, 61, 53, 218, 211, 75, 67, 174, 166, 46, 38, 208, 199, 272, 263, 111, 103, 161, 153, 144, 136, 33, 25, 124, 115, 254, 247, 235, 226, 90, 82, 17, 9]

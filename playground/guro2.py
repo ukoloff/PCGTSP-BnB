@@ -80,7 +80,7 @@ if __name__ == '__main__':
     from klasses import Task, STNode
 
     # z = samples.random(27, 7)
-    task = samples.load("e5x_1")
+    task = samples.load("34")
     nc.initL1(task)
     root = STNode(task)
     graph = nc.nc(root, L=1)
