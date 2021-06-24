@@ -32,6 +32,7 @@ def suffix_graphs(precalculated: tuple, sigma, last_cluster, start_cluster=1):
         precalculated[1].suffix_graph(sigma, last_cluster, start_cluster),
     )
 
+
 def lower_bound(precalculated: tuple, sigma, last_cluster, start_cluster=1, details=False):
     """Рассчитать LB для "внешнего" графа
     """
@@ -40,11 +41,18 @@ def lower_bound(precalculated: tuple, sigma, last_cluster, start_cluster=1, deta
     result = (
         AP(g1),
         AP(precalculated[1].suffix_graph(sigma, last_cluster, start_cluster)),
-        guro2.run(guro2.model(g1, precalculated[1].tree_closure, start_cluster)),
     )
     if details:
         return result
     return max(result)
+
+
+def lower_bound_harder(precalculated: tuple, sigma, last_cluster, start_cluster=1):
+    """Расчитать оценку для "внешнего" графа при помощи Gurobi
+    """
+    g1 = subgraph(precalculated[0], sigma, last_cluster, start_cluster)
+    return guro2.run(guro2.model(g1, precalculated[1].tree_closure, start_cluster)),
+
 
 #
 # Ниже расчёт L1
