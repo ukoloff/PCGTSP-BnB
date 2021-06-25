@@ -5,6 +5,7 @@
 import networkx as nx
 
 from saL2 import L2data
+import guro2
 
 
 def precalculate(dists: nx.DiGraph, clusters: dict, tree: nx.DiGraph, start_cluster=1):
@@ -31,13 +32,15 @@ def suffix_graphs(precalculated: tuple, sigma, last_cluster, start_cluster=1):
         precalculated[1].suffix_graph(sigma, last_cluster, start_cluster),
     )
 
-
 def lower_bound(precalculated: tuple, sigma, last_cluster, start_cluster=1, details=False):
     """Рассчитать LB для "внешнего" графа
     """
+    g1 = subgraph(precalculated[0], sigma, last_cluster, start_cluster)
+
     result = (
-        AP(subgraph(precalculated[0], sigma, last_cluster, start_cluster)),
+        AP(g1),
         AP(precalculated[1].suffix_graph(sigma, last_cluster, start_cluster)),
+        guro2.run(guro2.model(g1, precalculated[1].tree_closure, start_cluster)),
     )
     if details:
         return result
