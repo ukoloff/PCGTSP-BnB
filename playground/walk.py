@@ -1,59 +1,56 @@
 #
 # Полный обход дерева решений с отсечением
 #
+import sys
 from datetime import timedelta
 from timeit import default_timer as timer
 
 from klasses import Task, STNode
-import prefix, nc, cut_prefix, children
+import prefix, nc, cut_prefix, children, logging, ilayer
 
-def solve(task: Task):
+def solve(task: Task, log2=sys.stdout):
   """Обход дерева решений
   """
   nc.initL1(task)
   nc.initL2(task)
 
   last_len = 0
-  last = timer()
-  start = last
-
-  total_nodes = 0
-  skipped_nodes = 0
+  solve_start = timer()
 
   root = STNode(task)
   for node in subtree(root, order=-1):
-    total_nodes += 1
-    now = timer()
-    if now > last + 60:
-      print('+', timedelta(seconds=now - start),
-        '\tNodes:', total_nodes, f'\tSkipped: {int(skipped_nodes / total_nodes * 100)}%')
-      last = now
-
     if len(node.sigma) != last_len:
+      if last_len > 0:
+        this_layer.dump(root.LB)
       last_len = len(node.sigma)
       nc.history.clear()
       cut_prefix.history.clear()
+      this_layer = ilayer.iLayer(last_len)
 
-    print(node.sigma, end='\t', flush=True)
+    print(node.sigma, end='\t', file=log2)
     cut_prefix.skip(node)
     if node.skip:
-      skipped_nodes += 1
-      print('!')
+      this_layer.skipped()
+      print('!', file=log2)
       continue
     if node.is_leaf():
       nc.upper_bound(node)
-      print(node.bounds)
+      print(node.bounds, file=log2)
+      this_layer.found()
       continue
     nc.bounds(node)
-    print(node.bounds, end='\t', flush=True)
+    print(node.bounds, end='\t', file=log2)
     if node.bounds['LB'] > task.UB:
       node.skip = True
-      skipped_nodes += 1
-      print('!')
+      this_layer.skipped()
+      print('!', file=log2)
       continue
     updateLB(node)
-    print(f'\tLB={root.LB} // {(root.task.UB - root.LB) / root.task.UB * 100:.0f}%')
+    this_layer.found()
+    print(f'\tLB={root.LB} // {(root.task.UB - root.LB) / root.task.UB * 100:.0f}%', file=log2)
 
+  solve_end = timer()
+  print(f'Elapsed: {solve_end - solve_start:.1f} s')
 
 def subtree(node: STNode, order=None):
   """Генерировать полное поддерево поиска
@@ -107,7 +104,8 @@ if __name__ == '__main__':
 
   import samples
 
-  src = "e5x_1" if len(sys.argv) < 2 else sys.argv[1]
+  src = "e3x_2" if len(sys.argv) < 2 else sys.argv[1]
+  log2 = logging.start(src)
   print("Loading:", src)
 
   # task = samples.random(1000, 12)
@@ -118,4 +116,4 @@ if __name__ == '__main__':
   print("Solution so far:\t", task.solution)
   print()
 
-  solve(task)
+  solve(task, log2)
