@@ -11,11 +11,14 @@ import sys
 import glob 
 
 from collections import Counter
-from salmanize import lower_bound, precalculate
+from salmanize import lower_bound, lower_bound_harder, precalculate
 
 MAXINT = 100000000000000000000000000000
 MAXTASKSPERWORKER = 1000
 MEMORY_LIMIT = MAXINT  # MEMORY LIMIT (in Bytes), for cluster calculations
+
+LOW_PC = 0.10
+HIGH_PC = 0.95
 
 ###### Memory usage util #############################################################################
 ##  ATTENTION: designed for  Linux, for another OS can possible be adapted
@@ -49,6 +52,15 @@ class State:
 
 KEY_SIGMA = 0
 KEY_V = 3
+
+KEY_BOUND_SIGMA = 0
+KEY_BOUND_VJ = 1
+KEY_BOUND_VAL = 2
+
+KEY_RESULTS_CAPACITY = 0
+KEY_RESULTS_STATE = 1
+KEY_RESULTS_CUTOFF = 2
+KEY_RESULTS_LB = 3
       
 
 def make_unique_list(lst):
@@ -80,7 +92,7 @@ def compute_Bellman_cell(G, clusters, transitive_closure, lookup_table, filtered
 
 ################ multiprocessing staff #########
 ###  
-def worker_init(G, clusters, tree, lookup_table_filename, current_layer, UB):
+def worker_init(G, clusters, tree, current_layer, UB, lookup_table_filename = ''):
     global mp_G
     global mp_clusters
     global mp_tree
@@ -107,8 +119,11 @@ def worker_init(G, clusters, tree, lookup_table_filename, current_layer, UB):
     mp_precalcutated = precalculate(mp_G, mp_clusters, mp_tree, mp_start_cluster_id)
     # print(f'NC0=\n{mp_nc0.edges(data="weight")}')
 
-    with open(lookup_table_filename, 'rb') as fin:
-        mp_lookup_table = pic.load(fin)
+    mp_lookup_table = {}
+
+    if lookup_table_filename:
+        with open(lookup_table_filename, 'rb') as fin:
+            mp_lookup_table = pic.load(fin)
 
 
 ######
@@ -123,13 +138,14 @@ def worker_init(G, clusters, tree, lookup_table_filename, current_layer, UB):
 
 def parallel_fast_P2_bounds(sigma_Vjs):
     sigma, Vjs = sigma_Vjs
-   
+    l_sigma=list(sigma)
     result = []
+
     for ind_V_j in Vjs:
         P2_cost = 0
         ###
         try:
-            P2_cost = lower_bound(mp_precalcutated, [mp_start_cluster_id] + sigma, ind_V_j, mp_start_cluster_id)
+            P2_cost = lower_bound(mp_precalcutated, [mp_start_cluster_id] + l_sigma, ind_V_j, mp_start_cluster_id)
         except:
             print(f'LB fast bounding fault, sigma={sigma}, start={mp_start_cluster_id}, dest={ind_V_j}')
         ### 
@@ -151,10 +167,12 @@ def parallel_improve_P2_bound(sigma_Vj_rawP2bound):
     sigma, ind_V_j, raw_P2_bound = sigma_Vj_rawP2bound
     c_keys=list(mp_clusters.keys())
     start_cluster_id = c_keys[0]
+    l_sigma = list(sigma)
+
 
     gurobi_bound = raw_P2_bound
     try:
-        gurobi_bound = lower_bound_harder(mp_precalcutated, [mp_start_cluster_id] + sigma, ind_V_j, mp_start_cluster_id)
+        gurobi_bound = lower_bound_harder(mp_precalcutated, [mp_start_cluster_id] + l_sigma, ind_V_j, mp_start_cluster_id)
     except:
         print(f'LB Gurobi bounding fault, sigma={sigma}, start={mp_start_cluster_id}, dest={ind_V_j}')
 
@@ -248,6 +266,29 @@ def prepare_layer(clusters,tree, previous_layer, layer_level):
     current_layer = {key: list(set(val)) for key,val in current_layer.items()}
     return current_layer
 
+##########
+##########
+##
+##  Non-optimal version of the list_splitting function
+##
+##
+##
+##########
+##########
+
+def decompose(fast_P2_bounds, low_percent=LOW_PC, high_percent=HIGH_PC):
+    L = len(fast_P2_bounds)
+    low_count = int(L * low_percent)
+    high_count = int(L* high_percent)
+
+    sorted_bounds = sorted(fast_P2_bounds, key = lambda item: item[KEY_BOUND_VAL])
+    low_bounds = sorted_bounds[:low_count]
+    high_bounds = sorted_bounds[high_count:]
+
+    to_keep_on = sorted_bounds[low_count: high_count]
+
+    return low_bounds + high_bounds, to_keep_on
+
 
 def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, lookup_table_name, keep_lookup_table, workers_count, predicted_workers_count, UB, LB):
     c_keys=list(clusters.keys())
@@ -274,13 +315,14 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
                     P2_cost = lower_bound(precalculated, [start_cluster_id] + sigma, ind_V_j, start_cluster_id)
                 except:
                     print(f'LB fast bounding fault, sigma={sigma}, start={start_cluster_id}, dest={ind_V_j}')
+               
                 revised_bound = P2_cost
                 try:
-                    revised_bound = lower_bound_harder(mp_precalcutated, [start_cluster_id] + sigma, ind_V_j, start_cluster_id)
+                    revised_bound = lower_bound_harder(precalculated, [start_cluster_id] + sigma, ind_V_j, start_cluster_id)
                 except:
                     print(f'LB Gurobi bounding fault, sigma={sigma}, start={start_cluster_id}, dest={ind_V_j}')
 
-                
+                               
                 for v in clusters[start_cluster_id]:
                     for tilde_u in clusters[ind_V_j]:
                         if G.has_edge(v,tilde_u):             # checking if graph has the edge (v,tilde_u)
@@ -292,33 +334,51 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
 
                             witness = state.witness()
                             lookup_table[witness] = state
-                        
+                                     
                 
     else:
 
         actual_workers_count = min(workers_count, predicted_workers_count)
-        with mp.Pool(actual_workers_count, worker_init, (G, clusters, tree, f'{lookup_table_name}{layer_level-1:03d}.dct', layer, UB), maxtasksperchild=MAXTASKSPERWORKER) as pool:
-            
 
+        ### compute raw lower bounds for P2
+        with mp.Pool(actual_workers_count, worker_init,(G, clusters, tree, layer, UB), maxtasksperchild=MAXTASKSPERWORKER) as pool:
+
+            
             chunks_fast_P2_bounds = pool.map(parallel_fast_P2_bounds, layer.items())
-            # pool.close()
+            pool.close()
             pool.join()
 
             # collect all results from the workers
             fast_P2_bounds = [t for chunk in chunks_fast_P2_bounds for t in chunk]
-            # sort 
-            
+            # decompose for revised bounds computations
+            to_revise, to_keep_on = decompose(fast_P2_bounds) 
 
+            print(f'raw P2 bounds calculated, {len(to_revise)} sent for the revision')
+            
+        if to_revise:
+            with mp.Pool(actual_workers_count, worker_init,(G, clusters, tree, layer, UB), maxtasksperchild=MAXTASKSPERWORKER) as pool:
+                revised = pool.map(parallel_improve_P2_bound, to_revise)
+                pool.close()
+                pool.join()
+                # collect all results from the workers
+                
+                to_keep_on.extend(revised)
+                print(f'revised P2 bounds calculated')
+
+        with mp.Pool(actual_workers_count, worker_init,(G, clusters, tree, layer, UB, f'{lookup_table_name}{layer_level-1:03d}.dct'), maxtasksperchild=MAXTASKSPERWORKER) as pool:
+            results = pool.map(parallel_layer, to_keep_on)
+            pool.close()
+            pool.join()
 
             pool = None
             layer = None
- 
-            capacity = sum(map(lambda item: item[0],results))
-            cutoff = sum(map(lambda item: item[2],results))
-            layerLB = min(map(lambda item: item[3],results))
-     
+            
+            capacity = sum(map(lambda item: item[KEY_RESULTS_CAPACITY],results))
+            cutoff = sum(map(lambda item: item[KEY_RESULTS_CUTOFF],results))
+            layerLB = min(map(lambda item: item[KEY_RESULTS_LB],results))
+    
             def instead_of_lambda(acc, res):
-                acc.update(res[1])
+                acc.update(res[KEY_RESULTS_STATE])
                 return acc
 
             lookup_table = ft.reduce(instead_of_lambda, results, {})
@@ -344,6 +404,7 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
    
     print(f'\t{cutoff} ({cutoff / (cutoff + capacity):.1%}) of branches were cut off')
     print(f'layer {layer_level+1:03d} of size {capacity:>10} ({len(sigmas_from_lookup_table)}) is completed by {actual_workers_count} worker(s) at {time.time() - start_time:8.2f} sec.')
+    
     print(f'Best UB is {UB}, Best LB is {LB}, Gap is {Gap:.2%}\n=============================')
     return predicted_workers_count, lookup_table, sigmas_from_lookup_table, LB
 

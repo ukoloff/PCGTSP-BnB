@@ -52,7 +52,7 @@ def lower_bound_harder(precalculated: tuple, sigma, last_cluster, start_cluster=
     import guro2
 
     g1 = subgraph(precalculated[0], sigma, last_cluster, start_cluster)
-    return guro2.run(guro2.model(g1, precalculated[1].tree_closure, start_cluster)),
+    return guro2.run(guro2.model(g1, precalculated[1].tree_closure, start_cluster))
 
 
 #
