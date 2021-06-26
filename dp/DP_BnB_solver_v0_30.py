@@ -74,7 +74,7 @@ def compute_Bellman_cell(G, clusters, transitive_closure, lookup_table, filtered
     if best_cost < MAXINT:
         state.cost = best_cost
         state.predecessor_witness = prev_state.witness()
-        lookup_table[state.witness()] = state
+        # lookup_table[state.witness()] = state
 
     return best_cost
 
@@ -90,6 +90,7 @@ def worker_init(G, clusters, tree, lookup_table_filename, current_layer, UB):
     global mp_UB
     global mp_succs
     global mp_current_layer
+    global mp_start_cluster_id
 
 
     mp_G, mp_clusters, mp_tree = G, clusters, tree
@@ -100,71 +101,113 @@ def worker_init(G, clusters, tree, lookup_table_filename, current_layer, UB):
     mp_succs={}
 
     c_keys=list(mp_clusters.keys())
-    start_cluster_id = c_keys[0]
+    mp_start_cluster_id = c_keys[0]
     
     # mp_nc0 = nc0(mp_G, mp_clusters, mp_tree, start_cluster_id)
-    mp_precalcutated = precalculate(mp_G, mp_clusters, mp_tree, start_cluster_id)
+    mp_precalcutated = precalculate(mp_G, mp_clusters, mp_tree, mp_start_cluster_id)
     # print(f'NC0=\n{mp_nc0.edges(data="weight")}')
 
     with open(lookup_table_filename, 'rb') as fin:
         mp_lookup_table = pic.load(fin)
 
-def can_be_the_last_cluster(sigma,c_ind, transitive_closure):
-    global mp_succs
 
-    if c_ind not in mp_succs:
-        succ = list(transitive_closure.successors(c_ind))
-        mp_succs[c_ind] = succ
-    else:
-        succ = mp_succs[c_ind]
+######
+######
+##
+##   Find the best among of fast-computable bounds for the P2 Salman's problem
+##   INPUT:  tuple(sigma, list of possible finishing clusters (Vjs))
+##   OUTPUT: [(sigma, Vj, P2_cost) ... ]
+##
+######
+######
 
-    # if c_ind == 9 and sigma == [4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 17]:
-    #     print(f'test: ind={c_ind}, succ={succ}')
+def parallel_fast_P2_bounds(sigma_Vjs):
+    sigma, Vjs = sigma_Vjs
+   
+    result = []
+    for ind_V_j in Vjs:
+        P2_cost = 0
+        ###
+        try:
+            P2_cost = lower_bound(mp_precalcutated, [mp_start_cluster_id] + sigma, ind_V_j, mp_start_cluster_id)
+        except:
+            print(f'LB fast bounding fault, sigma={sigma}, start={mp_start_cluster_id}, dest={ind_V_j}')
+        ### 
+        result.append((sigma, ind_V_j, P2_cost))
+    return result
 
-    # succ = transitive_closure.successors(c_ind)
-    return all(not (s in sigma) for s in succ)
 
-def parallel(sigma_Vjs):
+######
+######
+##
+##   Try to solve exactly the P2 Salman's problem 
+##   INPUT:  tuple(sigma, Vj, raw_P2_cost)
+##   OUTPUT: tuple(sigma, Vj, revised_P2_cost)
+##
+######
+######
+
+def parallel_improve_P2_bound(sigma_Vj_rawP2bound):
+    sigma, ind_V_j, raw_P2_bound = sigma_Vj_rawP2bound
+    c_keys=list(mp_clusters.keys())
+    start_cluster_id = c_keys[0]
+
+    gurobi_bound = raw_P2_bound
+    try:
+        gurobi_bound = lower_bound_harder(mp_precalcutated, [mp_start_cluster_id] + sigma, ind_V_j, mp_start_cluster_id)
+    except:
+        print(f'LB Gurobi bounding fault, sigma={sigma}, start={mp_start_cluster_id}, dest={ind_V_j}')
+
+    return sigma, ind_V_j, gurobi_bound
+
+
+######
+######
+##
+##   Construct a part of the novel lookup table layer
+##   INPUT:  tuple(sigma, Vj, P2_cost)
+##   OUTPUT: (capacity, result, cutoff, localLB)
+##
+##      capacity    number of produced states
+##      cutoff      number of pruned states / branches
+##      results     dict{
+##                          witness: state        
+##                        }    
+##      localLB     min among P2_cost + <length of the partial path defined by the state> 
+##
+######
+######        
+
+def parallel_layer(sigma_Vj_P2cost):
     global mp_lookup_table
 
-    sigma, Vjs = sigma_Vjs
+    sigma, ind_V_j, P2_cost = sigma_Vj_P2cost
     
     result ={}
     capacity = 0
-    c_keys=list(mp_clusters.keys())
-    start_cluster_id = c_keys[0]
     cutoff = 0
     localLB = MAXINT
 
-    sigma = list(sigma)
-   
-
-    for ind_V_j in Vjs:
-        ###
-        try:
-            P2_cost = lower_bound(mp_precalcutated, [start_cluster_id] + sigma, ind_V_j, start_cluster_id)
-        except:
-            print(f'LB calculations fault, sigma={sigma}, start={start_cluster_id}, dest={ind_V_j}')
-            P2_cost = 0
-        ###
+    sigma = list(sigma)  
+  
         
-        truncated_sigma = tuple([ind for ind in sigma if ind != ind_V_j])
-        ts_keys = [key for key in mp_lookup_table if key[KEY_SIGMA] == truncated_sigma]
-        
-        for v in mp_clusters[start_cluster_id]:
-            filtered_prev_state_keys = [key for key in ts_keys if key[KEY_V] == v]
-            for tilde_u in mp_clusters[ind_V_j]:
-                state = State(sigma, ind_V_j, tilde_u, v)
-                state.cost = compute_Bellman_cell(mp_G, mp_clusters, mp_transitive_closure, mp_lookup_table, filtered_prev_state_keys, state)
-                if state.cost < MAXINT:
-                    state.LB = P2_cost + state.cost
-                    if state.LB <= mp_UB:
-                        result[state.witness()] = state
-                        capacity += 1
-                        localLB = min(localLB, state.LB)
-                    else:
-                        cutoff += 1
-    return (capacity, result, cutoff, localLB)
+    truncated_sigma = tuple([ind for ind in sigma if ind != ind_V_j])
+    ts_keys = [key for key in mp_lookup_table if key[KEY_SIGMA] == truncated_sigma]
+    
+    for v in mp_clusters[mp_start_cluster_id]:
+        filtered_prev_state_keys = [key for key in ts_keys if key[KEY_V] == v]
+        for tilde_u in mp_clusters[ind_V_j]:
+            state = State(sigma, ind_V_j, tilde_u, v)
+            state.cost = compute_Bellman_cell(mp_G, mp_clusters, mp_transitive_closure, mp_lookup_table, filtered_prev_state_keys, state)
+            if state.cost < MAXINT:
+                state.LB = P2_cost + state.cost
+                if state.LB <= mp_UB:
+                    result[state.witness()] = state
+                    capacity += 1
+                    localLB = min(localLB, state.LB)
+                else:
+                    cutoff += 1
+    return capacity, result, cutoff, localLB
 ###
 ##################################################
 
@@ -220,13 +263,23 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
     cutoff = 0
     layerLB = MAXINT
 
-    if layer_level < 1: # baseline case
+    if layer_level < 1: # baseline case - we use the short run
         actual_workers_count = 1
         for sigma in layer:
             sigma = list(sigma)
             for ind_V_j in sigma:
                 precalculated = precalculate(G, clusters, tree, start_cluster_id)
-                P2_cost = lower_bound(precalculated, [start_cluster_id] + sigma, ind_V_j, start_cluster_id)
+                P2_cost = 0
+                try:
+                    P2_cost = lower_bound(precalculated, [start_cluster_id] + sigma, ind_V_j, start_cluster_id)
+                except:
+                    print(f'LB fast bounding fault, sigma={sigma}, start={start_cluster_id}, dest={ind_V_j}')
+                revised_bound = P2_cost
+                try:
+                    revised_bound = lower_bound_harder(mp_precalcutated, [start_cluster_id] + sigma, ind_V_j, start_cluster_id)
+                except:
+                    print(f'LB Gurobi bounding fault, sigma={sigma}, start={start_cluster_id}, dest={ind_V_j}')
+
                 
                 for v in clusters[start_cluster_id]:
                     for tilde_u in clusters[ind_V_j]:
@@ -234,7 +287,7 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
                             capacity += 1
                             state = State(sigma, ind_V_j, tilde_u, v)
                             state.cost = G[v][tilde_u]["weight"]
-                            state.LB = state.cost + P2_cost
+                            state.LB = state.cost + revised_bound
                             layerLB = min(layerLB, state.LB)
 
                             witness = state.witness()
@@ -245,9 +298,18 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
 
         actual_workers_count = min(workers_count, predicted_workers_count)
         with mp.Pool(actual_workers_count, worker_init, (G, clusters, tree, f'{lookup_table_name}{layer_level-1:03d}.dct', layer, UB), maxtasksperchild=MAXTASKSPERWORKER) as pool:
-            results = pool.map(parallel, layer.items())
-            pool.close()
+            
+
+            chunks_fast_P2_bounds = pool.map(parallel_fast_P2_bounds, layer.items())
+            # pool.close()
             pool.join()
+
+            # collect all results from the workers
+            fast_P2_bounds = [t for chunk in chunks_fast_P2_bounds for t in chunk]
+            # sort 
+            
+
+
             pool = None
             layer = None
  
