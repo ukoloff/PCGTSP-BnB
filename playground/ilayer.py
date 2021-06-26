@@ -2,6 +2,7 @@
 # Информация об обработанном слое
 #
 from timeit import default_timer as timer
+import numpy as np
 
 class iLayer:
   def __init__(self, size):
@@ -19,6 +20,10 @@ class iLayer:
   def skipped(self):
     self.skipped_nodes += 1
 
+  def registerLB(self, LB: float):
+    self.found()
+    self.LBs.append(LB)
+
   def registerUB(self, UB: float, sigma: tuple):
     if self.UB is None or self.UB > UB:
       self.UB = UB
@@ -27,6 +32,9 @@ class iLayer:
   def dump(self, LB):
     print(f"Layer #{self.size} processed, {timer() - self.start:.1f} seconds")
     print(f"Nodes: {self.nodes}\tSkipped: {self.skipped_nodes}\tRatio: {self.nodes / (self.skipped_nodes + self.nodes) * 100:.0f}%\tLB: {LB}")
+    bins, edges = np.histogram(self.LBs, bins=20)
+    print(f'LB distribution: {edges[0]} - {edges[-1]}')
+    print(*bins)
     print(flush=True)
 
   def printUB(self):

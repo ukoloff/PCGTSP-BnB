@@ -47,7 +47,7 @@ def solve(task: Task, log2=sys.stdout):
       print('!', file=log2)
       continue
     updateLB(node)
-    this_layer.found()
+    this_layer.registerLB(node.bounds['LB'])
     print(f'\tLB={root.LB} // {(root.task.UB - root.LB) / root.task.UB * 100:.0f}%', file=log2)
 
   solve_end = timer()
