@@ -37,6 +37,7 @@ def solve(task: Task, log2=sys.stdout):
       nc.upper_bound(node)
       print(node.bounds, file=log2)
       this_layer.found()
+      this_layer.registerUB(node.bounds['UB'], node.sigma)
       continue
     nc.bounds(node)
     print(node.bounds, end='\t', file=log2)
@@ -50,6 +51,7 @@ def solve(task: Task, log2=sys.stdout):
     print(f'\tLB={root.LB} // {(root.task.UB - root.LB) / root.task.UB * 100:.0f}%', file=log2)
 
   solve_end = timer()
+  this_layer.printUB()
   print(f'Elapsed: {solve_end - solve_start:.1f} s')
 
 def subtree(node: STNode, order=None):
