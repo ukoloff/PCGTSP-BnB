@@ -312,6 +312,7 @@ def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_keep_layers, 
             tree, lookup_table_name, keep_lookup_table, workers_count, predicted_workers_count, UB, LB)
 
         if GAP_TO_STOP and GAP_TO_STOP >= (UB - LB) / LB * 100:
+          print(f"GAP of {GAP_TO_STOP}% is met!")
           break
 
     OPT = MAXINT

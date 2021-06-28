@@ -7,7 +7,7 @@ import sys
 from argparse import ArgumentParser
 
 from fromPCGLNS import getInstance
-from DP_BnB_solver_v0_40 import DP_solver_layered, visited_clusters, get_path_length, MAXINT, MEMORY_LIMIT, LOW_PC, HIGH_PC, setGap
+from DP_BnB_solver_v0_40 import DP_solver_layered, visited_clusters, get_path_length, MAXINT, MEMORY_LIMIT, setGap, setThresholds
 
 
 def test(filename, need_2_keep_layers, workers_count, UB):
@@ -79,7 +79,6 @@ if __name__ == '__main__':
     UB = args.upper_bound
     MEMORY_LIMIT = args.memory_limit_gb * 1000000000
     setGap(args.gap)
-    LOW_PC = args.bottom / 100
-    HIGH_PC = 1 - args.top / 100
+    setThresholds(args.bottom, args.top)
 
     test(ifname, keep_layers, workers_count, UB)
