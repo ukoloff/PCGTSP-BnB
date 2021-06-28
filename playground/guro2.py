@@ -8,12 +8,14 @@ import networkx as nx
 import gurobipy as gp
 from gurobipy import GRB
 
+TIME_LIMIT = 1.01
+
 # Force banner
 gp.Model('-')
 
 
 def run(model: gp.Model):
-    model.Params.TimeLimit = 1.01
+    model.Params.TimeLimit = TIME_LIMIT
     model.optimize()
     if model.status not in (GRB.OPTIMAL, GRB.TIME_LIMIT):
         raise RuntimeError(f"Gurobi exited with status {model.status}")
