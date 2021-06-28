@@ -29,3 +29,8 @@ class STNode:
 
     def is_leaf(self):
       return len(self.sigma) == len(self.task.clusters)
+
+    def gap(self):
+      LB = self.LB
+      UB = self.task.UB
+      return 0 if LB == 0 else (UB - LB) / LB * 100

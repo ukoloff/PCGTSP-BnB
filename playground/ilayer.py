@@ -4,6 +4,8 @@
 from timeit import default_timer as timer
 import numpy as np
 
+from klasses import Task, STNode
+
 class iLayer:
   def __init__(self, size):
     self.start = timer()
@@ -29,9 +31,9 @@ class iLayer:
       self.UB = UB
       self.solution = sigma
 
-  def dump(self, LB):
+  def dump(self, root: STNode):
     print(f"Layer #{self.size} processed, {timer() - self.start:.1f} seconds")
-    print(f"Nodes: {self.nodes}\tSkipped: {self.skipped_nodes}\tRatio: {self.nodes / (self.skipped_nodes + self.nodes) * 100:.0f}%\tLB: {LB}")
+    print(f"Nodes: {self.nodes}\tSkipped: {self.skipped_nodes}\tRatio: {self.nodes / (self.skipped_nodes + self.nodes) * 100:.0f}%\tLB: {root.LB}\tGap: {root.gap():.0f}%")
     bins, edges = np.histogram(self.LBs, bins=20)
     print(f'LB distribution: {edges[0]} - {edges[-1]}')
     print(*bins)
