@@ -7,11 +7,12 @@ import sys
 from argparse import ArgumentParser
 
 from fromPCGLNS import getInstance
-from DP_BnB_solver_v0_21 import DP_solver_layered, visited_clusters, get_path_length, MAXINT, MEMORY_LIMIT
+from DP_BnB_solver_v0_40 import DP_solver_layered, visited_clusters, get_path_length, MAXINT, MEMORY_LIMIT, LOW_PC, HIGH_PC
 
 
 
 def test(filename, need_2_keep_layers, workers_count, UB):
+    print(f'Low: {LOW_PC}\tHigh: {HIGH_PC}')
 
     graph, clusters, tree = getInstance(filename)
 
@@ -69,6 +70,9 @@ if __name__ == '__main__':
     parser.add_argument('-w', '--workers', type=int, default=1, help='Maximum number of workers')
     parser.add_argument('-UB', '--upper_bound', type=float, default=MAXINT, required=True, help='Path length of solution')
     parser.add_argument('-m', '--memory_limit_gb', type=int, default=MAXINT, help='Memory limit, Gb')
+
+    parser.add_argument('-b', '--bottom', type=float, default=10, help='Low threshold for Gurobi application, %')
+    parser.add_argument('-t', '--top', type=float, default=5, help='High threshold for Gurobi application, %')
     args = parser.parse_args()
 
     ifname = args.input
@@ -76,6 +80,8 @@ if __name__ == '__main__':
     workers_count = args.workers
     UB = args.upper_bound
     MEMORY_LIMIT = args.memory_limit_gb * 1000000000
+    LOW_PC = args.bottom / 100
+    HIGH_PC = 1 - args.top / 100
 
     test(ifname, keep_layers, workers_count, UB)
 
