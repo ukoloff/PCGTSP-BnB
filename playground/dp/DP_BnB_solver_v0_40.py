@@ -399,7 +399,7 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
 
             to_revise_dict, to_revise = prepare_Uranus(states_list)
 
-            print(f'raw state costs computed, {len(to_revise)} P2 bounds sent for revision')
+            print(f'raw state costs computed, {len(to_revise)} P2 bounds sent for revision\t// range: {LOW_PC} - {HIGH_PC}')
 
         if to_revise:
             with mp.Pool(actual_workers_count, worker_init,(G, clusters, tree, layer, UB), maxtasksperchild=MAXTASKSPERWORKER) as pool:
