@@ -8,7 +8,7 @@ import psutil
 import os
 import functools as ft
 import sys
-import glob 
+import glob
 
 from collections import Counter
 from salmanize import lower_bound, precalculate
@@ -16,6 +16,13 @@ from salmanize import lower_bound, precalculate
 MAXINT = 100000000000000000000000000000
 MAXTASKSPERWORKER = 1000
 MEMORY_LIMIT = MAXINT  # MEMORY LIMIT (in Bytes), for cluster calculations
+
+GAP_TO_STOP = None      # Stop if GAP is reached
+
+def setGap(Gap):
+  global GAP_TO_STOP
+  if Gap:
+    GAP_TO_STOP = Gap
 
 ###### Memory usage util #############################################################################
 ##  ATTENTION: designed for  Linux, for another OS can possible be adapted
@@ -38,10 +45,10 @@ class State:
         self.sigma = sigma       # index set of visited clusters except the first one
         self.j = j               # index of the last cluster
         self.tilde_u = tilde_u   # last node in the last cluster
-        self.v = v               # first node 
+        self.v = v               # first node
         self.predecessor_witness = None    # predecessor state witness
         self.cost = cost
-        self.LB = - MAXINT  
+        self.LB = - MAXINT
 
     def witness(self):
         return (tuple(self.sigma), self.j, self.tilde_u, self.v)
@@ -49,7 +56,7 @@ class State:
 
 KEY_SIGMA = 0
 KEY_V = 3
-      
+
 
 def make_unique_list(lst):
     tuples=map(lambda item: tuple(sorted(item)),lst)
@@ -58,11 +65,11 @@ def make_unique_list(lst):
     return list(map(list,unique_tuples))
 
 
-def compute_Bellman_cell(G, clusters, transitive_closure, lookup_table, filtered_prev_state_keys, state):        
+def compute_Bellman_cell(G, clusters, transitive_closure, lookup_table, filtered_prev_state_keys, state):
     best_cost = MAXINT
     prev_state = None
 
-    
+
     for key in filtered_prev_state_keys:
         suggested_prev_state = mp_lookup_table[key]
         cost = suggested_prev_state.cost + G[suggested_prev_state.tilde_u][state.tilde_u]['weight']
@@ -79,7 +86,7 @@ def compute_Bellman_cell(G, clusters, transitive_closure, lookup_table, filtered
     return best_cost
 
 ################ multiprocessing staff #########
-###  
+###
 def worker_init(G, clusters, tree, lookup_table_filename, current_layer, UB):
     global mp_G
     global mp_clusters
@@ -96,12 +103,12 @@ def worker_init(G, clusters, tree, lookup_table_filename, current_layer, UB):
     mp_transitive_closure = nx.transitive_closure(tree)
     mp_UB = UB
     mp_current_layer = current_layer
-    
+
     mp_succs={}
 
     c_keys=list(mp_clusters.keys())
     start_cluster_id = c_keys[0]
-    
+
     # mp_nc0 = nc0(mp_G, mp_clusters, mp_tree, start_cluster_id)
     mp_precalcutated = precalculate(mp_G, mp_clusters, mp_tree, start_cluster_id)
     # print(f'NC0=\n{mp_nc0.edges(data="weight")}')
@@ -128,7 +135,7 @@ def parallel(sigma_Vjs):
     global mp_lookup_table
 
     sigma, Vjs = sigma_Vjs
-    
+
     result ={}
     capacity = 0
     c_keys=list(mp_clusters.keys())
@@ -137,7 +144,7 @@ def parallel(sigma_Vjs):
     localLB = MAXINT
 
     sigma = list(sigma)
-   
+
 
     for ind_V_j in Vjs:
         ###
@@ -147,10 +154,10 @@ def parallel(sigma_Vjs):
             print(f'LB calculations fault, sigma={sigma}, start={start_cluster_id}, dest={ind_V_j}')
             P2_cost = 0
         ###
-        
+
         truncated_sigma = tuple([ind for ind in sigma if ind != ind_V_j])
         ts_keys = [key for key in mp_lookup_table if key[KEY_SIGMA] == truncated_sigma]
-        
+
         for v in mp_clusters[start_cluster_id]:
             filtered_prev_state_keys = [key for key in ts_keys if key[KEY_V] == v]
             for tilde_u in mp_clusters[ind_V_j]:
@@ -169,21 +176,21 @@ def parallel(sigma_Vjs):
 ##################################################
 
 def do_prepare_layer(sigma, tree, V1, V1_succ, current_layer):
-    l_sigma = list(sigma) 
+    l_sigma = list(sigma)
     suppl = [(tuple(sorted(l_sigma + [succ])),succ) for succ in V1_succ if succ not in l_sigma]
     for new_sigma, succ in suppl:
         if not new_sigma in current_layer:
             current_layer[new_sigma] = [succ]
-        current_layer[new_sigma].append(succ) 
+        current_layer[new_sigma].append(succ)
 
-    
+
     for ind in l_sigma:
         suppl = [(tuple(sorted(l_sigma + [succ])),succ) for succ in tree.successors(ind) if succ not in l_sigma and nx.ancestors(tree,succ).issubset(l_sigma+[V1])]
         for new_sigma, succ in suppl:
             if not new_sigma in current_layer:
                 current_layer[new_sigma] = [succ]
-            current_layer[new_sigma].append(succ) 
-        
+            current_layer[new_sigma].append(succ)
+
 
 def prepare_layer(clusters,tree, previous_layer, layer_level):
     clust_keys=list(clusters.keys())
@@ -193,13 +200,13 @@ def prepare_layer(clusters,tree, previous_layer, layer_level):
 
     current_layer = {}
 
-    if not previous_layer:     # baseline case 
+    if not previous_layer:     # baseline case
         current_layer = {(succ,): None for succ in V1_succ}
         return current_layer
 
     for sigma in previous_layer:
         do_prepare_layer(sigma, tree, V1, V1_succ, current_layer)
-              
+
     current_layer = {key: list(set(val)) for key,val in current_layer.items()}
     return current_layer
 
@@ -210,7 +217,7 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
 
     layer = prepare_layer(clusters, tree, previous_layer, layer_level)
     print(f'layer {layer_level+1:03d} is prepared')
- 
+
     lookup_table = {}
     start_cluster_id = c_keys[0]
 
@@ -225,7 +232,7 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
             for ind_V_j in sigma:
                 precalculated = precalculate(G, clusters, tree, start_cluster_id)
                 P2_cost = lower_bound(precalculated, [start_cluster_id] + sigma, ind_V_j, start_cluster_id)
-                
+
                 for v in clusters[start_cluster_id]:
                     for tilde_u in clusters[ind_V_j]:
                         if G.has_edge(v,tilde_u):             # checking if graph has the edge (v,tilde_u)
@@ -237,8 +244,8 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
 
                             witness = state.witness()
                             lookup_table[witness] = state
-                        
-                
+
+
     else:
 
         actual_workers_count = min(workers_count, predicted_workers_count)
@@ -248,11 +255,11 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
             pool.join()
             pool = None
             layer = None
- 
+
             capacity = sum(map(lambda item: item[0],results))
             cutoff = sum(map(lambda item: item[2],results))
             layerLB = min(map(lambda item: item[3],results))
-     
+
             def instead_of_lambda(acc, res):
                 acc.update(res[1])
                 return acc
@@ -266,18 +273,18 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
     ####### to filter out the next layer ###################
     sigmas_from_lookup_table = list(set([key[KEY_SIGMA] for key in lookup_table]))
     ########################################################
-        
-    predicted_workers_count = possible_workers_count() 
+
+    predicted_workers_count = possible_workers_count()
 
     if not keep_lookup_table:
-        lookup_table = None    
-    
+        lookup_table = None
+
     gc.collect()
 
     LB = max(LB, layerLB)
     Gap = (UB - LB)/LB
 
-   
+
     print(f'\t{cutoff} ({cutoff / (cutoff + capacity):.1%}) of branches were cut off')
     print(f'layer {layer_level+1:03d} of size {capacity:>10} ({len(sigmas_from_lookup_table)}) is completed by {actual_workers_count} worker(s) at {time.time() - start_time:8.2f} sec.')
     print(f'Best UB is {UB}, Best LB is {LB}, Gap is {Gap:.2%}\n=============================')
@@ -285,7 +292,7 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
 
 
 def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_keep_layers, workers_count, UB = MAXINT):
-    
+
     num_of_layers = len(clusters) - 1
 
     predicted_workers_count = possible_workers_count()
@@ -293,7 +300,7 @@ def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_keep_layers, 
 
     c_keys=list(clusters.keys())
     start_cluster_id = c_keys[0]
- 
+
     precalculated = precalculate(G, clusters, tree, start_cluster_id)
     LB = lower_bound(precalculated, [start_cluster_id], start_cluster_id, start_cluster_id)
 
@@ -301,9 +308,12 @@ def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_keep_layers, 
 
     for layer_level in range(num_of_layers):
         keep_lookup_table = (layer_level >= num_of_layers - 1)
-        predicted_workers_count, lookup_table, previous_layer, LB = compute_Bellman_layer(G, clusters,  layer_level, previous_layer, 
+        predicted_workers_count, lookup_table, previous_layer, LB = compute_Bellman_layer(G, clusters,  layer_level, previous_layer,
             tree, lookup_table_name, keep_lookup_table, workers_count, predicted_workers_count, UB, LB)
-        
+
+        if GAP_TO_STOP and GAP_TO_STOP >= (UB - LB) / LB * 100:
+          break
+
     OPT = MAXINT
     best_state = None
 
@@ -313,7 +323,7 @@ def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_keep_layers, 
     sigma = sorted(clust_keys[1:])
     ind_V_1 = clust_keys[0]
 
-   
+
     for v in clusters[ind_V_1]:
         print(f'leaves: {leaves}')
         for ind in leaves:
@@ -336,7 +346,7 @@ def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_keep_layers, 
     route = [ind_V_1, best_state.j]
 
     layer_level = len(clusters) - 3
-    
+
     while current_state.predecessor_witness != None:
          with open(f'{lookup_table_name}{layer_level:03d}.dct', 'rb') as fin:
             layer_lookup_table = pic.load(fin)
@@ -361,10 +371,10 @@ def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_keep_layers, 
         for ff in filelist:
             try:
                 os.remove(ff)
-            except OSError as mag:
+            except OSError as msg:
                 print(msg)
 
-    
+
     return (OPT, route, path)
 
 
@@ -372,7 +382,7 @@ def get_path_length(path, graph):
     dist = [graph[path[i]][path[i+1]]['weight'] for i in range(len(path)-1)]
     print(f'dist = {dist}')
     return sum(dist)
-      
+
 
 def visited_clusters(tour, clusters):
     def cluster(node):
