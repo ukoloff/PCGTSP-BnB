@@ -157,7 +157,7 @@ def parallel_fast_P2_bounds(sigma_Vjs):
 ######
 ######
 ##
-##   Try to solve exactly the P2 Salman's problem 
+##   Try to solve the P2 Salman's problem exactly
 ##   INPUT:  tuple(sigma, Vj, raw_P2_cost)
 ##   OUTPUT: tuple(sigma, Vj, revised_P2_cost)
 ##
@@ -177,7 +177,7 @@ def parallel_improve_P2_bound(sigma_Vj_rawP2bound):
     except:
         print(f'LB Gurobi bounding fault, sigma={sigma}, start={mp_start_cluster_id}, dest={ind_V_j}')
 
-    return sigma, ind_V_j, gurobi_bound
+    return sigma, ind_V_j, max(gurobi_bound, raw_P2_bound)
 
 
 ######
