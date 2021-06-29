@@ -295,7 +295,10 @@ def prepare_layer(clusters,tree, previous_layer, layer_level):
 ##########
 ##########
 
-def prepare_Uranus(states_list, low_percent=LOW_PC, high_percent=HIGH_PC):
+def prepare_Uranus(states_list):
+    low_percent=LOW_PC
+    high_percent=HIGH_PC
+
     L = len(states_list)
     low_count = int(L * low_percent)
     high_count = int(L* high_percent)
