@@ -17,8 +17,8 @@ MAXINT = 100000000000000000000000000000
 MAXTASKSPERWORKER = 1000
 MEMORY_LIMIT = MAXINT  # MEMORY LIMIT (in Bytes), for cluster calculations
 
-LOW_PC = 0.10
-HIGH_PC = 0.95
+LOW_PC = 0.005
+HIGH_PC = 0.99
 
 ###### Memory usage util #############################################################################
 ##  ATTENTION: designed for  Linux, for another OS can possible be adapted
@@ -379,12 +379,13 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
             
             capacity = sum(map(lambda item: item[KEY_RESULTS_CAPACITY],results))
             cutoff = sum(map(lambda item: item[KEY_RESULTS_CUTOFF],results))
-            layerLB = min(map(lambda item: item[KEY_RESULTS_LB],results))
+            # layerLB = min(map(lambda item: item[KEY_RESULTS_LB],results))
 
-        ### take a given part of states for the revision    
+            ### combine and sort states by local LBs 
             states_list = [s for chunk in results for s in chunk[KEY_RESULTS_STATE]]
             states_list.sort(key = lambda state: state.LB)
 
+            ### take a given part of states for the revision 
             to_revise_dict, to_revise = prepare_Uranus(states_list)
 
             print(f'raw state costs computed, {len(to_revise)} P2 bounds sent for revision')
@@ -399,18 +400,33 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
                 print(f'revised P2 bounds obtained')
 
                 # recompute the states
-                revised_layerLB = MAXINT
+                # revised_layerLB = MAXINT
+                
+                sum_diff = 0
+                count = 0
+
                 for item in revised:
                     for state in to_revise_dict[(item[KEY_BOUND_SIGMA], item[KEY_BOUND_VJ])]:
+                        old_localLB = state.LB
                         state.P2_cost = item[KEY_BOUND_VAL]
-                        state.LB = state.cost + state.P2_cost
-                        if revised_layerLB > state.LB:
-                            revised_layerLB = state.LB
+                        state.LB =  state.cost + state.P2_cost
+
+                        assert state.LB >= old_localLB, f'Error: raw LB {old_localLB} turns to be better than revised {state.LB}'
+                        sum_diff += state.LB - old_localLB
+                        count += 1
+
+                
+                        # if revised_layerLB > state.LB:
+                        #     revised_layerLB = state.LB
+
+                print(f'Average local LB growth is {sum_diff / count:.3f}')
 
         ### construct current layer
         lookup_table = {state.witness(): state for state in states_list}
 
-        layerLB = max(layerLB, revised_layerLB)
+        # layerLB = max(layerLB, revised_layerLB)
+        
+        layerLB = min([state.LB for state in states_list]) 
    
 
     with open(f'{lookup_table_name}{layer_level:03d}.dct', 'wb') as fout:
