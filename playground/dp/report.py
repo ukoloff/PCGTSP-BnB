@@ -7,7 +7,7 @@ from pathlib import Path
 logs = Path(__file__).parent.parent.parent / "logs/dp"
 
 print("run\t\ttime\tstates\tsigmas\tLB\tLBs")
-for log in logs.iterdir():
+for log in logs.glob('*.log.txt'):
   time = None
   states, sigmas = 0, 0
   LBs = []
