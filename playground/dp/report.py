@@ -5,6 +5,8 @@ import re
 from pathlib import Path
 
 logs = Path(__file__).parent.parent.parent / "logs/dp"
+
+print("run\t\ttime\tstates\tsigmas\tLB\tLBs")
 for log in logs.iterdir():
   time = None
   states, sigmas = 0, 0
@@ -17,4 +19,4 @@ for log in logs.iterdir():
       sigmas += int(m[2])
     if m := re.search(r"Best\s+LB\s+is\s+(\d+([.]\d+)?)", line):
       LBs.append(float(m[1]))
-  print(log.stem, time, states, sigmas, LBs, sep='\t')
+  print(log.stem, time, states, sigmas, max(LBs), LBs, sep='\t')
