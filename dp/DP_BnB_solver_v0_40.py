@@ -295,7 +295,7 @@ def prepare_Uranus(states_list, low_percent=LOW_PC, high_percent=HIGH_PC):
         short_key = (tuple(state.sigma), state.j)
 
         if not short_key in to_revise_dict:
-            to_revise_dict[short_key] = []
+            to_revise_dict[short_key] = [state]
         else:
             to_revise_dict[short_key].append(state)
 
