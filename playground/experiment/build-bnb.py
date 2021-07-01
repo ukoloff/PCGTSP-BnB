@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import re
 import sys
 from pathlib import Path
@@ -8,7 +10,7 @@ for i in range(3):
 
 samples = root / "Salman"
 tasks = samples / "input"
-logs = root / "logs/salman"
+logs = root / "logs/s/bnb"
 logs.mkdir(parents=True, exist_ok=True)
 
 sources = []
@@ -52,6 +54,6 @@ for n, f in sources:
 # {f}[{n}] UB={thisUB}
 outf="--output={logs}/{f}.log.txt"
 errf="--error={logs}/{f}.errors.log.txt"
-cmd="srun $m $t $g $p -u python DP_pcglns.py -i={tasks}/{f}.pcglns -w=$threads -UB={thisUB}"
-sbatch $t $m $p $errf $outf $g -J {f} --wrap="$cmd"
+cmd="srun $m $t $g $p -u python ../walk.py s/{f} --gap 5"
+sbatch $t $m $p $errf $outf $g -J .{f} --wrap="$cmd"
 """)
