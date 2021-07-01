@@ -10,7 +10,7 @@ import prefix
 import nc
 import cut_prefix
 import children
-import logging
+import loggging
 import ilayer
 
 
@@ -131,7 +131,7 @@ if __name__ == '__main__':
       exit()
 
     src = args.model
-    log2 = logging.start(src)
+    log2 = loggging.start(src)
     print("Loading:", src)
 
     # task = samples.random(1000, 12)
