@@ -2,7 +2,7 @@ import re
 import sys
 from pathlib import Path
 
-root = Path(__file__)
+root = Path(__file__).resolve()
 for i in range(3):
   root = root.parent
 
@@ -14,7 +14,8 @@ logs.mkdir(parents=True, exist_ok=True)
 sources = []
 for f in tasks.glob('*'):
     for line in open(f):
-      if m := re.match(r"\s*GTSP_SETS\s*:\s*(\d+)", line):
+      m = re.match(r"\s*GTSP_SETS\s*:\s*(\d+)", line)
+      if m:
         sources.append((int(m[1]), f.stem))
 
 sources = sorted(sources)
@@ -22,7 +23,8 @@ sources = sorted(sources)
 
 def UB(sample):
   for line in (samples / "heuristic" / f"{sample}.pcglns.result.txt").open():
-    if m := re.match(r"\s*Cost\s*:\s*(\d+)", line):
+    m = re.match(r"\s*Cost\s*:\s*(\d+)", line)
+    if m:
       return float(m[1])
 
 def header():
