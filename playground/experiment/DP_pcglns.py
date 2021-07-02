@@ -4,15 +4,14 @@ import Instance_generator as ig
 import time
 import os
 import sys
-
+from argparse import ArgumentParser
 
 from fromPCGLNS import getInstance
-from DP_BnB_solver_v0_40 import DP_solver_layered, visited_clusters, get_path_length, MAXINT, MEMORY_LIMIT
+from DP_BnB_solver_v0_40 import DP_solver_layered, visited_clusters, get_path_length, MAXINT, MEMORY_LIMIT, setGap
 
-      
 
 def test(filename, need_2_keep_layers, workers_count, UB):
-    
+
     graph, clusters, tree = getInstance(filename)
 
     n = graph.number_of_nodes()
@@ -23,10 +22,10 @@ def test(filename, need_2_keep_layers, workers_count, UB):
     print(f'Partial order tree: {tree.edges()}')
 
     start_time = time.time()
-    
+
     lookup_table_name = f'problem_{n}_{m}_'
     res = DP_solver_layered(graph, clusters, tree, lookup_table_name, need_2_keep_layers, workers_count, UB)
-    
+
     print(f'RESULT: ')
     if res:
         OPT, route, tour = res
@@ -63,32 +62,20 @@ if __name__ == '__main__':
     UB = MAXINT
     keep_layers = False
 
-    try:
-        for arg in sys.argv:
-            if arg == '--keep_layers':
-                keep_layers = True
-            if '=' in arg:
-                parts = arg.split('=')
-                if parts[0] == '--input' or parts[0] == '-i':
-                    ifname = parts[1]
-                if parts[0] == '--workers' or parts[0] == '-w':
-                    workers_count = int(parts[1])
-                if parts[0] == '--upper_bound' or parts[0] == '-UB':
-                    UB = float(parts[1])
-                if parts[0] == '--memory_limit_gb' or parts[0] == '-m':
-                    MEMORY_LIMIT = int(parts[1]) * 1000000000
+    parser = ArgumentParser(description='Run Dynamic Programming for PCGTSP with BnB features')
+    parser.add_argument('-i', '--input', required=True, help='Source file (.pcglns)')
+    parser.add_argument('-k', '--keep_layers', action='store_true', help='Keep layers')
+    parser.add_argument('-w', '--workers', type=int, default=1, help='Maximum number of workers')
+    parser.add_argument('-UB', '--upper_bound', type=float, default=MAXINT, required=True, help='Path length of solution')
+    parser.add_argument('-m', '--memory_limit_gb', type=int, default=MAXINT, help='Memory limit, Gb')
+    parser.add_argument('-g', '--gap', type=float, help='Stop calculation at (percent)')
+    args = parser.parse_args()
 
-    except:
-        print('SYNTAX: python DP_parallel_layered3_pcglns.py -i=<input path/filename> [-w=<workers_count>] [-UB=<upper_bound>] [-m=<memory_limit (Gb)>]')
+    ifname = args.input
+    keep_layers = args.keep_layers
+    workers_count = args.workers
+    UB = args.upper_bound
+    MEMORY_LIMIT = args.memory_limit_gb * 1000000000
+    setGap(args.gap)
 
     test(ifname, keep_layers, workers_count, UB)
-
-    
-
-    
-
-        
-    
-    
-  
-
