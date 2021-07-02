@@ -27,6 +27,7 @@ def solve(task: Task, log2=sys.stdout, gap=None):
     for node in subtree(root, order=-1):
         if len(node.sigma) != last_len:
             if last_len > 0:
+                root.LB = max(root.LB, min(this_layer.LBs, default=root.LB))
                 this_layer.dump(root)
                 if gap and root.gap()  <= gap:
                   print(f"GAP of {gap}% is met!")
