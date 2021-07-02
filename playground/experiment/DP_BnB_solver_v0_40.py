@@ -478,13 +478,24 @@ def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_keep_layers, 
 
     print(f'Start LB is {LB}')
 
+    def cleanUpTables():
+      if not need_2_keep_layers:
+          filelist = glob.glob(f'{lookup_table_name}*.dct', recursive = False)
+          for ff in filelist:
+              try:
+                  os.remove(ff)
+              except OSError as mag:
+                  print(msg)
+
+
     for layer_level in range(num_of_layers):
         keep_lookup_table = (layer_level >= num_of_layers - 1)
         predicted_workers_count, lookup_table, previous_layer, LB = compute_Bellman_layer(G, clusters,  layer_level, previous_layer,
             tree, lookup_table_name, keep_lookup_table, workers_count, predicted_workers_count, UB, LB)
         if GAP_TO_STOP and GAP_TO_STOP >= (UB - LB) / LB * 100:
           print(f"GAP of {GAP_TO_STOP}% is met!")
-          break
+          cleanUpTables()
+          return (UB, [], [])
 
     OPT = MAXINT
     best_state = None
@@ -538,14 +549,7 @@ def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_keep_layers, 
     path.reverse()
     route.reverse()
 
-    if not need_2_keep_layers:
-        filelist = glob.glob(f'{lookup_table_name}*.dct', recursive = False)
-        for ff in filelist:
-            try:
-                os.remove(ff)
-            except OSError as mag:
-                print(msg)
-
+    cleanUpTables()
 
     return (OPT, route, path)
 
