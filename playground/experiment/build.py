@@ -52,6 +52,6 @@ for n, f in sources:
 # {f}[{n}] UB={thisUB}
 outf="--output={logs}/{f}.log.txt"
 errf="--error={logs}/{f}.errors.log.txt"
-cmd="srun $m $t $g $p -u python DP_pcglns.py -i={tasks}/{f}.pcglns -w=$threads -UB={thisUB}"
+cmd="srun $m $t $g $p -u python DP_pcglns.py -i={tasks}/{f}.pcglns -w=$threads -UB={thisUB} --gap 5"
 sbatch $t $m $p $errf $outf $g -J {f} --wrap="$cmd"
 """)
