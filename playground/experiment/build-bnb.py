@@ -36,7 +36,7 @@ def header():
 export GRB_LICENSE_FILE=~/gurobi.lic
 export LD_PRELOAD=~/ioctl/ioctl_faker.so
 
-threads=36
+threads=1
 m="--mem=128G"
 g="--cpus-per-task=$threads"
 t="--time=600"
