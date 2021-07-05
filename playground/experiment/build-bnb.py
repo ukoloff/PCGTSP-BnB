@@ -37,7 +37,7 @@ export GRB_LICENSE_FILE=~/gurobi.lic
 export LD_PRELOAD=~/ioctl/ioctl_faker.so
 
 threads=1
-m="--mem=128G"
+m="--mem=32G"
 g="--cpus-per-task=$threads"
 t="--time=600"
 p="--partition=apollo"
