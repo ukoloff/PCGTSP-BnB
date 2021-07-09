@@ -464,6 +464,7 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
 
 
 def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_keep_layers, workers_count, UB = MAXINT):
+    start_time = time.time()
 
     num_of_layers = len(clusters) - 1
 
@@ -477,6 +478,7 @@ def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_keep_layers, 
     LB = lower_bound(precalculated, [start_cluster_id], start_cluster_id, start_cluster_id)
 
     print(f'Start LB is {LB}')
+    print(f'Starting layers at: {time.time() - start_time:8.2f}')
 
     def cleanUpTables():
       if not need_2_keep_layers:
@@ -486,6 +488,11 @@ def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_keep_layers, 
                   os.remove(ff)
               except OSError as mag:
                   print(msg)
+
+    if GAP_TO_STOP and GAP_TO_STOP >= (UB - LB) / LB * 100:
+      print(f"GAP of {GAP_TO_STOP}% is met!")
+      cleanUpTables()
+      return (UB, [], [])
 
 
     for layer_level in range(num_of_layers):
