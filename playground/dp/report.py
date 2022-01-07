@@ -19,4 +19,4 @@ for log in logs.glob('*.log.txt'):
       sigmas += int(m[2])
     if m := re.search(r"Best\s+LB\s+is\s+(\d+([.]\d+)?)", line):
       LBs.append(float(m[1]))
-  print(log.stem, time, states, sigmas, max(LBs), LBs, sep='\t')
+  print(log.stem, time, states, sigmas, max(LBs, default=None), LBs, sep='\t')
