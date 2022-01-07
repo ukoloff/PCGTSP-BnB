@@ -11,7 +11,7 @@ referred to in
 
 ## Prerequisites
 
-One need modern installation of [Python]
+One needs modern installation of [Python]
 as well as modules in
 [requirements.txt](requirements.txt):
 ```sh
@@ -38,7 +38,7 @@ by PCGLNS heuristic
 are in
 [Salman/heuristic](Salman/heuristic).
 
-Logs of B-n-B flavoure of the algorithm
+Logs of B-n-B flavour of the algorithm
 are in
 [logs/s](logs/s),
 of DP flavour -
