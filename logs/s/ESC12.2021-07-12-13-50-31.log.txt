@@ -1,0 +1,67 @@
+Loading: s/ESC12
+Size:	 65 / 13
+UB:	 1390.0
+Solution so far:	 [(1, 1), (5, 19), (9, 45), (11, 53), (10, 51), (8, 36), (2, 2), (4, 8), (6, 27), (12, 58), (3, 4), (7, 33), (13, 63)]
+
+Layer #1 processed, 0.3 seconds
+Nodes: 1	Skipped: 0	Ratio: 100%	LB: 1362.0	Gap: 2%
+LB distribution: 1361.5 - 1362.5
+0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0
+
+Layer #2 processed, 1.5 seconds
+Nodes: 1	Skipped: 9	Ratio: 10%	LB: 1362.0	Gap: 2%
+LB distribution: 1361.5 - 1362.5
+0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0
+
+Layer #3 processed, 0.9 seconds
+Nodes: 1	Skipped: 8	Ratio: 11%	LB: 1362.0	Gap: 2%
+LB distribution: 1361.5 - 1362.5
+0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0
+
+Layer #4 processed, 0.6 seconds
+Nodes: 1	Skipped: 7	Ratio: 12%	LB: 1362.0	Gap: 2%
+LB distribution: 1364.5 - 1365.5
+0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0
+
+Layer #5 processed, 0.5 seconds
+Nodes: 1	Skipped: 6	Ratio: 14%	LB: 1362.0	Gap: 2%
+LB distribution: 1367.5 - 1368.5
+0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0
+
+Layer #6 processed, 0.2 seconds
+Nodes: 1	Skipped: 5	Ratio: 17%	LB: 1362.0	Gap: 2%
+LB distribution: 1367.5 - 1368.5
+0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0
+
+Layer #7 processed, 0.1 seconds
+Nodes: 1	Skipped: 4	Ratio: 20%	LB: 1362.0	Gap: 2%
+LB distribution: 1374.5 - 1375.5
+0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0
+
+Layer #8 processed, 0.0 seconds
+Nodes: 2	Skipped: 2	Ratio: 50%	LB: 1362.0	Gap: 2%
+LB distribution: 1375.0 - 1383.0
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+
+Layer #9 processed, 0.0 seconds
+Nodes: 2	Skipped: 4	Ratio: 33%	LB: 1362.0	Gap: 2%
+LB distribution: 1381.0 - 1383.0
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+
+Layer #10 processed, 0.0 seconds
+Nodes: 2	Skipped: 2	Ratio: 50%	LB: 1362.0	Gap: 2%
+LB distribution: 1383.0 - 1388.0
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+
+Layer #11 processed, 0.0 seconds
+Nodes: 2	Skipped: 0	Ratio: 100%	LB: 1383.0	Gap: 1%
+LB distribution: 1383.0 - 1389.0
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+
+Layer #12 processed, 0.0 seconds
+Nodes: 2	Skipped: 0	Ratio: 100%	LB: 1385.0	Gap: 0%
+LB distribution: 1385.0 - 1390.0
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+
+UB: 1390.0	@(1, 5, 9, 11, 10, 8, 2, 4, 6, 12, 3, 7, 13)
+Elapsed: 4.1 s

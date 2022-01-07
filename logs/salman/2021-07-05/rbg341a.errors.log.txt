@@ -1,0 +1,5 @@
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** JOB 12573876 ON apollo27 CANCELLED AT 2021-07-02T07:45:39 DUE TO TIME LIMIT ***
+slurmstepd: error: *** STEP 12573876.0 ON apollo27 CANCELLED AT 2021-07-02T07:45:39 DUE TO TIME LIMIT ***
+slurmstepd: error: Detected 8 oom-kill event(s) in step 12573876.batch cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.
+slurmstepd: error: Detected 8 oom-kill event(s) in step 12573876.0 cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.

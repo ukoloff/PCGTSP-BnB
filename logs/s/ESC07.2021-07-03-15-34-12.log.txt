@@ -1,0 +1,35 @@
+Loading: s/ESC07
+Size:	 39 / 8
+UB:	 1730.0
+Gap:	 5 %
+Solution so far:	 [(1, 1), (2, 2), (5, 19), (8, 38), (3, 8), (7, 26), (6, 22), (4, 15)]
+
+Layer #1 processed, 1.0 seconds
+Nodes: 1	Skipped: 0	Ratio: 100%	LB: 1451.0	Gap: 19%
+LB distribution: 1450.5 - 1451.5
+0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0
+
+Layer #2 processed, 0.0 seconds
+Nodes: 1	Skipped: 2	Ratio: 33%	LB: 1451.0	Gap: 19%
+LB distribution: 1450.5 - 1451.5
+0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0
+
+Layer #3 processed, 0.0 seconds
+Nodes: 2	Skipped: 3	Ratio: 40%	LB: 1451.0	Gap: 19%
+LB distribution: 1451.0 - 1490.0
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+
+Layer #4 processed, 0.0 seconds
+Nodes: 4	Skipped: 4	Ratio: 50%	LB: 1452.0	Gap: 19%
+LB distribution: 1452.0 - 1720.0
+1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2
+
+Layer #5 processed, 0.0 seconds
+Nodes: 2	Skipped: 10	Ratio: 17%	LB: 1717.0	Gap: 1%
+LB distribution: 1717.0 - 1720.0
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+
+GAP of 5% is met!
+
+UB: None	@None
+Elapsed: 1.1 s

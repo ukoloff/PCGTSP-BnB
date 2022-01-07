@@ -1,0 +1,3 @@
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** JOB 12596467 ON apollo18 CANCELLED AT 2021-07-07T19:18:41 DUE TO TIME LIMIT ***
+slurmstepd: error: *** STEP 12596467.0 ON apollo18 CANCELLED AT 2021-07-07T19:18:41 DUE TO TIME LIMIT ***
