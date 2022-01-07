@@ -1,0 +1,46 @@
+Loading: s/p43.3
+Size:	 211 / 43
+UB:	 23122.0
+Gap:	 5 %
+Solution so far:	 [(1, 1), (5, 24), (38, 178), (27, 131), (13, 60), (15, 67), (14, 61), (33, 158), (10, 49), (20, 102), (17, 85), (16, 78), (42, 199), (43, 209), (41, 193), (40, 186), (39, 180), (25, 123), (22, 112), (23, 117), (24, 122), (36, 170), (37, 176), (3, 14), (4, 17), (28, 132), (29, 140), (30, 148), (31, 150), (32, 153), (11, 51), (9, 46), (12, 52), (26, 127), (35, 165), (34, 162), (19, 99), (21, 107), (18, 91), (8, 43), (6, 27), (7, 38), (2, 5)]
+
+Layer #1 processed, 0.9 seconds
+Nodes: 1	Skipped: 0	Ratio: 100%	LB: 793.0	Gap: 2816%
+LB distribution: 792.5 - 793.5
+0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0
+
+Layer #2 processed, 0.5 seconds
+Nodes: 16	Skipped: 0	Ratio: 100%	LB: 793.0	Gap: 2816%
+LB distribution: 793.0 - 22764.0
+13 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3
+
+Layer #3 processed, 6.6 seconds
+Nodes: 221	Skipped: 25	Ratio: 90%	LB: 794.0	Gap: 2812%
+LB distribution: 794.0 - 23075.0
+153 6 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 61
+
+Layer #4 processed, 48.3 seconds
+Nodes: 2109	Skipped: 1167	Ratio: 64%	LB: 801.0	Gap: 2787%
+LB distribution: 801.0 - 23122.0
+1189 95 11 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 814
+
+Layer #5 processed, 239.3 seconds
+Nodes: 15283	Skipped: 14869	Ratio: 51%	LB: 835.0	Gap: 2669%
+LB distribution: 845.0 - 23122.0
+7157 820 76 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 7230
+
+Layer #6 processed, 886.9 seconds
+Nodes: 84468	Skipped: 127362	Ratio: 40%	LB: 849.0	Gap: 2623%
+LB distribution: 874.0 - 23122.0
+33598 4215 383 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 46272
+
+Layer #7 processed, 2799.8 seconds
+Nodes: 372953	Skipped: 769787	Ratio: 33%	LB: 849.0	Gap: 2623%
+LB distribution: 883.0 - 23122.0
+126350 17956 1519 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 227128
+
+Layer #8 processed, 7476.1 seconds
+Nodes: 1353323	Skipped: 3599480	Ratio: 27%	LB: 849.0	Gap: 2623%
+LB distribution: 898.0 - 23122.0
+400952 59390 4943 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 888037
+

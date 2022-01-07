@@ -1,0 +1,4 @@
+slurmstepd: error: *** STEP 12577245.0 ON apollo23 CANCELLED AT 2021-07-04T04:11:52 DUE TO TIME LIMIT ***
+slurmstepd: error: *** JOB 12577245 ON apollo23 CANCELLED AT 2021-07-04T04:11:52 DUE TO TIME LIMIT ***
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: error: apollo23: task 0: Terminated

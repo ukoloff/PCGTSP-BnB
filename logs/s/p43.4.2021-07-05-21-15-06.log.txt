@@ -1,0 +1,217 @@
+Loading: s/p43.4
+Size:	 204 / 43
+UB:	 66857.0
+Solution so far:	 [(1, 1), (5, 24), (15, 79), (33, 160), (27, 139), (25, 132), (22, 109), (24, 120), (36, 172), (38, 181), (12, 61), (40, 185), (42, 201), (43, 203), (6, 36), (7, 40), (37, 176), (4, 15), (29, 145), (32, 158), (10, 52), (19, 96), (21, 100), (35, 164), (14, 74), (41, 192), (3, 5), (23, 111), (28, 142), (30, 152), (8, 42), (13, 70), (17, 86), (16, 80), (11, 55), (26, 134), (18, 94), (20, 97), (34, 162), (9, 50), (31, 153), (39, 183), (2, 4)]
+
+Layer #1 processed, 1.9 seconds
+Nodes: 1	Skipped: 0	Ratio: 100%	LB: 23214.0	Gap: 188%
+LB distribution: 23213.5 - 23214.5
+0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0
+
+Layer #2 processed, 0.1 seconds
+Nodes: 8	Skipped: 0	Ratio: 100%	LB: 23214.0	Gap: 188%
+LB distribution: 23214.0 - 45363.0
+7 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+
+Layer #3 processed, 0.9 seconds
+Nodes: 51	Skipped: 7	Ratio: 88%	LB: 23215.0	Gap: 188%
+LB distribution: 23215.0 - 45453.0
+44 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 7
+
+Layer #4 processed, 2.9 seconds
+Nodes: 218	Skipped: 121	Ratio: 64%	LB: 23215.0	Gap: 188%
+LB distribution: 23215.0 - 66815.0
+175 0 0 0 0 0 0 0 0 8 23 0 0 0 0 0 0 0 0 12
+
+Layer #5 processed, 6.7 seconds
+Nodes: 693	Skipped: 649	Ratio: 52%	LB: 23217.0	Gap: 188%
+LB distribution: 23217.0 - 66856.0
+502 0 0 0 0 0 0 0 0 26 82 0 0 0 0 0 0 0 0 83
+
+Layer #6 processed, 12.5 seconds
+Nodes: 1727	Skipped: 2291	Ratio: 43%	LB: 23217.0	Gap: 188%
+LB distribution: 23217.0 - 66857.0
+1150 0 0 0 0 0 0 0 0 47 249 0 0 0 0 0 0 0 0 281
+
+Layer #7 processed, 24.5 seconds
+Nodes: 4319	Skipped: 5995	Ratio: 42%	LB: 23217.0	Gap: 188%
+LB distribution: 23217.0 - 66857.0
+2910 0 0 0 0 0 0 0 0 56 655 0 0 0 0 0 0 0 0 698
+
+Layer #8 processed, 53.1 seconds
+Nodes: 11537	Skipped: 18337	Ratio: 39%	LB: 23223.0	Gap: 188%
+LB distribution: 23223.0 - 66857.0
+8394 0 0 0 0 0 0 0 0 93 1594 0 0 0 0 0 0 0 0 1456
+
+Layer #9 processed, 110.2 seconds
+Nodes: 31672	Skipped: 61490	Ratio: 34%	LB: 23223.0	Gap: 188%
+LB distribution: 23223.0 - 66857.0
+23175 0 0 0 0 0 0 0 0 248 4469 2 0 0 0 0 0 0 0 3778
+
+Layer #10 processed, 193.2 seconds
+Nodes: 72281	Skipped: 188637	Ratio: 28%	LB: 23267.0	Gap: 187%
+LB distribution: 23267.0 - 66857.0
+49185 0 0 0 0 0 0 0 0 769 11290 27 0 0 0 0 0 0 0 11010
+
+Layer #11 processed, 281.4 seconds
+Nodes: 124242	Skipped: 433559	Ratio: 22%	LB: 23317.0	Gap: 187%
+LB distribution: 23317.0 - 66857.0
+73748 0 0 0 0 0 0 0 0 1910 22807 115 0 0 0 0 0 0 0 25662
+
+Layer #12 processed, 327.5 seconds
+Nodes: 159088	Skipped: 710448	Ratio: 18%	LB: 23353.0	Gap: 186%
+LB distribution: 23353.0 - 66857.0
+77162 0 0 0 0 0 0 0 0 3108 36022 240 0 0 0 0 0 0 0 42556
+
+Layer #13 processed, 301.9 seconds
+Nodes: 156826	Skipped: 845638	Ratio: 16%	LB: 23403.0	Gap: 186%
+LB distribution: 23403.0 - 66857.0
+55399 0 0 0 0 0 0 0 0 4140 46004 333 0 0 0 0 0 0 0 50950
+
+Layer #14 processed, 235.8 seconds
+Nodes: 131471	Skipped: 765811	Ratio: 15%	LB: 23500.0	Gap: 184%
+LB distribution: 23500.0 - 66857.0
+26171 0 0 0 0 0 0 0 0 5794 50099 381 0 0 0 0 0 0 0 49026
+
+Layer #15 processed, 169.6 seconds
+Nodes: 107728	Skipped: 596992	Ratio: 15%	LB: 23589.0	Gap: 183%
+LB distribution: 23589.0 - 66857.0
+5860 0 0 0 0 0 0 0 0 6960 52228 62 0 0 0 0 0 0 0 42618
+
+Layer #16 processed, 133.3 seconds
+Nodes: 101219	Skipped: 472888	Ratio: 18%	LB: 23829.0	Gap: 181%
+LB distribution: 23829.0 - 66857.0
+761 0 0 0 0 0 0 0 0 13791 52912 10 0 0 0 0 0 0 0 33745
+
+Layer #17 processed, 141.4 seconds
+Nodes: 117532	Skipped: 459496	Ratio: 20%	LB: 44862.0	Gap: 49%
+LB distribution: 44862.0 - 66857.0
+66110 25142 472 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 25808
+
+Layer #18 processed, 174.4 seconds
+Nodes: 155837	Skipped: 582498	Ratio: 21%	LB: 44895.0	Gap: 49%
+LB distribution: 44895.0 - 66857.0
+91890 41187 1104 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 21656
+
+Layer #19 processed, 221.0 seconds
+Nodes: 200469	Skipped: 805496	Ratio: 20%	LB: 44959.0	Gap: 49%
+LB distribution: 44959.0 - 66857.0
+123986 54577 1975 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 19931
+
+Layer #20 processed, 255.5 seconds
+Nodes: 240417	Skipped: 1022397	Ratio: 19%	LB: 44986.0	Gap: 49%
+LB distribution: 44986.0 - 66857.0
+152940 64824 3256 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 19397
+
+Layer #21 processed, 273.6 seconds
+Nodes: 277176	Skipped: 1188725	Ratio: 19%	LB: 45018.0	Gap: 49%
+LB distribution: 45018.0 - 66857.0
+181710 69631 4375 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 21460
+
+Layer #22 processed, 279.2 seconds
+Nodes: 305657	Skipped: 1329855	Ratio: 19%	LB: 45025.0	Gap: 48%
+LB distribution: 45025.0 - 66857.0
+197243 74920 5510 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 27984
+
+Layer #23 processed, 291.1 seconds
+Nodes: 309717	Skipped: 1422094	Ratio: 18%	LB: 45025.0	Gap: 48%
+LB distribution: 45025.0 - 66857.0
+186491 75979 6504 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 40743
+
+Layer #24 processed, 264.9 seconds
+Nodes: 281336	Skipped: 1391566	Ratio: 17%	LB: 45065.0	Gap: 48%
+LB distribution: 45065.0 - 66857.0
+155620 64654 6439 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 54621
+
+Layer #25 processed, 224.4 seconds
+Nodes: 228253	Skipped: 1219298	Ratio: 16%	LB: 45069.0	Gap: 48%
+LB distribution: 45069.0 - 66857.0
+108755 54543 6712 11 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 58232
+
+Layer #26 processed, 162.7 seconds
+Nodes: 166261	Skipped: 953853	Ratio: 15%	LB: 45135.0	Gap: 48%
+LB distribution: 45135.0 - 66857.0
+73330 38966 6077 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 47856
+
+Layer #27 processed, 122.7 seconds
+Nodes: 109883	Skipped: 666524	Ratio: 14%	LB: 45182.0	Gap: 48%
+LB distribution: 45182.0 - 66857.0
+44908 25382 5118 75 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 34400
+
+Layer #28 processed, 70.2 seconds
+Nodes: 69842	Skipped: 420584	Ratio: 14%	LB: 45234.0	Gap: 48%
+LB distribution: 45234.0 - 66857.0
+25054 14295 3361 119 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 27013
+
+Layer #29 processed, 45.5 seconds
+Nodes: 44121	Skipped: 256599	Ratio: 15%	LB: 45347.0	Gap: 47%
+LB distribution: 45347.0 - 66857.0
+12427 6227 1544 97 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 23826
+
+Layer #30 processed, 29.9 seconds
+Nodes: 27852	Skipped: 156262	Ratio: 15%	LB: 45444.0	Gap: 47%
+LB distribution: 45444.0 - 66857.0
+3764 1997 576 58 0 0 0 0 0 0 442 154 55 7 0 0 0 0 0 20799
+
+Layer #31 processed, 19.7 seconds
+Nodes: 17947	Skipped: 98428	Ratio: 15%	LB: 45667.0	Gap: 46%
+LB distribution: 45667.0 - 66857.0
+290 368 116 15 0 0 0 0 0 0 466 71 18 0 0 0 0 0 0 16603
+
+Layer #32 processed, 12.8 seconds
+Nodes: 12174	Skipped: 64210	Ratio: 16%	LB: 66526.5	Gap: 0%
+LB distribution: 66526.5 - 66857.0
+14 34 48 64 87 138 168 217 323 479 564 560 838 974 1029 1097 1156 1300 1515 1569
+
+Layer #33 processed, 8.5 seconds
+Nodes: 8620	Skipped: 42810	Ratio: 17%	LB: 66560.5	Gap: 0%
+LB distribution: 66560.5 - 66857.0
+6 15 30 44 68 78 165 192 236 345 376 423 568 642 705 748 841 988 1123 1027
+
+Layer #34 processed, 5.9 seconds
+Nodes: 6279	Skipped: 28610	Ratio: 18%	LB: 66583.5	Gap: 0%
+LB distribution: 66583.5 - 66857.0
+3 20 28 35 45 100 150 157 189 190 268 337 451 410 484 548 592 757 784 731
+
+Layer #35 processed, 4.0 seconds
+Nodes: 4269	Skipped: 19666	Ratio: 18%	LB: 66612.5	Gap: 0%
+LB distribution: 66612.5 - 66857.0
+6 19 25 36 56 81 106 89 134 117 178 242 270 299 294 353 431 513 517 503
+
+Layer #36 processed, 2.7 seconds
+Nodes: 2520	Skipped: 13370	Ratio: 16%	LB: 66643.0	Gap: 0%
+LB distribution: 66643.0 - 66857.0
+6 6 9 20 26 44 39 41 51 54 131 162 139 155 188 216 252 325 333 323
+
+Layer #37 processed, 1.8 seconds
+Nodes: 1158	Skipped: 8202	Ratio: 12%	LB: 66695.0	Gap: 0%
+LB distribution: 66695.0 - 66857.0
+7 5 3 0 1 4 14 42 45 66 63 59 94 80 95 91 119 105 123 142
+
+Layer #38 processed, 1.0 seconds
+Nodes: 334	Skipped: 3907	Ratio: 8%	LB: 66744.0	Gap: 0%
+LB distribution: 66744.0 - 66857.0
+4 4 6 9 8 9 5 3 5 9 21 16 15 29 25 27 41 27 32 39
+
+Layer #39 processed, 0.4 seconds
+Nodes: 147	Skipped: 1073	Ratio: 12%	LB: 66764.0	Gap: 0%
+LB distribution: 66764.0 - 66857.0
+1 0 0 2 0 0 3 4 5 8 14 10 10 13 8 14 11 9 17 18
+
+Layer #40 processed, 0.2 seconds
+Nodes: 22	Skipped: 444	Ratio: 5%	LB: 66823.0	Gap: 0%
+LB distribution: 66823.0 - 66857.0
+1 1 1 0 0 0 0 3 1 0 2 0 1 0 1 3 0 0 3 5
+
+Layer #41 processed, 0.1 seconds
+Nodes: 5	Skipped: 57	Ratio: 8%	LB: 66837.0	Gap: 0%
+LB distribution: 66837.0 - 66855.0
+1 0 0 0 0 0 0 0 1 0 0 0 0 1 0 1 0 0 0 1
+
+Layer #42 processed, 0.0 seconds
+Nodes: 3	Skipped: 7	Ratio: 30%	LB: 66845.5	Gap: 0%
+LB distribution: 66845.5 - 66849.5
+1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1
+
+UB: 66848.0	@(1, 5, 15, 33, 27, 25, 22, 24, 36, 38, 12, 40, 42, 43, 6, 7, 37, 29, 32, 10, 19, 21, 35, 14, 41, 3, 23, 28, 31, 30, 8, 13, 17, 16, 11, 20, 18, 26, 39, 2, 34, 9, 4)
+Elapsed: 4470.8 s

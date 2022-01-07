@@ -1,0 +1,3 @@
+slurmstepd: error: *** STEP 12577236.0 ON apollo24 CANCELLED AT 2021-07-04T03:20:19 DUE TO TIME LIMIT ***
+slurmstepd: error: *** JOB 12577236 ON apollo24 CANCELLED AT 2021-07-04T03:20:19 DUE TO TIME LIMIT ***
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
