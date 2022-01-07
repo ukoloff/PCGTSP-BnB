@@ -6,7 +6,8 @@
 import networkx as nx
 
 from klasses import Task, STNode
-import prefix, nb, nc0, L2, guro2
+import prefix, nb, nc0, L2
+# import guro2
 
 # historySuffix[] @ page 9
 history = {}
@@ -66,7 +67,7 @@ def lower_bounds(node: STNode):
   g = nc(node)
   # node.bounds['MSAP'] = MSAP(g)
   node.bounds['AP'] = AP(g)
-  node.bounds['TSP'] = gurobi(node, g)
+  # node.bounds['TSP'] = gurobi(node, g)
 
   g = nc(node, L=2)
   node.bounds['L2'] = AP(g)

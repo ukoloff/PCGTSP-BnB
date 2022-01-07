@@ -17,8 +17,20 @@ MAXINT = 100000000000000000000000000000
 MAXTASKSPERWORKER = 1000
 MEMORY_LIMIT = MAXINT  # MEMORY LIMIT (in Bytes), for cluster calculations
 
-LOW_PC = 0.005
-HIGH_PC = 0.99
+GAP_TO_STOP = None      # Stop if GAP is reached
+
+LOW_PC = 0.10
+HIGH_PC = 0.95
+
+def setGap(Gap):
+  global GAP_TO_STOP
+  if Gap:
+    GAP_TO_STOP = Gap
+
+def setThresholds(low, high):
+  global LOW_PC, HIGH_PC
+  LOW_PC = low / 100
+  HIGH_PC = 1 - high / 100
 
 ###### Memory usage util #############################################################################
 ##  ATTENTION: designed for  Linux, for another OS can possible be adapted
@@ -283,7 +295,10 @@ def prepare_layer(clusters,tree, previous_layer, layer_level):
 ##########
 ##########
 
-def prepare_Uranus(states_list, low_percent=LOW_PC, high_percent=HIGH_PC):
+def prepare_Uranus(states_list):
+    low_percent=LOW_PC
+    high_percent=HIGH_PC
+
     L = len(states_list)
     low_count = int(L * low_percent)
     high_count = int(L* high_percent)
@@ -295,7 +310,7 @@ def prepare_Uranus(states_list, low_percent=LOW_PC, high_percent=HIGH_PC):
         short_key = (tuple(state.sigma), state.j)
 
         if not short_key in to_revise_dict:
-            to_revise_dict[short_key] = [state]
+            to_revise_dict[short_key] = []
         else:
             to_revise_dict[short_key].append(state)
 
@@ -379,16 +394,15 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
 
             capacity = sum(map(lambda item: item[KEY_RESULTS_CAPACITY],results))
             cutoff = sum(map(lambda item: item[KEY_RESULTS_CUTOFF],results))
-            # layerLB = min(map(lambda item: item[KEY_RESULTS_LB],results))
+            layerLB = min(map(lambda item: item[KEY_RESULTS_LB],results))
 
-            ### combine and sort states by local LBs
+        ### take a given part of states for the revision
             states_list = [s for chunk in results for s in chunk[KEY_RESULTS_STATE]]
             states_list.sort(key = lambda state: state.LB)
 
-            ### take a given part of states for the revision
             to_revise_dict, to_revise = prepare_Uranus(states_list)
 
-            print(f'raw state costs computed, {len(to_revise)} P2 bounds sent for revision')
+            print(f'raw state costs computed, {len(to_revise)} P2 bounds sent for revision\t// range: {LOW_PC} - {HIGH_PC}')
 
         if to_revise:
             with mp.Pool(actual_workers_count, worker_init,(G, clusters, tree, layer, UB), maxtasksperchild=MAXTASKSPERWORKER) as pool:
@@ -400,33 +414,18 @@ def compute_Bellman_layer(G, clusters,  layer_level, previous_layer, tree, looku
                 print(f'revised P2 bounds obtained')
 
                 # recompute the states
-                # revised_layerLB = MAXINT
-
-                sum_diff = 0
-                count = 0
-
+                revised_layerLB = MAXINT
                 for item in revised:
                     for state in to_revise_dict[(item[KEY_BOUND_SIGMA], item[KEY_BOUND_VJ])]:
-                        old_localLB = state.LB
                         state.P2_cost = item[KEY_BOUND_VAL]
-                        state.LB =  state.cost + state.P2_cost
-
-                        assert state.LB >= old_localLB, f'Error: raw LB {old_localLB} turns to be better than revised {state.LB}'
-                        sum_diff += state.LB - old_localLB
-                        count += 1
-
-
-                        # if revised_layerLB > state.LB:
-                        #     revised_layerLB = state.LB
-
-                print(f'Average local LB growth is {sum_diff / count:.3f}')
+                        state.LB = state.cost + state.P2_cost
+                        if revised_layerLB > state.LB:
+                            revised_layerLB = state.LB
 
         ### construct current layer
         lookup_table = {state.witness(): state for state in states_list}
 
-        # layerLB = max(layerLB, revised_layerLB)
-
-        layerLB = min([state.LB for state in states_list])
+        layerLB = max(layerLB, revised_layerLB)
 
 
     with open(f'{lookup_table_name}{layer_level:03d}.dct', 'wb') as fout:
@@ -474,6 +473,10 @@ def DP_solver_layered(G, clusters, tree, lookup_table_name, need_2_keep_layers, 
         keep_lookup_table = (layer_level >= num_of_layers - 1)
         predicted_workers_count, lookup_table, previous_layer, LB = compute_Bellman_layer(G, clusters,  layer_level, previous_layer,
             tree, lookup_table_name, keep_lookup_table, workers_count, predicted_workers_count, UB, LB)
+
+        if GAP_TO_STOP and GAP_TO_STOP >= (UB - LB) / LB * 100:
+          print(f"GAP of {GAP_TO_STOP}% is met!")
+          break
 
     OPT = MAXINT
     best_state = None

@@ -53,6 +53,9 @@ def names():
     return (f.stem for f in lib.glob("*"))
 
 
+def names_salman():
+    return (f.stem for f in (root / "Salman/input").glob('*'))
+
 def random(n, m):
     """(int, int) -> Task
     """

@@ -11,3 +11,5 @@
 *.dct
 *.html
 /tmp
+/logs
+~$*
