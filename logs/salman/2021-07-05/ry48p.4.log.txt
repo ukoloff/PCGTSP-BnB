@@ -1,0 +1,434 @@
+Number of nodes: 249, Number of clusters: 48
+Clusters: {1: [1], 2: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 3: [12], 4: [13, 14, 15], 5: [16, 17], 6: [18, 19, 20, 21, 22, 23], 7: [24, 25, 26, 27, 28, 29, 30], 8: [31, 32], 9: [33, 34, 35, 36, 37, 38, 39, 40, 41], 10: [42, 43, 44, 45, 46], 11: [47, 48, 49, 50, 51], 12: [52, 53, 54], 13: [55, 56], 14: [57, 58, 59, 60, 61, 62, 63, 64, 65], 15: [66, 67], 16: [68, 69], 17: [70, 71, 72], 18: [73], 19: [74, 75, 76, 77], 20: [78, 79, 80], 21: [81, 82, 83, 84], 22: [85, 86, 87, 88, 89, 90, 91, 92], 23: [93, 94, 95, 96], 24: [97, 98, 99, 100, 101], 25: [102, 103, 104, 105, 106, 107, 108, 109], 26: [110, 111], 27: [112, 113, 114, 115, 116, 117, 118, 119, 120, 121], 28: [122, 123, 124, 125, 126, 127, 128, 129], 29: [130, 131, 132, 133, 134, 135], 30: [136, 137, 138, 139], 31: [140, 141, 142, 143, 144, 145, 146, 147, 148, 149], 32: [150], 33: [151, 152, 153, 154, 155, 156, 157], 34: [158, 159, 160, 161, 162, 163], 35: [164, 165, 166, 167, 168, 169], 36: [170, 171, 172, 173, 174, 175, 176], 37: [177, 178, 179, 180, 181], 38: [182, 183, 184], 39: [185, 186, 187, 188, 189, 190, 191, 192, 193], 40: [194, 195, 196, 197, 198], 41: [199, 200, 201, 202], 42: [203, 204, 205, 206, 207, 208], 43: [209, 210, 211, 212, 213, 214, 215], 44: [216, 217, 218, 219, 220, 221, 222], 45: [223, 224, 225, 226, 227, 228], 46: [229, 230, 231, 232, 233, 234, 235, 236, 237], 47: [238, 239], 48: [240, 241, 242, 243, 244, 245, 246, 247, 248, 249]}
+Partial order tree: [(1, 2), (1, 6), (1, 17), (1, 25), (1, 27), (1, 30), (1, 32), (1, 37), (1, 41), (1, 43), (1, 48), (3, 45), (5, 19), (6, 46), (6, 29), (7, 13), (8, 15), (9, 14), (11, 40), (11, 47), (13, 22), (13, 29), (14, 18), (15, 16), (16, 4), (16, 36), (17, 8), (19, 18), (21, 23), (22, 34), (22, 44), (23, 38), (23, 9), (23, 20), (24, 7), (24, 26), (25, 10), (25, 20), (26, 34), (27, 36), (28, 24), (28, 31), (29, 21), (30, 16), (31, 18), (31, 20), (32, 29), (33, 35), (33, 39), (34, 12), (35, 20), (36, 11), (36, 28), (37, 10), (37, 36), (38, 5), (38, 12), (39, 8), (40, 46), (41, 33), (42, 3), (42, 21), (43, 46), (44, 42), (45, 9), (45, 12), (46, 3), (47, 7), (47, 26)]
+Start LB is 17512
+layer 001 is prepared
+Academic license - for non-commercial use only - expires 2021-08-22
+Using license file /home/u0618/gurobi.lic
+	0 (0.0%) of branches were cut off
+layer 001 of size         68 (11) is completed by 1 worker(s) at    14.67 sec.
+Best UB is 25977.0, Best LB is 20155.0, Gap is 28.89%
+=============================
+layer 002 is prepared
+raw P2 bounds calculated
+raw state costs computed, 4 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2724.200
+	0 (0.0%) of branches were cut off
+layer 002 of size        687 (56) is completed by 16 worker(s) at     2.76 sec.
+Best UB is 25977.0, Best LB is 20155.0, Gap is 28.89%
+=============================
+layer 003 is prepared
+raw P2 bounds calculated
+raw state costs computed, 13 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2777.735
+	0 (0.0%) of branches were cut off
+layer 003 of size       3214 (178) is completed by 16 worker(s) at     4.31 sec.
+Best UB is 25977.0, Best LB is 20155.0, Gap is 28.89%
+=============================
+layer 004 is prepared
+raw P2 bounds calculated
+raw state costs computed, 29 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2571.803
+	0 (0.0%) of branches were cut off
+layer 004 of size       9444 (405) is completed by 16 worker(s) at     7.33 sec.
+Best UB is 25977.0, Best LB is 20155.0, Gap is 28.89%
+=============================
+layer 005 is prepared
+raw P2 bounds calculated
+raw state costs computed, 52 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2606.220
+	0 (0.0%) of branches were cut off
+layer 005 of size      20099 (720) is completed by 16 worker(s) at    11.83 sec.
+Best UB is 25977.0, Best LB is 20155.0, Gap is 28.89%
+=============================
+layer 006 is prepared
+raw P2 bounds calculated
+raw state costs computed, 93 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2566.787
+	0 (0.0%) of branches were cut off
+layer 006 of size      33862 (1062) is completed by 16 worker(s) at    18.81 sec.
+Best UB is 25977.0, Best LB is 20155.0, Gap is 28.89%
+=============================
+layer 007 is prepared
+raw P2 bounds calculated
+raw state costs computed, 130 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2537.575
+	0 (0.0%) of branches were cut off
+layer 007 of size      47619 (1348) is completed by 16 worker(s) at    26.28 sec.
+Best UB is 25977.0, Best LB is 20155.0, Gap is 28.89%
+=============================
+layer 008 is prepared
+raw P2 bounds calculated
+raw state costs computed, 158 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2500.917
+	0 (0.0%) of branches were cut off
+layer 008 of size      57330 (1502) is completed by 16 worker(s) at    30.79 sec.
+Best UB is 25977.0, Best LB is 20155.0, Gap is 28.89%
+=============================
+layer 009 is prepared
+raw P2 bounds calculated
+raw state costs computed, 163 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2350.926
+	0 (0.0%) of branches were cut off
+layer 009 of size      59883 (1490) is completed by 16 worker(s) at    33.68 sec.
+Best UB is 25977.0, Best LB is 20155.0, Gap is 28.89%
+=============================
+layer 010 is prepared
+raw P2 bounds calculated
+raw state costs computed, 170 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2363.047
+	0 (0.0%) of branches were cut off
+layer 010 of size      55097 (1337) is completed by 16 worker(s) at    30.53 sec.
+Best UB is 25977.0, Best LB is 20155.0, Gap is 28.89%
+=============================
+layer 011 is prepared
+raw P2 bounds calculated
+raw state costs computed, 144 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2344.306
+	0 (0.0%) of branches were cut off
+layer 011 of size      45686 (1108) is completed by 16 worker(s) at    26.10 sec.
+Best UB is 25977.0, Best LB is 20155.0, Gap is 28.89%
+=============================
+layer 012 is prepared
+raw P2 bounds calculated
+raw state costs computed, 102 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2327.804
+	0 (0.0%) of branches were cut off
+layer 012 of size      35271 (871) is completed by 16 worker(s) at    21.42 sec.
+Best UB is 25977.0, Best LB is 20155.0, Gap is 28.89%
+=============================
+layer 013 is prepared
+raw P2 bounds calculated
+raw state costs computed, 70 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2262.665
+	0 (0.0%) of branches were cut off
+layer 013 of size      26436 (678) is completed by 16 worker(s) at    14.78 sec.
+Best UB is 25977.0, Best LB is 20155.0, Gap is 28.89%
+=============================
+layer 014 is prepared
+raw P2 bounds calculated
+raw state costs computed, 54 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2267.280
+	0 (0.0%) of branches were cut off
+layer 014 of size      20703 (583) is completed by 16 worker(s) at    10.44 sec.
+Best UB is 25977.0, Best LB is 20155.0, Gap is 28.89%
+=============================
+layer 015 is prepared
+raw P2 bounds calculated
+raw state costs computed, 52 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2255.538
+	0 (0.0%) of branches were cut off
+layer 015 of size      20090 (654) is completed by 16 worker(s) at    10.65 sec.
+Best UB is 25977.0, Best LB is 20155.0, Gap is 28.89%
+=============================
+layer 016 is prepared
+raw P2 bounds calculated
+raw state costs computed, 74 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2102.655
+	0 (0.0%) of branches were cut off
+layer 016 of size      27030 (928) is completed by 16 worker(s) at    15.83 sec.
+Best UB is 25977.0, Best LB is 20155.0, Gap is 28.89%
+=============================
+layer 017 is prepared
+raw P2 bounds calculated
+raw state costs computed, 115 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2159.694
+	0 (0.0%) of branches were cut off
+layer 017 of size      41663 (1354) is completed by 16 worker(s) at    19.76 sec.
+Best UB is 25977.0, Best LB is 20155.0, Gap is 28.89%
+=============================
+layer 018 is prepared
+raw P2 bounds calculated
+raw state costs computed, 163 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2051.365
+	0 (0.0%) of branches were cut off
+layer 018 of size      60249 (1812) is completed by 16 worker(s) at    31.17 sec.
+Best UB is 25977.0, Best LB is 20155.0, Gap is 28.89%
+=============================
+layer 019 is prepared
+raw P2 bounds calculated
+raw state costs computed, 210 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 1996.180
+	0 (0.0%) of branches were cut off
+layer 019 of size      77692 (2205) is completed by 16 worker(s) at    39.61 sec.
+Best UB is 25977.0, Best LB is 20421.5, Gap is 27.20%
+=============================
+layer 020 is prepared
+raw P2 bounds calculated
+raw state costs computed, 265 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 1932.107
+	0 (0.0%) of branches were cut off
+layer 020 of size      91736 (2523) is completed by 16 worker(s) at    50.78 sec.
+Best UB is 25977.0, Best LB is 20762, Gap is 25.12%
+=============================
+layer 021 is prepared
+raw P2 bounds calculated
+raw state costs computed, 301 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 1968.264
+	7 (0.0%) of branches were cut off
+layer 021 of size     103871 (2816) is completed by 16 worker(s) at    56.38 sec.
+Best UB is 25977.0, Best LB is 21007, Gap is 23.66%
+=============================
+layer 022 is prepared
+raw P2 bounds calculated
+raw state costs computed, 347 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 1915.549
+	359 (0.3%) of branches were cut off
+layer 022 of size     116426 (3134) is completed by 16 worker(s) at    70.27 sec.
+Best UB is 25977.0, Best LB is 21295, Gap is 21.99%
+=============================
+layer 023 is prepared
+raw P2 bounds calculated
+raw state costs computed, 397 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 1863.498
+	1908 (1.4%) of branches were cut off
+layer 023 of size     130315 (3491) is completed by 16 worker(s) at    80.49 sec.
+Best UB is 25977.0, Best LB is 21627, Gap is 20.11%
+=============================
+layer 024 is prepared
+raw P2 bounds calculated
+raw state costs computed, 466 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 1837.405
+	5355 (3.6%) of branches were cut off
+layer 024 of size     144359 (3828) is completed by 16 worker(s) at   100.50 sec.
+Best UB is 25977.0, Best LB is 21969, Gap is 18.24%
+=============================
+layer 025 is prepared
+raw P2 bounds calculated
+raw state costs computed, 545 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 1738.214
+	10083 (6.1%) of branches were cut off
+layer 025 of size     154428 (4014) is completed by 16 worker(s) at   102.76 sec.
+Best UB is 25977.0, Best LB is 22261.0, Gap is 16.69%
+=============================
+layer 026 is prepared
+raw P2 bounds calculated
+raw state costs computed, 583 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 1762.639
+	13796 (8.2%) of branches were cut off
+layer 026 of size     155028 (3912) is completed by 16 worker(s) at   118.94 sec.
+Best UB is 25977.0, Best LB is 22433.5, Gap is 15.80%
+=============================
+layer 027 is prepared
+raw P2 bounds calculated
+raw state costs computed, 591 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 1877.344
+	14758 (9.3%) of branches were cut off
+layer 027 of size     143096 (3514) is completed by 16 worker(s) at   105.55 sec.
+Best UB is 25977.0, Best LB is 22578, Gap is 15.05%
+=============================
+layer 028 is prepared
+raw P2 bounds calculated
+raw state costs computed, 526 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2222.370
+	13434 (10.0%) of branches were cut off
+layer 028 of size     121238 (2952) is completed by 16 worker(s) at    95.21 sec.
+Best UB is 25977.0, Best LB is 22706.0, Gap is 14.41%
+=============================
+layer 029 is prepared
+raw P2 bounds calculated
+raw state costs computed, 430 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2466.273
+	11244 (10.4%) of branches were cut off
+layer 029 of size      96712 (2431) is completed by 16 worker(s) at    58.99 sec.
+Best UB is 25977.0, Best LB is 22852.5, Gap is 13.67%
+=============================
+layer 030 is prepared
+raw P2 bounds calculated
+raw state costs computed, 336 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2422.618
+	11408 (13.2%) of branches were cut off
+layer 030 of size      74715 (2020) is completed by 16 worker(s) at    50.43 sec.
+Best UB is 25977.0, Best LB is 23099, Gap is 12.46%
+=============================
+layer 031 is prepared
+raw P2 bounds calculated
+raw state costs computed, 315 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2385.925
+	12711 (18.1%) of branches were cut off
+layer 031 of size      57536 (1726) is completed by 16 worker(s) at    38.82 sec.
+Best UB is 25977.0, Best LB is 23483.0, Gap is 10.62%
+=============================
+layer 032 is prepared
+raw P2 bounds calculated
+raw state costs computed, 302 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 1983.537
+	14947 (25.4%) of branches were cut off
+layer 032 of size      43899 (1482) is completed by 16 worker(s) at    34.32 sec.
+Best UB is 25977.0, Best LB is 23706, Gap is 9.58%
+=============================
+layer 033 is prepared
+raw P2 bounds calculated
+raw state costs computed, 245 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 1995.924
+	16122 (33.0%) of branches were cut off
+layer 033 of size      32677 (1236) is completed by 16 worker(s) at    24.65 sec.
+Best UB is 25977.0, Best LB is 23840.5, Gap is 8.96%
+=============================
+layer 034 is prepared
+raw P2 bounds calculated
+raw state costs computed, 196 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 1970.873
+	16073 (41.1%) of branches were cut off
+layer 034 of size      23073 (976) is completed by 16 worker(s) at    18.41 sec.
+Best UB is 25977.0, Best LB is 23957.0, Gap is 8.43%
+=============================
+layer 035 is prepared
+raw P2 bounds calculated
+raw state costs computed, 139 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 2067.167
+	14542 (48.7%) of branches were cut off
+layer 035 of size      15320 (733) is completed by 16 worker(s) at    10.05 sec.
+Best UB is 25977.0, Best LB is 24025.5, Gap is 8.12%
+=============================
+layer 036 is prepared
+raw P2 bounds calculated
+raw state costs computed, 80 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 1907.532
+	12413 (57.1%) of branches were cut off
+layer 036 of size       9340 (479) is completed by 16 worker(s) at     6.35 sec.
+Best UB is 25977.0, Best LB is 24181.0, Gap is 7.43%
+=============================
+layer 037 is prepared
+raw P2 bounds calculated
+raw state costs computed, 49 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 1776.724
+	8626 (63.2%) of branches were cut off
+layer 037 of size       5013 (286) is completed by 16 worker(s) at     3.42 sec.
+Best UB is 25977.0, Best LB is 24555.0, Gap is 5.79%
+=============================
+layer 038 is prepared
+raw P2 bounds calculated
+raw state costs computed, 22 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 1404.200
+	5462 (70.1%) of branches were cut off
+layer 038 of size       2330 (148) is completed by 16 worker(s) at     2.52 sec.
+Best UB is 25977.0, Best LB is 24680.0, Gap is 5.26%
+=============================
+layer 039 is prepared
+raw P2 bounds calculated
+raw state costs computed, 10 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 1220.286
+	2826 (74.3%) of branches were cut off
+layer 039 of size        975 (62) is completed by 16 worker(s) at     1.86 sec.
+Best UB is 25977.0, Best LB is 25042.5, Gap is 3.73%
+=============================
+layer 040 is prepared
+raw P2 bounds calculated
+raw state costs computed, 5 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 822.400
+	1106 (75.9%) of branches were cut off
+layer 040 of size        351 (23) is completed by 16 worker(s) at     1.54 sec.
+Best UB is 25977.0, Best LB is 25260, Gap is 2.84%
+=============================
+layer 041 is prepared
+raw P2 bounds calculated
+raw state costs computed, 2 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 866.500
+	333 (68.7%) of branches were cut off
+layer 041 of size        152 (15) is completed by 16 worker(s) at     1.45 sec.
+Best UB is 25977.0, Best LB is 25400, Gap is 2.27%
+=============================
+layer 042 is prepared
+raw P2 bounds calculated
+raw state costs computed, 1 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 395.000
+	222 (79.9%) of branches were cut off
+layer 042 of size         56 (8) is completed by 16 worker(s) at     1.54 sec.
+Best UB is 25977.0, Best LB is 25656.0, Gap is 1.25%
+=============================
+layer 043 is prepared
+raw P2 bounds calculated
+raw state costs computed, 1 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 548.000
+	96 (70.6%) of branches were cut off
+layer 043 of size         40 (4) is completed by 16 worker(s) at     1.45 sec.
+Best UB is 25977.0, Best LB is 25781.5, Gap is 0.76%
+=============================
+layer 044 is prepared
+raw P2 bounds calculated
+raw state costs computed, 1 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 0.000
+	41 (78.8%) of branches were cut off
+layer 044 of size         11 (1) is completed by 16 worker(s) at     1.39 sec.
+Best UB is 25977.0, Best LB is 25921, Gap is 0.22%
+=============================
+layer 045 is prepared
+raw P2 bounds calculated
+raw state costs computed, 1 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 0.000
+	4 (57.1%) of branches were cut off
+layer 045 of size          3 (1) is completed by 16 worker(s) at     1.53 sec.
+Best UB is 25977.0, Best LB is 25944.5, Gap is 0.13%
+=============================
+layer 046 is prepared
+raw P2 bounds calculated
+raw state costs computed, 1 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 0.000
+	1 (25.0%) of branches were cut off
+layer 046 of size          3 (1) is completed by 16 worker(s) at     1.40 sec.
+Best UB is 25977.0, Best LB is 25944.5, Gap is 0.13%
+=============================
+layer 047 is prepared
+LB fast bounding fault, sigma=(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48), start=1, dest=18
+raw P2 bounds calculated
+raw state costs computed, 1 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 705.000
+	0 (0.0%) of branches were cut off
+layer 047 of size          1 (1) is completed by 16 worker(s) at     1.31 sec.
+Best UB is 25977.0, Best LB is 25977.0, Gap is 0.00%
+=============================
+leaves: [2, 4, 10, 12, 18, 20, 48]
+RESULT: 
+OPT = 25977
+Optimal Tour: [1, 201, 151, 189, 138, 178, 211, 71, 114, 22, 32, 67, 68, 170, 124, 47, 238, 150, 100, 240, 102, 198, 25, 56, 90, 143, 221, 237, 134, 208, 84, 95, 183, 12, 9, 14, 110, 166, 224, 43, 17, 163, 52, 40, 62, 80, 74, 73, 1]
+Visited clusters: [1, 41, 33, 39, 30, 37, 43, 17, 27, 6, 8, 15, 16, 36, 28, 11, 47, 32, 24, 48, 25, 40, 7, 13, 22, 31, 44, 46, 29, 42, 21, 23, 38, 3, 2, 4, 26, 35, 45, 10, 5, 34, 12, 9, 14, 20, 19, 18, 1]
+dist = [730, 869, 854, 1102, 131, 166, 205, 103, 205, 817, 569, 702, 925, 199, 653, 359, 520, 435, 436, 373, 521, 549, 780, 702, 572, 234, 386, 1133, 389, 819, 372, 615, 537, 1040, 545, 154, 383, 239, 498, 631, 453, 595, 353, 640, 600, 748, 431, 705]
+Tour length (rechecked): 25977
+Elapsed time: 1433.11 sec

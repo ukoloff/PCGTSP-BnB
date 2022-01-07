@@ -1,0 +1,33 @@
+Process ForkPoolWorker-753:
+Traceback (most recent call last):
+  File "/home/u0618/anaconda3/lib/python3.7/multiprocessing/process.py", line 297, in _bootstrap
+    self.run()
+  File "/home/u0618/anaconda3/lib/python3.7/multiprocessing/process.py", line 99, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/u0618/anaconda3/lib/python3.7/multiprocessing/pool.py", line 105, in worker
+    initializer(*initargs)
+  File "/misc/home4/u0618/michael/Petunin/pcgtsp-bnb/playground/experiment/DP_BnB_solver_v0_40.py", line 135, in worker_init
+    mp_lookup_table = pic.load(fin)
+OSError: [Errno 12] Cannot allocate memory
+Process ForkPoolWorker-859:
+Traceback (most recent call last):
+  File "/home/u0618/anaconda3/lib/python3.7/multiprocessing/process.py", line 297, in _bootstrap
+    self.run()
+  File "/home/u0618/anaconda3/lib/python3.7/multiprocessing/process.py", line 99, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/u0618/anaconda3/lib/python3.7/multiprocessing/pool.py", line 105, in worker
+    initializer(*initargs)
+  File "/misc/home4/u0618/michael/Petunin/pcgtsp-bnb/playground/experiment/DP_BnB_solver_v0_40.py", line 135, in worker_init
+    mp_lookup_table = pic.load(fin)
+OSError: [Errno 12] Cannot allocate memory
+Process ForkPoolWorker-948:
+Traceback (most recent call last):
+  File "/home/u0618/anaconda3/lib/python3.7/multiprocessing/process.py", line 297, in _bootstrap
+    self.run()
+  File "/home/u0618/anaconda3/lib/python3.7/multiprocessing/process.py", line 99, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/u0618/anaconda3/lib/python3.7/multiprocessing/pool.py", line 105, in worker
+    initializer(*initargs)
+  File "/misc/home4/u0618/michael/Petunin/pcgtsp-bnb/playground/experiment/DP_BnB_solver_v0_40.py", line 135, in worker_init
+    mp_lookup_table = pic.load(fin)
+OSError: [Errno 12] Cannot allocate memory

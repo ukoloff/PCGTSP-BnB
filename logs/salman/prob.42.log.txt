@@ -1,0 +1,58 @@
+Number of nodes: 208, Number of clusters: 41
+Clusters: {1: [1], 2: [2, 3], 3: [4, 5, 6, 7, 8, 9], 4: [10, 11, 12, 13, 14, 15, 16, 17], 5: [18], 6: [19, 20, 21, 22, 23, 24, 25, 26, 27], 7: [28, 29, 30, 31, 32], 8: [33, 34, 35, 36, 37], 9: [38, 39, 40, 41, 42, 43, 44], 10: [45, 46, 47, 48, 49, 50, 51, 52, 53], 11: [54, 55, 56, 57, 58, 59, 60, 61, 62], 12: [63, 64, 65], 13: [66, 67, 68, 69, 70, 71, 72, 73], 14: [74, 75, 76, 77, 78, 79, 80, 81], 15: [82, 83, 84, 85, 86], 16: [87, 88, 89, 90, 91, 92], 17: [93], 18: [94], 19: [95, 96, 97, 98, 99, 100, 101, 102, 103, 104], 20: [105, 106, 107, 108], 21: [109, 110, 111, 112, 113], 22: [114], 23: [115, 116, 117, 118, 119, 120], 24: [121, 122, 123, 124, 125, 126], 25: [127, 128, 129, 130, 131, 132, 133, 134], 26: [135, 136, 137, 138, 139, 140], 27: [141, 142, 143], 28: [144, 145, 146, 147, 148], 29: [149, 150, 151, 152, 153, 154, 155, 156, 157, 158], 30: [159, 160, 161, 162, 163, 164, 165, 166, 167], 31: [168, 169, 170, 171, 172], 32: [173, 174, 175, 176], 33: [177], 34: [178], 35: [179, 180, 181, 182, 183, 184], 36: [185], 37: [186, 187], 38: [188, 189, 190, 191, 192], 39: [193, 194], 40: [195, 196, 197, 198, 199, 200, 201], 41: [202, 203, 204, 205, 206, 207, 208]}
+Partial order tree: [(1, 2), (1, 5), (1, 12), (1, 14), (1, 15), (1, 16), (1, 17), (1, 18), (1, 19), (1, 20), (1, 21), (1, 22), (1, 23), (1, 24), (1, 25), (1, 26), (1, 27), (1, 28), (1, 29), (1, 30), (1, 31), (1, 32), (1, 33), (1, 34), (1, 35), (1, 36), (1, 37), (1, 38), (1, 39), (1, 40), (1, 41), (2, 3), (3, 4), (4, 11), (4, 13), (5, 6), (5, 7), (5, 8), (7, 9), (8, 9), (9, 10)]
+Start LB is 140
+layer 001 is prepared
+Academic license - for non-commercial use only - expires 2021-08-22
+Using license file /home/u0618/gurobi.lic
+	0 (0.0%) of branches were cut off
+layer 001 of size        141 (31) is completed by 1 worker(s) at    42.23 sec.
+Best UB is 232.0, Best LB is 140, Gap is 65.71%
+=============================
+layer 002 is prepared
+raw P2 bounds calculated
+raw state costs computed, 21 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 20.207
+	2285 (53.7%) of branches were cut off
+layer 002 of size       1970 (306) is completed by 16 worker(s) at     5.12 sec.
+Best UB is 232.0, Best LB is 148, Gap is 56.76%
+=============================
+layer 003 is prepared
+raw P2 bounds calculated
+raw state costs computed, 102 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 15.987
+	24993 (61.2%) of branches were cut off
+layer 003 of size      15851 (2074) is completed by 16 worker(s) at    21.23 sec.
+Best UB is 232.0, Best LB is 148, Gap is 56.76%
+=============================
+layer 004 is prepared
+raw P2 bounds calculated
+raw state costs computed, 601 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 20.408
+	176427 (65.5%) of branches were cut off
+layer 004 of size      92821 (10954) is completed by 16 worker(s) at   122.19 sec.
+Best UB is 232.0, Best LB is 149, Gap is 55.70%
+=============================
+layer 005 is prepared
+raw P2 bounds calculated
+raw state costs computed, 2654 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 25.014
+	944321 (68.2%) of branches were cut off
+layer 005 of size     439850 (46594) is completed by 16 worker(s) at   697.87 sec.
+Best UB is 232.0, Best LB is 153, Gap is 51.63%
+=============================
+layer 006 is prepared
+raw P2 bounds calculated
+raw state costs computed, 10157 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 26.823
+	4018173 (70.1%) of branches were cut off
+layer 006 of size    1717625 (166092) is completed by 16 worker(s) at  6356.42 sec.
+Best UB is 232.0, Best LB is 153, Gap is 51.63%
+=============================
+layer 007 is prepared
+raw P2 bounds calculated

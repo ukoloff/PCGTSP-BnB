@@ -1,0 +1,74 @@
+Number of nodes: 39, Number of clusters: 8
+Clusters: {1: [1], 2: [2, 3], 3: [4, 5, 6, 7, 8, 9], 4: [10, 11, 12, 13, 14, 15, 16, 17, 18], 5: [19, 20], 6: [21, 22, 23, 24, 25], 7: [26, 27, 28, 29, 30, 31, 32, 33], 8: [34, 35, 36, 37, 38, 39]}
+Partial order tree: [(1, 2), (1, 3), (1, 4), (2, 8), (2, 5), (2, 7), (5, 6), (7, 6), (8, 6)]
+Start LB is 1451
+layer 001 is prepared
+Academic license - for non-commercial use only - expires 2021-08-22
+Using license file /home/u0618/gurobi.lic
+	0 (0.0%) of branches were cut off
+layer 001 of size         17 (3) is completed by 1 worker(s) at     0.87 sec.
+Best UB is 1730.0, Best LB is 1717.0, Gap is 0.76%
+=============================
+layer 002 is prepared
+raw P2 bounds calculated
+raw state costs computed, 1 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 277.000
+	40 (80.0%) of branches were cut off
+layer 002 of size         10 (2) is completed by 36 worker(s) at     0.93 sec.
+Best UB is 1730.0, Best LB is 1717.0, Gap is 0.76%
+=============================
+layer 003 is prepared
+raw P2 bounds calculated
+raw state costs computed, 1 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 0.000
+	35 (67.3%) of branches were cut off
+layer 003 of size         17 (3) is completed by 36 worker(s) at     0.79 sec.
+Best UB is 1730.0, Best LB is 1717.0, Gap is 0.76%
+=============================
+layer 004 is prepared
+raw P2 bounds calculated
+raw state costs computed, 1 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 0.000
+	55 (82.1%) of branches were cut off
+layer 004 of size         12 (1) is completed by 36 worker(s) at     0.78 sec.
+Best UB is 1730.0, Best LB is 1717.0, Gap is 0.76%
+=============================
+layer 005 is prepared
+raw P2 bounds calculated
+raw state costs computed, 1 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 0.000
+	9 (52.9%) of branches were cut off
+layer 005 of size          8 (1) is completed by 36 worker(s) at     1.03 sec.
+Best UB is 1730.0, Best LB is 1717.0, Gap is 0.76%
+=============================
+layer 006 is prepared
+raw P2 bounds calculated
+raw state costs computed, 1 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 0.000
+	12 (85.7%) of branches were cut off
+layer 006 of size          2 (1) is completed by 36 worker(s) at     0.77 sec.
+Best UB is 1730.0, Best LB is 1726, Gap is 0.23%
+=============================
+layer 007 is prepared
+LB fast bounding fault, sigma=(2, 3, 4, 5, 6, 7, 8), start=1, dest=4
+raw P2 bounds calculated
+raw state costs computed, 1 P2 bounds sent for revision
+revised P2 bounds obtained
+Average local LB growth is 0.000
+	8 (88.9%) of branches were cut off
+layer 007 of size          1 (1) is completed by 36 worker(s) at     0.78 sec.
+Best UB is 1730.0, Best LB is 1730.0, Gap is 0.00%
+=============================
+leaves: [3, 4, 6]
+RESULT: 
+OPT = 1730
+Optimal Tour: [1, 2, 19, 38, 8, 26, 22, 15, 1]
+Visited clusters: [1, 2, 5, 8, 3, 7, 6, 4, 1]
+dist = [0, 62, 208, 0, 489, 808, 163, 0]
+Tour length (rechecked): 1730
+Elapsed time: 8.37 sec
